@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpl:template
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:tpl="urn:coffee:components:template"
+		src="templates/template.xhtml" >
+
+	<tpl:define name="title" value="Yeah! It really fucking works!" />
+
+	<tpl:define name="body">
+		<form>
+			<div class="FormItem">
+				<label>Nome:</label>
+				<input type="text" name="nome" value="#{usuario.nome}" />
+			</div>
+			<div class="FormItem">
+				<label>Sobrenome:</label>
+				<input type="text" name="sobrenome" value="#{usuario.sobrenome}" />
+			</div>
+			<div class="FormItem">
+				<label>Idade:</label>
+				<input type="text" name="idade" value="#{usuario.idade}" />
+			</div>
+			<div class="FormItem">
+				<label>Sexo:</label>
+				<select name="sexo" selected="#{usuario.sexo}">
+					<option value="0"> -- Selecione -- </option>
+					<option value="1">Masculino</option>
+					<option value="2">Feminino</option>
+				</select>
+			</div>
+			<div class="FormItem">
+				<label>Observações:</label>
+				<textarea name="obs" rows="5" cols="60">#{usuario.observacoes}</textarea>
+			</div>
+			<div class="FormItem">
+				<label>Doador de sangue?</label>
+				<label><input type="radio" name="doador" value="true" checked="#{usuario.doador}" /> Sim</label>
+				<label><input type="radio" name="doador" value="false" checked="#{usuario.doador}" /> Não</label>
+			</div>
+		</form>
+	</tpl:define>
+</tpl:template>
