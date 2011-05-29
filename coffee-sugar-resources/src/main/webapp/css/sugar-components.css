@@ -1,0 +1,141 @@
+/* Debug flags */
+.debug { border: 1px dashed #FF0000; }
+
+/* Default Font */
+@font-face {  
+  font-family: "Junction";  
+  src: url( ../fonts/Junction.eot ); /* IE */  
+  src: local("Junction"), url( ../fonts/Junction.ttf ) format("truetype"); /* non-IE */  
+}
+
+/* The Application Theme */
+form.Application {
+}
+
+form.Application * {
+	font-family: "Junction", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	margin: 0px;
+	padding: 0px;
+}
+
+/* Box Container */
+div.Box {
+    overflow: hidden;
+}
+
+/* FormItem Container */
+div.FormItem {
+	margin-bottom: 10px;
+    overflow: hidden;
+}
+
+div.FormItem span.Label {
+	display: block;
+	padding-top: 3px;
+}
+
+div.FormItem span.required {
+	color: red;
+	font-weight: bolder;
+	position: relative;
+	top: 3px;
+}
+
+/* Widgets */
+form.Application button,
+form.Application input[type="BUTTON"],
+form.Application input[type="SUBMIT"],
+form.Application select,
+form.Application textarea,
+form.Application input[type="TEXT"] {
+	border: 1px solid #cdcdcd;
+	border-right-color: #898989;
+	border-bottom-color: #898989;
+	font-family: sans-serif;
+}
+
+form.Application input[type="CHECKBOX"] {
+	position: relative;
+	top: 5px;
+}
+
+form.Application select {
+	background-image: url(../imgs/combobox-bg.png);
+	background-repeat: repeat-x;
+	padding: 5px;
+}
+
+form.Application textarea,
+form.Application input[type="TEXT"] {
+	background-color: white;
+	padding: 5px;
+	font-family: monospace;
+}
+
+form.Application button,
+form.Application input[type="BUTTON"],
+form.Application input[type="SUBMIT"] {
+	background-image: url(../imgs/combobox-bg.png);
+	background-repeat: repeat-x;
+	border-radius: 5px;
+	padding: 5px 8px;
+}
+
+/* Grid */
+form.Application div.Grid {
+    background: white;
+    border: 1px solid #cecece;
+}
+form.Application div.Grid ul {
+    border-bottom: 1px dotted #dedede;
+    display: block;
+    height: 29px;
+    list-style: none;
+    overflow: hidden;
+    width: 100%;
+}
+form.Application div.Grid ul li {
+    border-left: 1px solid transparent;
+    display: block;
+    float: left;
+    overflow: hidden;
+    padding: 6px 6px 4px;
+}
+form.Application div.Grid ul.highlighted {
+    background: #f7f7f7;
+}
+form.Application div.Grid ul.selected {
+    background: #cdf;
+    font-weight: bolder;
+}
+form.Application div.Grid ul:hover {
+    background: #def;
+    cursor: pointer;
+}
+form.Application div.Grid ul.GridHeader {
+    background: url(../imgs/grid-header-bg.png) repeat-x;
+    border: 1px solid #dedede;
+}
+form.Application div.Grid ul.GridHeader li {
+    border-left: 1px solid #dedede;
+    padding-top: 6px;
+}
+form.Application div.Grid div.GridBody {
+	overflow: auto;
+	overflow-x: hidden;
+}
+
+/* RadioGroup */
+form.Application ul.RadioGroup {
+	list-style: none;
+	padding-top: 2px;
+}
+form.Application ul.RadioGroup input[type="RADIO"] {
+	margin-right: 5px;
+	position: relative;
+	top: 1px;
+}
+form.Application ul.RadioGroup label {
+	padding-right: 10px;
+}

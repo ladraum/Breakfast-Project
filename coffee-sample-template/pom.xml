@@ -8,10 +8,10 @@
 		<artifactId>parent</artifactId>
 	</parent>
 
-	<artifactId>coffee-core</artifactId>
-	<name>Coffee Framework Core</name>
-	<description>Coffee Web Framework Development</description>
-	<packaging>jar</packaging>
+	<artifactId>coffee-sample</artifactId>
+	<name>Coffee Framework Sample Implementation</name>
+	<description>A Sample Project using Coffee Web Framework Development</description>
+	<packaging>war</packaging>
 
 	<licenses>
 		<license>
@@ -23,47 +23,24 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>coffee.framework</groupId>
+			<artifactId>coffee-core</artifactId>
+			<version>${coffee.version}</version>
+			<!--scope>provided</scope-->
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<resources>
 			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<filtering>false</filtering>
 				<directory>src/main/java</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
 			</resource>
 		</resources>
-		<testResources>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>src/test/resources</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</testResource>
-		</testResources>
 		<plugins>
 			<plugin>
 				<inherited>true</inherited>
@@ -84,6 +61,38 @@
 				<configuration>
 					<downloadSources>true</downloadSources>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<path>/sample</path>
+				</configuration>
+				<dependencies>
+					<!-- java mail api -->
+					<dependency>
+						<groupId>javax.mail</groupId>
+						<artifactId>mail</artifactId>
+						<version>1.4</version>
+					</dependency>
+					<!-- jta -->
+					<dependency>
+						<groupId>javax.transaction</groupId>
+						<artifactId>jta</artifactId>
+						<version>1.1</version>
+					</dependency>
+					<dependency>
+						<groupId>javax.servlet</groupId>
+						<artifactId>servlet-api</artifactId>
+						<version>2.5</version>
+					</dependency>
+					<!--dependency>
+						<groupId>coffee.framework</groupId>
+						<artifactId>coffee-core</artifactId>
+						<version>${coffee.version}</version>
+					</dependency-->
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

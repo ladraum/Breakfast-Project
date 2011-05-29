@@ -37,7 +37,7 @@ public class TextNode extends HtmlComponent {
 	@Override
 	public void render() throws IOException {
 		PrintWriter writer = coffeeContext.getResponse().getWriter();
-		writer.append(bindTextContent());
+		writer.append(getTextContent());
 	}
 
 }

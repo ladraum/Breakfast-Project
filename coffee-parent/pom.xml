@@ -22,8 +22,11 @@
 	</properties>
 	
 	<modules>
-		<module>coffee-core</module>
-		<module>coffee-stress</module>
-		<module>coffee-sample</module>
+		<module>../coffee-core</module>
+		<module>../coffee-sample-template</module>
+		<module>../coffee-stress</module>
+		<module>../coffee-sugar</module>
+		<module>../coffee-sugar-resources</module>
+		<module>../coffee-sample-sugar</module>
 	</modules>
 </project>

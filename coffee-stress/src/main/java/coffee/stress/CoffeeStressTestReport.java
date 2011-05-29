@@ -2,14 +2,15 @@ package coffee.stress;
 
 public class CoffeeStressTestReport {
 
-	private static final int NUMBER_OF_REQUESTS = 200;
+	private static final String URL = "http://localhost:8080/sugar-sample/sample/";
+	private static final int NUMBER_OF_REQUESTS = 100;
 
 	public static void main(String[] args) throws InterruptedException {
 		CoffeeStressTestReport stressTest = new CoffeeStressTestReport();
 
 		long begin = System.currentTimeMillis();
 
-		for (int i=0;i<10;i++)
+		for (int i=0;i<200;i++)
 			stressTest.doRequestStress();
 
 		long end = System.currentTimeMillis() - begin;
@@ -19,7 +20,7 @@ public class CoffeeStressTestReport {
 	}
 
 	public void doRequestStress() throws InterruptedException {
-		RequestData data = new RequestData("http://localhost:8080/sample/sample/");
+		RequestData data = new RequestData(URL);
 		
 		System.out.println("Requesting http://localhost:8080/sample/sample/...");
 

@@ -36,6 +36,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import coffee.components.IComponent;
+import coffee.util.Util;
 
 public class CoffeeResourceLoader {
 
@@ -66,14 +67,13 @@ public class CoffeeResourceLoader {
  */
 	public IComponent compile(String templateName, CoffeeContext context) throws IOException,
 						ParserConfigurationException, SAXException, CloneNotSupportedException {
-		if (isCacheEnabled() && resourceCache.containsKey(templateName)) {
-			IComponent component = (IComponent)resourceCache.get(templateName).clone();
-			component.setCoffeeContext(context);
-			component.flush();
-			return component;
-		}
-		
+		if (isCacheEnabled() && resourceCache.containsKey(templateName))
+			return (IComponent)resourceCache.get(templateName).clone(context);
+
 		InputStream template = loadTemplate(templateName);
+		if (Util.isNull(template))
+			throw new IOException("Can't find template '" + templateName + "'.");
+
 		CoffeeParser parser = new CoffeeParser();
 		parser.setContext(context);
 		IComponent application = parser.parse(template);
@@ -117,8 +117,7 @@ public class CoffeeResourceLoader {
  * @return The classes
  * @throws ClassNotFoundException
  */
-	public Map<String,CoffeeResource> findClasses(File directory, String packageName) throws ClassNotFoundException 
-	{
+	public Map<String,CoffeeResource> findClasses(File directory, String packageName) {
 		Map<String,CoffeeResource> classes = new HashMap<String,CoffeeResource>();
         for (File file : directory.listFiles()) {
         	String fileName = file.getName();
@@ -131,21 +130,25 @@ public class CoffeeResourceLoader {
             if (!fileName.endsWith(".class") || fileName.contains("$"))
             	continue;
 
-			String className = packageName + '.' + fileName.substring(0, fileName.length() - 6);
-			Class<?> clazz = getClassLoader().loadClass(
-					normalizeClassName(className));
-			
-			WebResource webresource = clazz.getAnnotation(WebResource.class);
-			if (isNull(webresource))
+			try {
+				String className = packageName + '.' + fileName.substring(0, fileName.length() - 6);
+				Class<?> clazz = getClassLoader().loadClass(
+						normalizeClassName(className));
+
+				WebResource webresource = clazz.getAnnotation(WebResource.class);
+				if (isNull(webresource))
+					continue;
+
+				String pattern = webresource.pattern();
+				CoffeeResource data = new CoffeeResource();
+				data.setClazz(clazz);
+				data.setPattern(pattern);
+				data.setTemplate(webresource.template());
+
+				classes.put(pattern, data);
+			} catch (ClassNotFoundException e) {
 				continue;
-
-			String pattern = webresource.pattern();
-			CoffeeResource data = new CoffeeResource();
-			data.setClazz(clazz);
-			data.setPattern(pattern);
-			data.setTemplate(webresource.template());
-
-			classes.put(pattern, data);
+			}
         }
         return classes;
     }

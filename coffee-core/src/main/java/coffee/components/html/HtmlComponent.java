@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import coffee.binding.CoffeeBinder;
 import coffee.components.AbstractComponent;
 import coffee.components.IComponent;
 
@@ -35,13 +34,17 @@ public class HtmlComponent extends AbstractComponent {
 	private boolean selfCloseable;
 	private List<String> ignoredAttributes;
 	
-	public HtmlComponent() {
-		ignoredAttributes = new ArrayList<String>();
-	}
+	public HtmlComponent() {}
 
 	public HtmlComponent(String name) {
 		super();
 		setComponentName(name);
+	}
+
+	@Override
+	protected void initialize() {
+		super.initialize();
+		ignoredAttributes = new ArrayList<String>();
 	}
 
 	@Override
@@ -82,7 +85,7 @@ public class HtmlComponent extends AbstractComponent {
 
 		String textContent = getTextContent();
 		if (!isNull(textContent))
-			writer.append(bindTextContent());
+			writer.append(textContent);
 
 		writer.append("</").append(componentName).append('>');
 	}
@@ -111,16 +114,10 @@ public class HtmlComponent extends AbstractComponent {
  * @throws IOException 
  */
 	public void renderChildren() throws IOException {
-		for (IComponent child : childs) {
+		for (IComponent child : children) {
 			child.setCoffeeContext(getCoffeeContext());
 			child.render();
 		}
-	}
-
-	public CharSequence bindTextContent() {
-		return CoffeeBinder.getValue(
-						getTextContent(), coffeeContext
-					).toString();
 	}
 
 /**

@@ -54,11 +54,12 @@ public interface IComponent extends Cloneable {
  * <br/>
  * Note: this method is handled by the Coffee Life Cycle and should not be called
  * unless you really knows what are you doing.
+ * @param context 
  * 
  * @return
  * @throws CloneNotSupportedException
  */
-	public Object clone() throws CloneNotSupportedException;
+	public Object clone(CoffeeContext context) throws CloneNotSupportedException;
 
 /**
  * Appends a child at end of children's list.
@@ -76,7 +77,7 @@ public interface IComponent extends Cloneable {
  * Set a new list of component to use as children of the component.
  * @param value
  */
-	public void setChildren(List<IComponent> value);
+	public IComponent setChildren(List<IComponent> value);
 
 /**
  * Retrieves the children's list.
@@ -91,8 +92,9 @@ public interface IComponent extends Cloneable {
  * should stores the <i>default value</i> into a String field inside of component.
  * 
  * @param content
+ * @return 
  */
-	public void setTextContent(String content);
+	public IComponent setTextContent(String content);
 
 /**
  * Retrieves the text content of the component.
@@ -113,7 +115,7 @@ public interface IComponent extends Cloneable {
  * @param attribute
  * @param value
  */
-	public void setAttribute(String attribute, Object value);
+	public IComponent setAttribute(String attribute, Object value);
 
 /**
  * Retrieves the parent component.
@@ -125,7 +127,7 @@ public interface IComponent extends Cloneable {
  * Set's the parent component.
  * @param parent
  */
-	public void setParent(IComponent parent);
+	public IComponent setParent(IComponent parent);
 
 /**
  * Returns if the component is a <i>Value Holder Component</i>.<br/>
@@ -154,7 +156,7 @@ public interface IComponent extends Cloneable {
  * Set the component's unique identification.
  * @param id
  */
-	public void setId(String id);
+	public IComponent setId(String id);
 
 /**
  * Get's the default value for the component. This attribute is usually used to holds
@@ -170,12 +172,12 @@ public interface IComponent extends Cloneable {
  * @param value
  * @see IComponent#getHoldenValue()
  */
-	public void holdValue(String value);
+	public IComponent holdValue(String value);
 
 /**
  * Sets the current CoffeeContext.
  */
-	public void setCoffeeContext(CoffeeContext context);
+	public IComponent setCoffeeContext(CoffeeContext context);
 	
 /**
  * Retrieves the current CoffeeContext
@@ -205,15 +207,4 @@ public interface IComponent extends Cloneable {
  * unless you really knows what are you doing.
  */
 	public void bind();
-
-/**
- * Flushes this component and forces any <i>Value Holder Component</i> data to
- * be configured, and if needed, re-binded against its target. The general contract
- * of flush is when calling it, if any <i>Value Holder Component</i> child is present at
- * <i>Component Tree</i>, it will be flushed in cascade.<br/>
- * <br/>
- * Note: this method is handled by the Coffee Life Cycle and should not be called
- * unless you really knows what are you doing.
- */
-	public void flush();
 }

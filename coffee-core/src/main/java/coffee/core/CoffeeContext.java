@@ -40,7 +40,7 @@ public class CoffeeContext {
 	public CoffeeContext() {
 		properties = new HashMap<String, Object>();
 	}
-	
+
 	public static void registerNamespace(String namespace, IComponentFactory factory) {
 		registeredNamespaces.put(namespace, factory);
 	}

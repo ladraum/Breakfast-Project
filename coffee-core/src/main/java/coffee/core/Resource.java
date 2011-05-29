@@ -30,7 +30,7 @@ public abstract class Resource implements IResource {
 	public void configure(CoffeeContext context) {
 		setContext(context);
 		setCharacterEncoding("UTF-8");
-		
+		setContentType("applicationx/xhtml+xml");
 		configure();
 	}
 
@@ -61,7 +61,7 @@ public abstract class Resource implements IResource {
  * @param parameters
  * @return
  */
-	public String getResourceURI(CoffeeContext context) {
+	public String getResourceURI() {
 		StringBuffer buffer = new StringBuffer();
 
 		WebResource resource = getClass().getAnnotation(WebResource.class);
@@ -69,20 +69,7 @@ public abstract class Resource implements IResource {
 		buffer
 			.append(context.getContextPath())
 			.append(resource.uri());
-		
-//		HttpServletRequest request = context.getRequest();
-
-		/*
-		 * TODO: melhorar o modelo de getResourceURI
-		 * int i=0;
-		for (String param : ((Map<String, Object>)request.getParameterMap()).keySet()){
-			buffer.append(i==0 ? '?' : '&')
-				  .append(param)
-				  .append("=")
-				  .append(request.getParameter(param));
-			i++;
-		}*/
-		return "";
+		return buffer.toString();
 	}
 	
 	public void setCharacterEncoding(String encoding) {
@@ -90,6 +77,6 @@ public abstract class Resource implements IResource {
 	}
 	
 	public void setContentType(String contentType) {
-		getContext().getResponse().setContentType("applicationx/xhtml+xml");
+		getContext().getResponse().setContentType(contentType);
 	}
 }

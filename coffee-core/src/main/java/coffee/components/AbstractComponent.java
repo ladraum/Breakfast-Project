@@ -44,7 +44,7 @@ import coffee.util.Util;
  */
 public abstract class AbstractComponent implements IComponent {
 
-	protected List<IComponent> childs;
+	protected List<IComponent> children;
 	protected Map<String, Object> attributes;
 	private IComponent parent;
 	private String textContent;
@@ -55,7 +55,11 @@ public abstract class AbstractComponent implements IComponent {
 
 	public AbstractComponent() {
 		super();
-		childs = new ArrayList<IComponent>();
+		initialize();
+	}
+
+	protected void initialize() {
+		children = new ArrayList<IComponent>();
 		attributes = new HashMap<String, Object>();
 	}
 
@@ -94,34 +98,37 @@ public abstract class AbstractComponent implements IComponent {
 	}
 
 	@Override
-	public void flush() {
-		bind();
-	
-		// Flushes child elements in cascade
-		for (IComponent child : childs) {
-			child.setCoffeeContext(coffeeContext);
-			child.flush();
-		}
-	}
+	public Object clone(CoffeeContext context) throws CloneNotSupportedException {
+		flush();
 
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		AbstractComponent clone = (AbstractComponent)super.clone();
 		List<IComponent> children = new ArrayList<IComponent>();
-		
-		for (IComponent child : childs) {
+		AbstractComponent clone = (AbstractComponent)super.clone();
+
+		for (IComponent child : getChildren()) {
 			child.setParent(clone);
-			children.add((IComponent)child.clone());
+			children.add((IComponent)child.clone(context));
 		}
-		
+
 		clone.setChildren(children);
 		clone.setTextContent(textContent);
+		clone.setCoffeeContext(context);
+		clone.bind();
+
 		return clone;
+	}
+
+/**
+ * Flushes objects that will be never used after component's rendering. Custom components should
+ * override this method to clean some variables to avoid memory leaks. Note that you should
+ * always call super.flush() to clean the {@link AbstractComponent} internal variables. 
+ */
+	protected void flush() {
+		this.setCoffeeContext(null);
 	}
 
 	@Override
 	public void addChild(IComponent child) {
-		childs.add(child);
+		children.add(child);
 	}
 
 /**
@@ -130,16 +137,21 @@ public abstract class AbstractComponent implements IComponent {
  * @param index
  */
 	public void addChild(IComponent child, int index) {
-		childs.add(index, child);
+		children.add(index, child);
 	}
 
 	@Override
-	public void setTextContent(String content) {
+	public IComponent setTextContent(String content) {
 		this.textContent = content;
+		return this;
 	}
 
 	public String getTextContent() {
-		return this.textContent;
+		if (isNull(textContent))
+			return null;
+
+		return CoffeeBinder.getValue(
+				textContent, coffeeContext).toString();
 	}
 
 	@Override
@@ -170,13 +182,14 @@ public abstract class AbstractComponent implements IComponent {
  * After stores the value, if the component implementation has a setter method with same name of the attribute
  * it will be dispatched too.
  */
-	public void setAttribute(String attribute, Object value) {
+	public IComponent setAttribute(String attribute, Object value) {
 		this.attributes.put(attribute, value);
 		try {
 			Method setter = Reflection.extractSetterFor(attribute, this, value);
 			setter.invoke(this, value);
+			return this;
 		} catch (Exception e) {
-			return;
+			return this;
 		}
 	}
 
@@ -186,33 +199,36 @@ public abstract class AbstractComponent implements IComponent {
 	}
 
 	@Override
-	public void setParent(IComponent parent) {
+	public IComponent setParent(IComponent parent) {
 		this.parent = parent;
+		return this;
 	}
 
 	@Override
 	public int getNumChildren() {
-		return childs.size();
+		return children.size();
 	}
 
 	@Override
 	public List<IComponent> getChildren() {
-		return childs;
+		return children;
 	}
 
 	@Override
-	public void setChildren(List<IComponent> value) {
-		this.childs = value;
+	public IComponent setChildren(List<IComponent> value) {
+		this.children = value;
+		return this;
 	}
 
 	@Override
 	public boolean isValueHolder() {
-		return !Util.isNull(getHeldValue());
+		return !Util.isNull(getHeldValue()) && !Util.isNull(getId());
 	}
 
 	@Override
-	public void setId(String id) {
+	public IComponent setId(String id) {
 		this.id = id;
+		return this;
 	}
 
 	@Override
@@ -226,13 +242,15 @@ public abstract class AbstractComponent implements IComponent {
 	}
 
 	@Override
-	public void holdValue(String value) {
+	public IComponent holdValue(String value) {
 		this.value = value;
+		return this;
 	};
 
 	@Override
-	public void setCoffeeContext(CoffeeContext context) {
+	public IComponent setCoffeeContext(CoffeeContext context) {
 		this.coffeeContext = context;
+		return this;
 	}
 
 	@Override

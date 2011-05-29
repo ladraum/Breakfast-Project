@@ -20,6 +20,9 @@ public class SampleResource extends Resource {
 
 	@Override
 	public void process() {
+		
+		// TODO: incluir a servlet-api:2.5 no pom.xml
+		
 		if (Util.isNull(usuario.getNome()))
 			usuario.setNome("Miere");
 		if (Util.isNull(usuario.getSobrenome()))

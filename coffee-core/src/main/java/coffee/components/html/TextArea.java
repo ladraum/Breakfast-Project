@@ -15,6 +15,8 @@
  */
 package coffee.components.html;
 
+import coffee.components.IComponent;
+
 public class TextArea extends HtmlComponent {
 
 	private String name;
@@ -35,9 +37,10 @@ public class TextArea extends HtmlComponent {
 	}
 
 	@Override
-	public void setTextContent(String content) {
+	public IComponent setTextContent(String content) {
 		super.setTextContent(content);
 		holdValue(content);
+		return this;
 	}
 
 }

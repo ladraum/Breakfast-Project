@@ -8,9 +8,9 @@
 		<artifactId>parent</artifactId>
 	</parent>
 
-	<artifactId>coffee-core</artifactId>
-	<name>Coffee Framework Core</name>
-	<description>Coffee Web Framework Development</description>
+	<artifactId>coffee-sugar</artifactId>
+	<name>Sugar RIA Components for Coffee Framework</name>
+	<description>The Sweet Flavor of RIA Web Development</description>
 	<packaging>jar</packaging>
 
 	<licenses>
@@ -33,6 +33,11 @@
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>coffee.framework</groupId>
+			<artifactId>coffee-core</artifactId>
+			<version>${coffee.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

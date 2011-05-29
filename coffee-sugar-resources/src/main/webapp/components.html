@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="applicationx/xhtml+xml; charset=UTF-8" />
+		<title>Coffee-Sugar Component set</title>
+		<script src="js/sugar-core.js" ></script>
+		<script src="js/sugar-core-components.js" ></script>
+		<script src="js/sugar-core-application.js" ></script>
+		<link href="css/sugar-components.css" media="screen" rel="stylesheet" type="text/css" ></link>
+		
+		<style>
+		
+			body {
+				/*background: #f4f4f4 url(imgs/body-bg.png) repeat-x;*/
+			}
+		
+		</style>
+
+		<script>
+
+			    function main() {
+			    	var grid = new Grid({
+				    		id: "grid1",
+				    		height: "250px",
+				    		width: "95%",
+				    		columns: [
+			    		          { id: "codigo", label: "Código", width: "10%" },
+			    		          { id: "nome", label: "Nome", width: "50%" },
+			    		          { id: "login", label: "Login", width: "150px" },
+			    		          { id: "status", label: "Status" },
+		    		          ],
+				    		data: [
+									{ codigo: "1201", nome: "Miere Liniel Teixeira", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+									{ codigo: "1201", nome: "Miere", login: "miere", status: "Ativo", type: "defaultColumn" },
+			    		       ]
+		    			});
+			    }
+
+		</script>
+	</head>
+
+	<body onload="main()">
+    	<form class="Application" style="margin: 30px auto; width:80%;" method="post" action="">
+
+            <div class="FormItem">
+                <span class="Label" style="width: 150px;float: left;">Nome:
+                	<span class="required">*</span></span>
+                <input type="text" name="name" style="width: 300px" />
+            </div>
+
+			
+            <div class="FormItem">
+                <span class="Label" style="width: 150px;">Grid de exemplo:</span>
+    			<div id="grid1" class="Grid" style="width: 600px;"></div>
+   			</div>
+    	</form>
+
+	</body>
+</html>
+

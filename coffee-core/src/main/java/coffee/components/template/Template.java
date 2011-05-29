@@ -44,8 +44,6 @@ public class Template extends AbstractComponent {
 			throw new IOException(e);
 		} catch (CloneNotSupportedException e) {
 			throw new IOException(e);
-		} catch (IOException e) {
-			throw new IOException(e);
 		}
 	}
 
