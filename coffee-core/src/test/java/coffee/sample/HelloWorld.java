@@ -1,10 +1,9 @@
 package coffee.sample;
 
 import coffee.core.Resource;
-import coffee.core.WebResource;
+import coffee.core.annotation.WebResource;
 
 @WebResource(
-	uri="/hello/",
 	pattern="/hello/*",
 	template="templates/hello.xhtml" )
 

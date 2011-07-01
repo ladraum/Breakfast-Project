@@ -8,7 +8,7 @@
 		<artifactId>parent</artifactId>
 	</parent>
 
-	<artifactId>coffee-sample</artifactId>
+	<artifactId>coffee-sample-core</artifactId>
 	<name>Coffee Framework Sample Implementation</name>
 	<description>A Sample Project using Coffee Web Framework Development</description>
 	<packaging>war</packaging>

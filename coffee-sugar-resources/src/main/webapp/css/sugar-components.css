@@ -1,26 +1,25 @@
 /* Debug flags */
 .debug { border: 1px dashed #FF0000; }
-
-/* Default Font */
-@font-face {  
-  font-family: "Junction";  
-  src: url( ../fonts/Junction.eot ); /* IE */  
-  src: local("Junction"), url( ../fonts/Junction.ttf ) format("truetype"); /* non-IE */  
-}
+html { overflow: auto; }
 
 /* The Application Theme */
 form.Application {
+	display: block;
 }
 
 form.Application * {
-	font-family: "Junction", Helvetica, Arial, sans-serif;
-	font-size: 16px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 14px;
 	margin: 0px;
 	padding: 0px;
+	overflow: hidden;
 }
 
 /* Box Container */
 div.Box {
+	float: left;
+	margin: 0px;
+	position: relative;
     overflow: hidden;
 }
 
@@ -32,7 +31,7 @@ div.FormItem {
 
 div.FormItem span.Label {
 	display: block;
-	padding-top: 3px;
+	padding: 3px 7px 0px 0px;
 }
 
 div.FormItem span.required {
@@ -80,6 +79,19 @@ form.Application input[type="SUBMIT"] {
 	background-repeat: repeat-x;
 	border-radius: 5px;
 	padding: 5px 8px;
+	min-width: 80px;
+}
+
+/* Button Bar */
+form.Application ul.ButtonBar {
+	list-style: none;
+	overflow: hidden;
+	padding: 5px 10px 5px;
+}
+
+form.Application ul.ButtonBar li {
+	display: inline;
+	margin-left: 10px;
 }
 
 /* Grid */
@@ -115,15 +127,20 @@ form.Application div.Grid ul:hover {
 }
 form.Application div.Grid ul.GridHeader {
     background: url(../imgs/grid-header-bg.png) repeat-x;
-    border: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
 }
 form.Application div.Grid ul.GridHeader li {
     border-left: 1px solid #dedede;
+    font-family: sans-serif;
+    font-weight: bold;
     padding-top: 6px;
 }
 form.Application div.Grid div.GridBody {
 	overflow: auto;
 	overflow-x: hidden;
+}
+form.Application div.Grid div.GridBody ul li {
+	font-family: monospace;
 }
 
 /* RadioGroup */
@@ -139,3 +156,159 @@ form.Application ul.RadioGroup input[type="RADIO"] {
 form.Application ul.RadioGroup label {
 	padding-right: 10px;
 }
+
+/* Panel */
+form.Application div.Panel {
+    padding: 67px 10px 40px 10px;
+    position: relative;
+}
+form.Application div.Panel div.PanelBar {
+    border-bottom: 1px solid #ababab;
+    color: black;
+    display: block;
+    height: 37px;
+    left: 0px;
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+}
+form.Application div.Panel div.PanelBar span {
+    font-size: 18px;
+    left: 24px;
+    position: relative;
+    text-transform: uppercase;
+    top: 13px;
+}
+form.Application div.Collapsed {
+	height: 0px;
+	padding: 45px 0px 0px;
+}
+form.Application div.Collapsed * { display: none; }
+form.Application div.Collapsed div.PanelBar,
+form.Application div.Collapsed div.PanelBar * { display:block;}
+form.Application div.Collapsed div.PanelBar {
+	background: url(../imgs/panel-pointer-collapsed.png) 0% 16px no-repeat;
+}
+form.Application div.Elapsed div.PanelBar {
+	background: url(../imgs/panel-pointer-elapsed.png) 0% 16px no-repeat;
+}
+form.Application div.Collapsed div.PanelBar:hover,
+form.Application div.Elapsed div.PanelBar:hover { cursor: pointer; }
+
+/* Dialog Panel */
+form.Application div.DialogPanel {
+	background: #fefefe;
+	background-image: url(../imgs/panel-gradient-bg.png);
+	background-position: 100% 100%;
+	background-repeat: repeat-x;
+
+	border: 1px solid #cdcdcd;
+
+	border-top-right-radius: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-top-right-radius: 3px;
+
+	border-bottom-right-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+
+	border-top-left-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-webkit-border-top-left-radius: 3px;
+
+	border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px #888;
+	box-shadow: 0 0 5px #888;
+
+	padding: 45px 0px 0px;
+	margin-bottom: 15px;
+	position: relative;
+}
+form.Application div.DialogPanel div.PanelBar {
+	border-bottom: 0px;
+}
+form.Application div.DialogPanel div.PanelBar span {
+	color: #222;
+	font-size: 14px;
+	font-weight: bold;
+	left: 20px;
+	top: 14px;
+}
+form.Application div.DialogPanel div.PanelBar a.CloseButton {
+	background: url(../imgs/panel-button-close.gif) no-repeat;
+	border: none;
+	display: block;
+	height: 16px;
+	position: absolute;
+	right: 13px;
+	text-decoration: none;
+	top: 12px;
+	width: 16px;
+}
+form.Application div.DialogPanel div.PanelBar a.CloseButton:hover {
+/* 	opacity: 0.8; */
+	cursor: pointer;
+	text-decoration: none;
+}
+form.Application div.DialogPanel ul.ButtonBar {
+	position: relative;
+	display: block;
+}
+
+/* FIXME continuar */
+form.Application div.Modal {
+	
+}
+
+form.Application div.Error{
+	padding: 67px 30px 30px;
+	border-color: red;
+}
+form.Application div.Error div.PanelBar {
+	background-color: #f1f1f1;
+	background-image: -moz-linear-gradient(top, #ffaaaa, #ee9999); 
+	background-image: -ms-linear-gradient(top, #ffaaaa, #ee9999); 
+	background-image: -o-linear-gradient(top, #ffaaaa, #ee9999); 
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffAAaa), to(#ee9999)); 
+	background-image: -webkit-linear-gradient(top, #ffaaaa, #ee9999); 
+	background-image: linear-gradient(top, #ffaaaa, #ee9999);
+	border-color: red;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffAAaa', EndColorStr='#ee9999');
+}
+
+form.Application div.Warning {
+	padding: 67px 30px 30px;
+}
+
+form.Application div.Warning p {
+	text-align: center;
+}
+
+/* Tree Component */
+form.Application div.Tree { overflow: auto; }
+form.Application div.Tree ul { clear: both; display: block; list-style: none; }
+form.Application div.Tree ul li { overflow: hidden; display: block; width: 100%; }
+form.Application div.Tree ul li a { border: 0px; display: block; width: 12px; height: 22px; float: left; text-decoration: none; }
+form.Application div.Tree ul li label {
+	float: left;
+	display: block;
+	padding: 5px 0px 5px 10px;
+}
+form.Application div.Tree ul li a.collapsed {
+	background-image: url(../imgs/tree-pointer-collapsed.png);
+	background-repeat: no-repeat;
+	background-position: 0px center;
+}
+/*form.Application div.Tree ul li.collapsed ul { display: none; }*/
+form.Application div.Tree ul li a.elapsed {
+	background-image: url(../imgs/tree-pointer-elapsed.png);
+	background-repeat: no-repeat;
+	background-position: 0px center;
+}
+form.Application div.Tree ul li label input[type="CHECKBOX"] { top: 1px; margin-right: 5px; }
+form.Application div.Tree ul li ul { margin-left: 30px; }

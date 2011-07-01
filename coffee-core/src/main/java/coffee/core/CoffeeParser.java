@@ -26,11 +26,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import coffee.components.IComponent;
-import coffee.components.IComponentFactory;
-import coffee.components.html.HtmlComponentFactory;
-import coffee.components.template.ComponentFactory;
-import coffee.util.Util;
+import coffee.core.components.IComponent;
+import coffee.core.components.IComponentFactory;
+import coffee.core.components.TextNode;
+import coffee.core.components.template.TemplateComponentFactory;
+import coffee.core.components.xhtml.XHtmlComponentFactory;
+import coffee.core.util.Util;
 
 
 /**
@@ -42,13 +43,16 @@ public class CoffeeParser extends DefaultHandler {
 	private IComponent currentComponent;
 	private StringBuffer textContent;
 	private CoffeeContext context;
+	private CoffeeResourceLoader resourceLoader;
 
 	public CoffeeParser() {
+		resourceLoader = CoffeeResourceLoader.getInstance();
+
 		this.textContent = new StringBuffer();
 		CoffeeContext.registerNamespace(
-				"http://www.w3.org/1999/xhtml", new HtmlComponentFactory());
+				"http://www.w3.org/1999/xhtml", new XHtmlComponentFactory());
 		CoffeeContext.registerNamespace(
-				"urn:coffee:components", new ComponentFactory());
+				"urn:coffee:template", new TemplateComponentFactory());
 	}
 
 /**
@@ -79,14 +83,13 @@ public class CoffeeParser extends DefaultHandler {
 		if (CoffeeContext.isRegisteredNamespace(uri))
 			return;
 
-		CoffeeResourceLoader resourceLoader = CoffeeResourceLoader.getInstance();
 		String className = String.format("%s.ComponentFactory",
 			Util.join(
 				uri.replace("urn:", "").split(":"), "."));
 		IComponentFactory factory = (IComponentFactory)resourceLoader.instanceForName(className);
 
 		if (Util.isNull(factory))
-			throw new NullPointerException("The 'factory' object is null: Can't find components factory.");
+			throw new NullPointerException("The 'factory' object is null: Can't find components factory for class " + className);
 
 		CoffeeContext.registerNamespace(uri, factory);
 	}

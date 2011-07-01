@@ -15,6 +15,8 @@
  */
 package coffee.core;
 
+import java.io.IOException;
+
 /**
  * @since Coffee 1.0
  */
@@ -54,8 +56,9 @@ public class CoffeeResource {
  * @return
  * @throws IllegalAccessException 
  * @throws InstantiationException 
+ * @throws IOException 
  */
-	public IResource instantiateHook(CoffeeContext context) throws InstantiationException, IllegalAccessException {
+	public IResource instantiateHook(CoffeeContext context) throws InstantiationException, IllegalAccessException, IOException {
 		IResource hook = (IResource)clazz.newInstance();
 		hook.configure(context);
 		return hook;

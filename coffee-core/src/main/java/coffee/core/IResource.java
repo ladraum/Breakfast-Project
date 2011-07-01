@@ -15,6 +15,8 @@
  */
 package coffee.core;
 
+import java.io.IOException;
+
 /**
  * The web resource interface. It defines the basic life cycle of
  * a web resource on the Coffee Framework. Software developers that
@@ -30,8 +32,9 @@ public interface IResource {
  * that will be handle by the coffee parser (like value expressions, for
  * an example).
  * @param context
+ * @throws IOException 
  */
-	public abstract void configure(CoffeeContext context);
+	public abstract void configure(CoffeeContext context) throws IOException;
 
 /**
  * The main method from the web resource. This method was designed to make possible

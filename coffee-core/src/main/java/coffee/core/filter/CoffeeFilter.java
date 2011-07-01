@@ -15,7 +15,7 @@
  */
 package coffee.core.filter;
 
-import static coffee.util.Util.isNull;
+import static coffee.core.util.Util.isNull;
 
 import java.io.IOException;
 
@@ -32,13 +32,13 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import coffee.components.IComponent;
 import coffee.core.CoffeeContext;
 import coffee.core.ICoffeeContextFactory;
 import coffee.core.CoffeeResourceLoader;
 import coffee.core.CoffeeResource;
 import coffee.core.CoffeeContextFactory;
 import coffee.core.IResource;
+import coffee.core.components.IComponent;
 
 
 public class CoffeeFilter implements Filter {
@@ -57,15 +57,12 @@ public class CoffeeFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		setFilterConfig(filterConfig);
 
-		// TODO: re-write the code to use Initial-Parameter from Filter configuration
-		String defaultPackageName = "";
+		// TODO: Allow to use a custom context factory by setting a new one at Initial-Parameter 
 		contextFactory = new CoffeeContextFactory();
 
 		try {
 			resourceLoader = CoffeeResourceLoader.getInstance();
-			resourceLoader.loadRegisteredResources(defaultPackageName);
-		} catch (ClassNotFoundException e) {
-			throw new ServletException(e.getMessage(), e);
+			resourceLoader.initialize();
 		} catch (IOException e) {
 			throw new ServletException(e.getMessage(), e);
 		}
@@ -94,7 +91,7 @@ public class CoffeeFilter implements Filter {
 		
 		try {
 			CoffeeContext coffeeContext = createCoffeeContext(request, response, getServletContext());
-			CoffeeResource resource = resourceLoader.get(coffeeContext.getRelativePath());
+			CoffeeResource resource = resourceLoader.getResource(coffeeContext.getRelativePath());
 
 			if (isNull(resource)) {
 				chain.doFilter(request, response);
@@ -137,11 +134,14 @@ public class CoffeeFilter implements Filter {
  */
 	public CoffeeContext createCoffeeContext(ServletRequest request,
 			ServletResponse response, ServletContext servletContext) {
+		HttpServletRequest httpRequest = (HttpServletRequest)request;
 		CoffeeContext context = contextFactory.createContext();
 		context.setRequest(request);
 		context.setResponse(response);
 		context.setServletContext(servletContext);
-		context.setPath(((HttpServletRequest)request).getRequestURI());
+		context.setPath(httpRequest.getRequestURI());
+		context.put("contextPath", httpRequest.getContextPath());
+		context.put("path", httpRequest.getRequestURI());
 		return context;
 	}
 

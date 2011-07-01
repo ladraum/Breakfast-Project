@@ -7,19 +7,27 @@
 	<display-name>coffee-sample</display-name>
 
 	<!-- COFFEE CONFIGURATION -->
+
 	<filter>
 		<filter-name>coffee</filter-name>
 		<filter-class>coffee.core.filter.CoffeeFilter</filter-class>
 	</filter>
 
-	<!-- IT WILL HANDLE ONLY HOOKS, OTHER RESOURCES ARE HANDLED BY DEFAULT CHAIN -->
 	<filter-mapping>
 		<filter-name>coffee</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<welcome-file-list>
-		<welcome-file>/sample/</welcome-file>
-	</welcome-file-list>
+	<!-- END of COFFEE CONFIGURATION -->
+	
+	<servlet>
+		<servlet-name>branch</servlet-name>
+		<servlet-class>sugar.sample.BranchServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>branch</servlet-name>
+		<url-pattern>/services/branch/*</url-pattern>
+	</servlet-mapping>
 
 </web-app>

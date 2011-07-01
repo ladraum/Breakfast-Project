@@ -32,9 +32,9 @@ public class CoffeeResourceLoaderTest {
 
 	@Test
 	public void retrieveHelloWorldHookResource() throws ClassNotFoundException, IOException {
-		resourceManager.loadRegisteredResources(PACKAGE_NAME);
+		resourceManager.initialize();
 		assertEquals(1, resourceManager.getRegisteredResources().size());
-		CoffeeResource resourceData = resourceManager.get("/hello");
+		CoffeeResource resourceData = resourceManager.getResource("/hello");
 		assertNotNull(resourceData);
 		assertEquals("templates/hello.xhtml", resourceData.getTemplate());
 		assertTrue(resourceData.getClazz().isAssignableFrom(HelloWorld.class));
@@ -42,8 +42,8 @@ public class CoffeeResourceLoaderTest {
 
 	@Test
 	public void retrieveHelloWorldTemplateResource() throws ClassNotFoundException, IOException {
-		resourceManager.loadRegisteredResources(PACKAGE_NAME);
-		CoffeeResource resourceData = resourceManager.get("/hello");
+		resourceManager.initialize();
+		CoffeeResource resourceData = resourceManager.getResource("/hello");
 		assertNotNull(resourceData);
 		String templateName = resourceData.getTemplate();
 		InputStream template = resourceManager.loadTemplate(templateName);
@@ -53,7 +53,7 @@ public class CoffeeResourceLoaderTest {
 	@Test
 	public void assertDoesntRaiseNullPointerExceptionWhileLoadingClasses() throws ClassNotFoundException, IOException {
 		try {
-			resourceManager.loadRegisteredResources(PACKAGE_NAME);
+			resourceManager.initialize();
 		} catch (NullPointerException e) {
 			fail("It shouldn't raise NullPointerException.");
 		}

@@ -24,11 +24,11 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import coffee.components.IComponentFactory;
+import coffee.core.components.IComponentFactory;
 
 public class CoffeeContext {
 
-	public static final String COFFEE_COMPONENTS_TEMPLATE_VALUE = "coffee.components.template.value.";
+	public static final String COFFEE_COMPONENTS_TEMPLATE_VALUE = "coffee.core.components.template.value.";
 	private static Map<String, IComponentFactory> registeredNamespaces = new HashMap<String, IComponentFactory>();
 	
 	private Map<String, Object> properties;
@@ -36,6 +36,7 @@ public class CoffeeContext {
 	private HttpServletResponse response;
 	private ServletContext servletContext;
 	private String path;
+	private int idComponentCounter = 0;
 
 	public CoffeeContext() {
 		properties = new HashMap<String, Object>();
@@ -141,5 +142,17 @@ public class CoffeeContext {
  */
 	public String getContextPath() {
 		return request.getContextPath();
+	}
+
+	public void setIdComponentCounter(int idComponentCounter) {
+		this.idComponentCounter = idComponentCounter;
+	}
+	
+	public int getIdComponentCounter() {
+		return idComponentCounter;
+	}
+	
+	public String getNextId() {
+		return "component" + (idComponentCounter++);
 	}
 }

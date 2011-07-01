@@ -15,6 +15,8 @@
  */
 package coffee.core;
 
+import java.io.IOException;
+
 /**
  * Generic implementation for Web Resource. It is a robust abstract implementation
  * of {@link IResource} interface. It was designed to helps software developer handling
@@ -27,25 +29,17 @@ public abstract class Resource implements IResource {
 	protected CoffeeContext context;
 
 	@Override
-	public void configure(CoffeeContext context) {
+	public void configure(CoffeeContext context) throws IOException {
 		setContext(context);
 		setCharacterEncoding("UTF-8");
-		setContentType("applicationx/xhtml+xml");
+		setContentType("text/html");
 		configure();
 	}
 
 /**
  * @see IResource#configure(CoffeeContext)
  */
-	public abstract void configure();
-
-	public CoffeeContext getContext() {
-		return context;
-	}
-
-	public void setContext(CoffeeContext context) {
-		this.context  = context;
-	}
+	public abstract void configure() throws IOException;
 
 /**
  * Changes the context navigation. Whenever you chance the coffee context navigation
@@ -62,20 +56,21 @@ public abstract class Resource implements IResource {
  * @return
  */
 	public String getResourceURI() {
-		StringBuffer buffer = new StringBuffer();
-
-		WebResource resource = getClass().getAnnotation(WebResource.class);
-
-		buffer
-			.append(context.getContextPath())
-			.append(resource.uri());
-		return buffer.toString();
+		return context.getRelativePath();
 	}
-	
+
+	public CoffeeContext getContext() {
+		return context;
+	}
+
+	public void setContext(CoffeeContext context) {
+		this.context  = context;
+	}
+
 	public void setCharacterEncoding(String encoding) {
 		getContext().getResponse().setCharacterEncoding(encoding);
 	}
-	
+
 	public void setContentType(String contentType) {
 		getContext().getResponse().setContentType(contentType);
 	}

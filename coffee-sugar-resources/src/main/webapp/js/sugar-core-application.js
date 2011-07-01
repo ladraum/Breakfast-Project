@@ -64,6 +64,17 @@
 
     Application.prototype.onValidationSuccess = function () {
     };
+    
+    Application.prototype.submit = function () {
+    	try {
+    		if (this.validate() && this.widgets.length> 0) {
+	    		var form = this.widgets[0].target.form;
+	    		form.submit();
+	    	}
+    	} catch (e) {
+            alert("ERROR: " + e);
+    	}
+    };
 
 /* -------------------------------------------------------------------------
  * Validator

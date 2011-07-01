@@ -1,12 +1,11 @@
 package coffee.sample;
 
 import coffee.core.Resource;
-import coffee.core.WebResource;
-import coffee.util.Util;
+import coffee.core.annotation.WebResource;
+import coffee.core.util.Util;
 
-@WebResource(uri="/sample/",
-			 pattern="/sample/*",
-			 template="templates/sample.xhtml")
+@WebResource( pattern="/sample/*",
+			  template="templates/sample.xhtml")
 
 public class SampleResource extends Resource {
 

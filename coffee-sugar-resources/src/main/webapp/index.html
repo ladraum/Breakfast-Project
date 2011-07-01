@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="applicationx/xhtml+xml; charset=UTF-8" />
+		<title>Coffee-Sugar Component set</title>
+		<script src="js/sugar-core.js" ></script>
+		<script src="js/sugar-core-components.js" ></script>
+		<script src="js/sugar-core-application.js" ></script>
+		<link href="css/sugar-components.css" media="screen" rel="stylesheet" type="text/css" ></link>
+		
+		<style>
+		
+			* { margin: 0px; padding: 0px; }
+			
+			.Breadcrumbs {
+				font-size: 14px;
+				margin: 5px auto 0px;
+				text-align: left;
+				list-style: none;
+				overflow: auto;
+			}
+			.Breadcrumbs li {
+				float: left;
+				padding-left: 20px;
+			}
+			
+			form.Application .Error ul {}
+			form.Application .Error ul li {
+				margin-left: 30px;
+				padding: 5px 15px;
+				list-style-image: url(imgs/status-error.png);
+				list-style-position: 0px 2px;
+			}
+			
+			#form {
+				min-width:735px;
+				width:95%;
+				margin: 0px auto;
+			}
+			
+			
+			#menu { padding-right: 10px;
+				float: left; }
+			
+			#menu ul {
+				min-width: 200px;
+				width: 20%;
+				height: 600px;
+				border-right: 2px solid #cdcdcd;}
+				
+			form.Application div.BlueBox {
+				/* background: #5689cc; */ /* AD2424 */
+				background-color: #5689cc;
+				background-image: -moz-linear-gradient(top, #6699dc, #5689cc); 
+				background-image: -ms-linear-gradient(top, #6699dc, #5689cc); 
+				background-image: -o-linear-gradient(top, #6699dc, #5689cc); 
+				background-image: -webkit-gradient(linear, left top, left bottom, from(#6699dc), to(#5689cc)); 
+				background-image: -webkit-linear-gradient(top, #6699dc, #5689cc); 
+				background-image: linear-gradient(top, #6699dc, #5689cc);
+
+				border-bottom-color: #cdcdcd;
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#6699dc', EndColorStr='#5689cc');
+				height: 60px;
+				text-transform: uppercase;
+				padding: 10px 20px 10px 20px;
+				text-align: right;
+
+			    -webkit-transition: background 500ms ease-in 200ms; /* property duration timing-function delay */
+			    -moz-transition: background 500ms ease-in 200ms;
+			    -o-transition: background 500ms ease-in 200ms;
+			    transition: background 500ms ease-in 200ms;
+			}
+			
+			form.Application div.BlueBox:hover {
+				background-color: #6699dc;
+				background-image: -moz-linear-gradient(top, #76a9ec, #6699dc); 
+				background-image: -ms-linear-gradient(top, #76a9ec, #6699dc); 
+				background-image: -o-linear-gradient(top, #76a9ec, #6699dc); 
+				background-image: -webkit-gradient(linear, left top, left bottom, from(#76a9ec), to(#6699dc)); 
+				background-image: -webkit-linear-gradient(top, #76a9ec, #6699dc); 
+				background-image: linear-gradient(top, #76a9ec, #6699dc);
+		    }
+			
+			form.Application div.BlueBox a {
+				text-decoration: none;
+				color: white; }
+			form.Application div.BlueBox a:hover { 
+				text-decoration: underline;
+				cursor: pointer;}
+			
+			form.Application div.BlueBox * {
+				color: white;
+    			font-family: Museo Sans;
+			}
+			
+			form.Application div.BlueBox .small {font-size: 1em;}
+			form.Application div.BlueBox .medium {font-size: 1.5em;}
+			form.Application div.BlueBox .huge {font-size: 2em;}
+			
+			form.StartPage div.Grid {
+				border: none;
+			}
+			
+			form.StartPage div.Grid div.GridBody ul {
+				border: none;
+			}
+			
+			form.StartPage div.Grid ul.GridHeader {
+				background: transparent;
+				padding-bottom: 5px;
+			}
+			
+			form.StartPage div.Grid ul.GridHeader li {
+				border-left: 1px solid transparent;
+				font-family: Museo Sans;
+				text-transform: uppercase;
+				font-weight: normal;
+			}
+			
+			form.StartPage div.Grid ul.GridHeader li img { visibility: hidden; }
+			
+			form.StartPage div.Grid ul.GridHeader li,
+			form.StartPage div.Grid div.GridBody ul li {
+			    padding: 10px 10px 8px;
+		    }
+		    form.StartPage div.Grid div.GridBody ul {
+		    	height: 40px;
+		    }
+			form.StartPage div.Grid div.GridBody ul li {
+				font-family: sans-serif;
+			    padding: 12px 10px 10px;
+			}
+			
+			form.Application div.Panel { padding-top: 50px; }
+			
+			form.Application div.Panel div.PanelBar { border-bottom: 1px solid #898989; }
+
+			body { 
+				background: white  url(extra/background.jpg) 0px -40px  repeat-x;
+			}
+
+			.Body {
+/* 				width: 90%; min-width: 1000px; */
+				width: 1000px;
+				margin: 10px auto; 
+				overflow: hidden;
+			}
+
+			.Body .Breadcrumbs {
+				margin-bottom: 20px;
+				width: 1000px;
+			}
+
+			.Header {
+				background: white;
+				display: block;
+    			border-bottom: 3px solid #069;
+    			height: 40px;
+			}
+
+			.Header ul {
+				display: block;
+				list-style: none;
+				margin: 0px auto;
+				overflow: hidden;
+				width: 1000px;
+			}
+
+			.Header ul li {
+				display: block;
+				float: left;
+			    font-family: Museo Sans;
+			    font-size: 16px;
+			    padding: 10px 0px 10px 30px;
+			    text-transform: uppercase;
+			}
+
+			.Header ul li a {
+			    color: black;
+				text-decoration: none;
+			}
+
+			.Header ul li a:hover {
+				color: #06a;
+				text-decoration: underline;
+			}
+
+		</style>
+	</head>
+
+	<body>
+	
+		<div class="Header">
+			<ul>
+				<li><a href="#inicio">Inicio</a></li>
+				<li><a href="#treinamento">Treinamento</a></li>
+				<li><a href="#biblioteca">Biblioteca</a></li>
+				<li><a href="#milhagem">Milhagem</a></li>
+				<li><a href="#comunidade">Comunidade</a></li>
+				<li><a href="#calendario">Calendário</a></li>
+				<li><a href="#administracao">Administração</a></li>
+			</ul>
+		</div>
+		<div class="Body">
+		
+		<ul class="Breadcrumbs">
+			<li><a href="#inicio">Inicio</a></li>
+			<li>Meu Dashboard</li>
+		</ul>
+		
+	    	<form class="Application StartPage" id="form" method="post" action="">
+
+				<div class="Portlet" >
+		    		<div class="Box"
+		    			style="background: #434343; width: 60%; height: 260px;">
+		    			<iframe src="http://player.vimeo.com/video/22532573?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=0"
+							width="601" height="443" frameborder="0" style="position: relative; top: -80px; left: -15px"></iframe>
+		    		</div>
+
+		    		<div class="Box BlueBox" style="width: 33%;">
+		    				<a href="#"><span class="huge">Calendário</span>
+		    				<span class="medium">de treinamentos</span></a>
+		    		</div>
+
+		    		<div class="Box BlueBox" style="width: 33%;">
+		    				<a href="#"><span class="huge">Meus treinamentos</span>
+		    				<span class="medium">em andamento</span></a>
+		    		</div>
+
+		    		<div class="Box BlueBox" style="width: 33%;">
+		    				<a href="#"><span class="medium">Catalogo de</span>
+		    				<span class="huge">Treinamentos</span></a>
+		    		</div>
+	    		</div>
+
+	    		<div class="Portlet Box" style="width: 32%;">
+		    		<div class="Panel Box" style="width: 100%;">
+		    			<div class="PanelBar"><span>Em andamento</span></div>
+		    			<div id="grid1" class="Grid" style="clear: both;"></div>
+		    			
+		    			<script>
+		    			
+			    			var grid = new Grid({
+					    		id: "grid1",
+					    		height: "200px",
+					    		columns: [
+				    		          { id: "codigo", label: "Código", width: "50px" },
+				    		          { id: "nome", label: "Nome", width: "150px" },
+			    		          ],
+					    		data: [
+										{ codigo: "1201", nome: "Treinamento SSIM", termino:"20/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1204", nome: "Treinamento AMS", termino:"23/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1201", nome: "Treinamento SSIM", termino:"20/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1204", nome: "Treinamento AMS", termino:"23/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1201", nome: "Treinamento SSIM", termino:"20/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1204", nome: "Treinamento AMS", termino:"23/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1201", nome: "Treinamento SSIM", termino:"20/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1204", nome: "Treinamento AMS", termino:"23/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+				    		       ]
+			    			});
+		    			
+		    			</script>
+		    		</div>
+	    		</div>
+	    		
+	    		<div class="Portlet Box" style="width: 32%;">
+		    		<div class="Panel Box" style="width: 100%;">
+		    			<div class="PanelBar"><span>Blah</span></div>
+		    			<div id="grid2" class="Grid" style="clear: both;"></div>
+		    			
+		    			<script>
+		    			
+			    			var grid = new Grid({
+					    		id: "grid2",
+					    		columns: [
+				    		          { id: "edit", value: "imgs/action-edit.png", type: "image" },
+				    		          { id: "codigo", label: "Código", width: "50px" },
+				    		          { id: "nome", label: "Nome", width: "150px" },
+			    		          ],
+					    		data: [
+										{ codigo: "1201", nome: "Treinamento SSIM", termino:"20/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1203", nome: "Treinamento EPM", termino:"22/06/2011" },
+										{ codigo: "1204", nome: "Treinamento AMS", termino:"23/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+				    		       ]
+			    			});
+		    			
+		    			</script>
+		    		</div>
+	    		</div>
+	    		
+	    		<div class="Portlet Box" style="width: 32%;">
+		    		<div class="Panel Box" style="width: 100%;">
+		    			<div class="PanelBar"><span>Outro Portlet</span></div>
+		    			<div id="grid3" class="Grid" style="clear: both;"></div>
+		    			
+		    			<script>
+		    			
+			    			var grid = new Grid({
+					    		id: "grid3",
+					    		columns: [
+				    		          { id: "edit", value: "imgs/action-edit.png", type: "image" },
+				    		          { id: "codigo", label: "Código", width: "50px" },
+				    		          { id: "nome", label: "Nome", width: "150px" },
+				    		          { id: "termino", label: "Término em" },
+			    		          ],
+					    		data: [
+										{ codigo: "1201", nome: "Treinamento SSIM", termino:"20/06/2011" },
+										{ codigo: "1202", nome: "Treinamento TFS", termino:"21/06/2011" },
+										{ codigo: "1203", nome: "Treinamento EPM", termino:"22/06/2011" },
+										{ codigo: "1204", nome: "Treinamento AMS", termino:"23/06/2011" },
+				    		       ]
+			    			});
+		    			
+		    			</script>
+		    		</div>
+	    		</div>
+
+	    	</form>
+		</div>
+	</body>
+</html>
+

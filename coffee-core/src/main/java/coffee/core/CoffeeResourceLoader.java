@@ -19,7 +19,7 @@
  */
 package coffee.core;
 
-import static coffee.util.Util.isNull;
+import static coffee.core.util.Util.isNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +35,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import coffee.components.IComponent;
-import coffee.util.Util;
+import coffee.core.annotation.WebResource;
+import coffee.core.components.IComponent;
+import coffee.core.util.Util;
 
 public class CoffeeResourceLoader {
 
@@ -44,8 +45,10 @@ public class CoffeeResourceLoader {
 
 	private Map<String, CoffeeResource> registeredResources;
 	private HashMap<String, IComponent> resourceCache;
+	
 	private Object resourceLoader;
 	private boolean cacheEnabled;
+	private Boolean populated = false;
 
 	private CoffeeResourceLoader() {
 		registeredResources = new HashMap<String,CoffeeResource>();
@@ -91,22 +94,28 @@ public class CoffeeResourceLoader {
  * @throws ClassNotFoundException
  * @throws IOException
  */
-	public void loadRegisteredResources(String packageName)
-            throws ClassNotFoundException, IOException 
+	public void initialize() throws IOException
     {
-        ClassLoader classLoader = getClassLoader();
-        assert classLoader != null;
-        String path = packageName.replace('.', '/');
-        Enumeration<URL> resources = classLoader.getResources(path);
-        while (resources.hasMoreElements()) {
-            URL resource = resources.nextElement();
-            String fileName = resource.getFile();
-            String fileNameDecoded = URLDecoder.decode(fileName, "UTF-8");
-            File file = new File(fileNameDecoded);
-            if (!file.exists())
-            		continue;
-            this.registeredResources.putAll(findClasses(file, packageName));
-        }
+		synchronized (populated) {
+			if (populated)
+				return;
+
+			ClassLoader classLoader = getClassLoader();
+			String path = "";
+
+			Enumeration<URL> resources = classLoader.getResources(path);
+			while (resources.hasMoreElements()) {
+				URL resource = resources.nextElement();
+				String fileName = resource.getFile();
+				String fileNameDecoded = URLDecoder.decode(fileName, "UTF-8");
+				File file = new File(fileNameDecoded);
+				if (!file.exists())
+					continue;
+				findClasses(file, path);
+			}
+
+			populated = true;
+		}
     }
 
 /**
@@ -117,14 +126,12 @@ public class CoffeeResourceLoader {
  * @return The classes
  * @throws ClassNotFoundException
  */
-	public Map<String,CoffeeResource> findClasses(File directory, String packageName) {
-		Map<String,CoffeeResource> classes = new HashMap<String,CoffeeResource>();
+	public void findClasses(File directory, String packageName) {
         for (File file : directory.listFiles()) {
         	String fileName = file.getName();
             if (file.isDirectory()) {
                 assert !fileName.contains(".");
-            	classes.putAll(findClasses(file, packageName + "." + fileName));
-            	return classes;
+            	findClasses(file, packageName + "." + fileName);
             }
 
             if (!fileName.endsWith(".class") || fileName.contains("$"))
@@ -136,22 +143,27 @@ public class CoffeeResourceLoader {
 						normalizeClassName(className));
 
 				WebResource webresource = clazz.getAnnotation(WebResource.class);
-				if (isNull(webresource))
-					continue;
+				if (!isNull(webresource))
+					registerResource(webresource, clazz);
 
-				String pattern = webresource.pattern();
-				CoffeeResource data = new CoffeeResource();
-				data.setClazz(clazz);
-				data.setPattern(pattern);
-				data.setTemplate(webresource.template());
-
-				classes.put(pattern, data);
 			} catch (ClassNotFoundException e) {
+				continue;
+			} catch (NoClassDefFoundError e) {
 				continue;
 			}
         }
-        return classes;
     }
+
+	public void registerResource(WebResource webresource, Class<?> clazz) {
+		String pattern = webresource.pattern();
+
+		CoffeeResource data = new CoffeeResource();
+		data.setClazz(clazz);
+		data.setPattern(pattern);
+		data.setTemplate(webresource.template());
+		
+		registeredResources.put(pattern, data);
+	}
 
 /**
  * Retrieves a className with a normalized notation (ex. no (back)slashes or dots at
@@ -192,43 +204,6 @@ public class CoffeeResourceLoader {
 		}
 	}
 
-	public ClassLoader getClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
-
-	public void unloadRegisteredResources() {
-		this.registeredResources.clear();
-	}
-	
-	public static CoffeeResourceLoader getInstance() {
-		if (isNull(instance))
-			instance = new CoffeeResourceLoader();
-		return instance;
-	}
-
-	public void setResources(Map<String, CoffeeResource> resources) {
-		this.registeredResources = resources;
-	}
-
-	public Map<String, CoffeeResource> getResources() {
-		return registeredResources;
-	}
-
-	public CoffeeResource get(String uri) {
-		for (String resourcePattern : registeredResources.keySet())
-			if (uri.matches(resourcePattern))
-				return registeredResources.get(resourcePattern);
-		return null;
-	}
-
-	public void setRegisteredResources(Map<String, CoffeeResource> registeredResources) {
-		this.registeredResources = registeredResources;
-	}
-
-	public Map<String, CoffeeResource> getRegisteredResources() {
-		return registeredResources;
-	}
-
 /**
  * Retrieves dynamically a resource as Stream from a resourceName.
  * 
@@ -248,6 +223,30 @@ public class CoffeeResourceLoader {
 		}
 	}
 
+	public CoffeeResource getResource(String uri) {
+		for (String resourcePattern : registeredResources.keySet())
+			if (uri.matches(resourcePattern))
+				return registeredResources.get(resourcePattern);
+		return null;
+	}
+
+	public ClassLoader getClassLoader() {
+		return Thread.currentThread().getContextClassLoader();
+	}
+
+	public void unloadRegisteredResources() {
+		this.registeredResources.clear();
+		populated = false;
+	}
+
+	public void setRegisteredResources(Map<String, CoffeeResource> registeredResources) {
+		this.registeredResources = registeredResources;
+	}
+
+	public Map<String, CoffeeResource> getRegisteredResources() {
+		return registeredResources;
+	}
+
 	public void setCurrentResourceLoader(Object resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}
@@ -262,5 +261,12 @@ public class CoffeeResourceLoader {
 
 	public boolean isCacheEnabled() {
 		return cacheEnabled;
+	}
+	
+	public static CoffeeResourceLoader getInstance() {
+		if (isNull(instance))
+			instance = new CoffeeResourceLoader();
+		//XXX: instance.initialize();
+		return instance;
 	}
 }
