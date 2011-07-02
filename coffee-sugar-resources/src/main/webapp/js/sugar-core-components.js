@@ -19,10 +19,10 @@ var MSG_INVALID_ID_ARGUMENT   = "Invalid 'id' argument: Unknown object.";
 var MSG_INVALID_ARGUMENT      = "Invalid argument: ";
 var MSG_NOT_IMPLEMENTED_YET   = "Not implemented yet: ";
 
-var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
-		"ondblclick", "onfocus", "onmousedown", "onmousemove",
-		"onmouseout", "onmouseover", "onmouseup", "onkeydown",
-		"onkeypress", "onkeyup", "onselect"];
+var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
+		"dblclick", "focus", "mousedown", "mousemove",
+		"mouseout", "mouseover", "mouseup", "keydown",
+		"keypress", "keyup", "select"];
 
 /* -------------------------------------------------------------------------
  * Component
@@ -67,12 +67,12 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
 
     Component.prototype.show = function () {
 		this.target.style.display = "";
-    	this.dispatch ("onshow");
+    	this.dispatch ("show");
     };
 
     Component.prototype.hide = function () {
 		this.target.style.display = "none";
-		this.dispatch ("onhide");
+		this.dispatch ("hide");
     };
 
     Component.prototype.setWidth = function (width) {
@@ -86,15 +86,15 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
     	this.target.style.height = height;
     	this.height = height;
     };
-    
+
     // FIXME: Make me render myself!
     Component.prototype.render = function () {
     	throw MSG_NOT_IMPLEMENTED_YET + "render method.";
     };
-    
+
     Component.prototype.event = function (eventName, callback) {
     	if (VALID_WIDGET_DOM_EVENTS.contains(eventName))
-    		DomUtil.addEventListener(this, eventName, callback);
+    		DomUtil.addEventListener(this.target, eventName, callback);
     	else
     		Component.prototype.event.apply(this, [eventName, callback]);
     };
@@ -180,7 +180,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
     	this.label = label;
     };
 
-    Panel.prototype.onToogleMode = function (event) {
+    Panel.prototype.onToogleMode = function () {
     	this.setCollapsed(!this.collapsed);
     };
 
@@ -189,7 +189,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
     	var className = mode ? "Collapsed" : "Elapsed";
     	this.target.className = "Panel " + className;
     	
-    	var eventName = this.collapsed ? "oncollapse" : "onelapse";
+    	var eventName = this.collapsed ? "collapse" : "elapse";
     	this.dispatch (eventName);
     };
 
@@ -232,7 +232,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
 					this.getMethod("onCloseClick"));
 	    	
 	    	if (args.onclose) {
-	    		this.event ("onclose", function(){
+	    		this.event ("close", function(){
 	    			eval(args.onclose);
 	    		});
 	    	}
@@ -307,7 +307,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
 
     DialogPanel.prototype.onCloseClick = function (){
     	this.hide();
-    	this.dispatch ("onclose");
+    	this.dispatch ("close");
     };
 
 /* -------------------------------------------------------------------------
@@ -531,7 +531,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
 
     Grid.prototype.onRowClick = function (event, row) {
     	this.selectRow(row);
-    	this.dispatch ("onrowclick");
+    	this.dispatch ("rowclick", row);
     };
 
     // FIXME: Make me select more than one row at once
@@ -654,26 +654,28 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
  * ------------------------------------------------------------------------- */
     GridImageColumn = Class(GridColumn);
     GridImageColumn.prototype.configure = function (args) {
-    	if (args.header)
-    		this.private ("onclick", unescape(args.header.onclick));
+    	if (args.header) {
+    		var onclick = unescape(args.header.click);
+    		this.event ("iconclick", function (data, index) {
+    			eval(onclick);
+    		});
+    	}
     };
 
     GridImageColumn.prototype.renderContent = function () {
 		var img = document.createElement("img");
 		img.setAttribute("src", this.value);
-		
-		if (this.onclick)
-			DomUtil.addEventListener(img, "click",
-					this.getMethod(
-						"onImageClick",
-						this.parent.value,
-						this.parent.index));
+
+		DomUtil.addEventListener(img, "click",
+				this.getMethod("onImageClick"));
 
 		return img;
     };
 
-    GridImageColumn.prototype.onImageClick = function (event, data, index){
-    	eval(this.onclick);
+    GridImageColumn.prototype.onImageClick = function (event){
+    	var data = this.parent.value,
+			index = this.parent.index;
+    	this.dispatch("iconclick", data, index);
     };
 
 /* -------------------------------------------------------------------------
@@ -747,9 +749,9 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
     		rootNode = this.children[item.parentId];
 
     	var child = rootNode.appendChild ( item );
-    	child.event ("onelapse", this.getMethod("requestChildrenService"));
-    	child.event ("onselect", this.getMethod("onSelectChild"));
-    	child.event ("onunselect", this.getMethod("onUnselectChild"));
+    	child.event ("elapse", this.getMethod("requestChildrenService"));
+    	child.event ("select", this.getMethod("onSelectChild"));
+    	child.event ("unselect", this.getMethod("onUnselectChild"));
     	child.setSelected(this.selectedChildren.contains(child.id));
     	this.children[item.id] = child;
     };
@@ -761,13 +763,13 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
     Tree.prototype.onSelectChild = function (child) {
     	this.selectedChildren.append(child.id);
     	this.flush();
-    	this.dispatch ("onselectchild", child);
+    	this.dispatch ("selectchild", child);
     };
 
     Tree.prototype.onUnselectChild = function (child) {
     	this.selectedChildren.remove(child.id);
     	this.flush();
-    	this.dispatch ("onunselectchild", child);
+    	this.dispatch ("unselectchild", child);
     };
 
     Tree.prototype.flush = function () {
@@ -792,7 +794,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
     	}
 
     	var http = new HttpRequest(this.service + "?id=" + child.id);
-    	http.event("onready", handleResponse);
+    	http.event("ready", handleResponse);
     	http.send();
     };
 
@@ -854,7 +856,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
     };
 
     TreeItem.prototype.onCheckboxClick = function () {
-    	var eventName = this.isSelected() ? "onselect" : "onunselect";
+    	var eventName = this.isSelected() ? "select" : "unselect";
     	this.dispatch (eventName, this);
     };
 
@@ -923,7 +925,7 @@ var VALID_WIDGET_DOM_EVENTS = ["onblur", "onchange", "onclick",
 
     	this.collapsed = !this.collapsed;
 
-    	var eventName = this.collapsed ? "oncollapse" : "onelapse";
+    	var eventName = this.collapsed ? "collapse" : "elapse";
     	this.dispatch (eventName, this);
 
     	this.flush();

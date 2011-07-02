@@ -8,8 +8,8 @@
  */
 	function onApplicationLoad() {
 		application.addValidator(new DaSilvaValidator());
-		application.branchesTree.event("onselectchild", updateBranchLabels);
-		application.branchesTree.event("onunselectchild", updateBranchLabels);
+		application.branchesTree.event("selectchild", updateBranchLabels);
+		application.branchesTree.event("unselectchild", updateBranchLabels);
 	}
 
 /**
@@ -48,6 +48,7 @@
  * Dispatched on dependents' grid newDependent button click
  */
 	function onNewDependentsBtnClick() {
+		cleanDependentsForm();
 		application.dependentsDialog.show();
 		application.depName.focus();
 	}

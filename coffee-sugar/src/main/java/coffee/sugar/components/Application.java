@@ -16,12 +16,12 @@ import coffee.sugar.Component;
 public class Application extends Component {
 
 	private String template;
-	private String onload;
+	private String load;
 	private String httpMethod;
 
 	@Override
 	public void configure() {
-		if (!Util.isNull(onload))
+		if (!Util.isNull(load))
 			defineOnLoadMethod();
 	}
 
@@ -59,16 +59,16 @@ public class Application extends Component {
 	}
 
 	public void defineOnLoadMethod() {
-		getCoffeeContext().put(ApplicationResources.SUGAR_JS_ON_LOAD_EVENT, onload);
+		getCoffeeContext().put(ApplicationResources.SUGAR_JS_ON_LOAD_EVENT, load);
 	}
 
 	public void setTemplate(String template) {
 		this.template = template;
 	}
 
-	public void setOnload(String onLoad) {
+	public void setLoad(String onLoad) {
 		getCoffeeContext().put(ApplicationResources.SUGAR_JS_ON_LOAD_EVENT, onLoad);
-		this.onload = onLoad;
+		this.load = onLoad;
 	}
 
 	public void setHttpMethod(String httpMethod) {

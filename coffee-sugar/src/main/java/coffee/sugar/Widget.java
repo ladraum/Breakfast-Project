@@ -8,10 +8,10 @@ public abstract class Widget extends Component {
 	
 	// Events
 	private final static String[] events = new String[] {
-		"onblur", "onchange", "onclick",
-		"ondblclick", "onfocus", "onmousedown", "onmousemove",
-		"onmouseout", "onmouseover", "onmouseup", "onkeydown",
-		"onkeypress", "onkeyup", "onselect" };
+		"blur", "change", "click",
+		"dblclick", "focus", "mousedown", "mousemove",
+		"mouseout", "mouseover", "mouseup", "keydown",
+		"keypress", "keyup", "select" };
 
 	private String label;
 	private boolean required = false;
@@ -24,6 +24,7 @@ public abstract class Widget extends Component {
 		for (String attribute : this.attributes.keySet())
 			if (isValidEvent(attribute))
 				buffer
+					.append("on")
 					.append(attribute)
 					.append("=\"")
 					.append(getAttributeValue(attribute))

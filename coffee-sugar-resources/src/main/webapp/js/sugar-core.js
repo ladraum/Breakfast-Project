@@ -59,27 +59,33 @@
 	Class.prototype.wrapMethod = function () {
         var self = this;
 		var method = self[arguments[0]];
-		var methodArguments = arguments;
-		return function (event) {
-			methodArguments[0] = event;
-			return method.apply(self, methodArguments);
+		var args = new Array();
+		for (var i=1; i<arguments.length; i++)
+			args.append(arguments[i]);
+		return function () {
+			for (var i=0; i<arguments.length; i++)
+				args.append(arguments[i]);
+			return method.apply(self, args);
 		};
     };
 
     Class.prototype.event = function (eventName, callback) {
-        //DomUtil.addEventListener(this.target, eventName, callback);
     	if (!this.events[eventName])
     		this.events[eventName] = new Array();
     	this.events[eventName].append(callback);
     };
-    
-    Class.prototype.dispatch = function (eventName, args) {
+
+    Class.prototype.dispatch = function (eventName) {
     	var events = this.events[eventName];
     	if (!events)
     		return;
-    	
+
+    	var args = new Array();
+    	for (var i=1; i<arguments.length; i++)
+			args.append(arguments[i]);
+
     	for (var i=0; i<events.size(); i++) {
-    		events[i](args);
+    		events[i].apply(window, args);
     	}
     };
 
@@ -109,15 +115,16 @@
 
 	HttpRequest.prototype.send = function (content) {
 		var oXHttp = this.xmlHttp;
-		this.xmlHttp.onreadystatechange = this.getMethod("responseHandler", oXHttp);
+		this.xmlHttp.onreadystatechange = this.getMethod("responseHandler");
 		this.xmlHttp.send( content );
 	};
 	
-	HttpRequest.prototype.responseHandler = function (event, http) {
+	HttpRequest.prototype.responseHandler = function () {
+		var http = this.xmlHttp;
 		if (http.status != "200" && http.status != 200)
 			throw "HTTP ERROR: " + http.statusText;
 
-		var state = ["onuninitialized", "onloading", "onloaded", "oninteractive", "onready"];
+		var state = ["uninitialized", "loading", "loaded", "interactive", "ready"];
 
 		this.dispatch(
 		   state[http.readyState],
