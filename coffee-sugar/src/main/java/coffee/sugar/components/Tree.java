@@ -28,14 +28,24 @@ public class Tree extends Widget {
 					.append(getAttributeValue("label"))
 				.append("\",id:\"")
 					.append(getId())
-				.append("\",service:\"")
-					.append(getAttributeValue("service"))
-				.append("\",children:")
+				.append("\",service:")
+					.append(getService())
+				.append(",children:")
 					.append(getChildrenAsJSON())
 				.append(",selectedChildren:")
 					.append(getSelectedChildrenAsJSON())
 			.append("}))</script></div>");
 
+	}
+
+	private StringBuilder getService() {
+		String value = getAttributeValue("service");
+		if (Util.isNull(value))
+			return null;
+		return new StringBuilder()
+				.append("\"")
+				.append(value)
+				.append("\"");
 	}
 
 	public StringBuilder getSelectedChildrenAsJSON(){

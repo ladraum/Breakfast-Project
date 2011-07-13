@@ -21,9 +21,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import coffee.core.CoffeeResourceLoader;
 import coffee.core.components.AbstractComponent;
 import coffee.core.components.IComponent;
+import coffee.core.loader.CoffeeResourceLoader;
 
 public class Template extends AbstractComponent {
 	

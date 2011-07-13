@@ -2,10 +2,12 @@ package sugar.sample;
 
 import java.util.ArrayList;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import coffee.core.servlet.JSONServlet;
 
+@WebServlet("/services/branch")
 public class BranchServlet extends JSONServlet {
 
 	/* (non-Javadoc)
@@ -20,8 +22,8 @@ public class BranchServlet extends JSONServlet {
 			int currentId = i * 10;
 
 			Branch branch = new Branch();
-			branch.setId(currentId);
-			branch.setParentId(id);
+			branch.setId((long)currentId);
+			branch.setParentId((long)id);
 			branch.setLabel("Unidade " + currentId);
 			branch.setHasChildren(false);
 

@@ -1,25 +1,6 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-	 version="2.4">
-
-	<display-name>coffee-sample</display-name>
-
-	<!-- COFFEE CONFIGURATION -->
-	<filter>
-		<filter-name>coffee</filter-name>
-		<filter-class>coffee.core.filter.CoffeeFilter</filter-class>
-	</filter>
-
-	<!-- IT WILL HANDLE ONLY HOOKS, OTHER RESOURCES ARE HANDLED BY DEFAULT CHAIN -->
-	<filter-mapping>
-		<filter-name>coffee</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<welcome-file-list>
-		<welcome-file>/sample/</welcome-file>
-	</welcome-file-list>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
 
 </web-app>

@@ -35,12 +35,15 @@ public abstract class Component extends AbstractComponent {
 	private String paddingRight;
 	private String paddingBottom;
 	private String border;
+	private String skin;
 	private boolean visible = true;
 	private boolean floating;
 
 	public void renderChildren() throws IOException {
-		for (IComponent child : getChildren())
+		for (IComponent child : getChildren()) {
+			child.setCoffeeContext(getCoffeeContext());
 			child.render();
+		}
 	}
 
 	public void addChild(IComponent component, int index) {
@@ -323,5 +326,15 @@ public abstract class Component extends AbstractComponent {
 
 	public String getLabel() {
 		return label;
+	}
+
+	public void setSkin(String skin) {
+		this.skin = skin;
+	}
+
+	public String getSkin() {
+		if (Util.isNull(skin))
+			skin = "";
+		return skin;
 	}
 }

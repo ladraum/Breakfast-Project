@@ -11,8 +11,7 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import coffee.core.CoffeeResourceLoader;
-import coffee.core.CoffeeResource;
+import coffee.core.loader.CoffeeResourceLoader;
 import coffee.sample.HelloWorld;
 
 

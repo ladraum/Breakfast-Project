@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-var MSG_INVALID_ARGUMENT_LIST = "Invalid arguments list. Components excepts at least \"{id: ''}\" as argument.";
+var MSG_INVALID_ARGUMENT_LIST = "Invalid arguments list. Components excepts at least \"{id: 'someId'}\" as argument.";
 var MSG_INVALID_ID_ARGUMENT   = "Invalid 'id' argument: Unknown object.";
 var MSG_INVALID_ARGUMENT      = "Invalid argument: ";
 var MSG_NOT_IMPLEMENTED_YET   = "Not implemented yet: ";
@@ -23,6 +23,56 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 		"dblclick", "focus", "mousedown", "mousemove",
 		"mouseout", "mouseover", "mouseup", "keydown",
 		"keypress", "keyup", "select"];
+
+/* -------------------------------------------------------------------------
+ * TextMask
+ * ------------------------------------------------------------------------- */
+	TextMask = {
+
+        MASKS_FILTER: {
+            '9':/\d/,
+            'Z':/[a-zA-Z]/,
+            '#':/./
+        },
+
+        MASKS_ALIASES: {
+            date: "99/99/9999",
+            date_us: "`[0-1]`9/`[0-3]`9/9999",
+            date_br: "`[0-3]`9/`[0-1]`9/9999",
+            phone: "99 9999-9999",
+            cpf: "999.999.999-99"
+        },
+        
+        register: function (alias, mask) {
+        	TextMask.MASKS_ALIASES[alias] = mask;
+        },
+
+        applyRule: function (rule, value) {
+            var re = (rule.indexOf("`") < 0) ? TextMask.MASKS_FILTER[rule]
+                        : new RegExp("^" + rule.replace(/`/g,""));
+            if (!re) return rule
+            var matched = value.match(re);
+            return !matched ? null : matched[0];
+        },
+
+        applyMask: function (value, mask) {
+            mask = TextMask.MASKS_ALIASES[mask] || mask;
+            var buffer = "";
+            for (var i=0, j=0; i<mask.length && i<value.length;) {
+                var k = (mask[j] == '`') ? mask.indexOf("`",j+1) + 1 : j + 1;
+                var sstr = value.substring(i);
+                var rule = mask.substring(j,k);
+                var result = TextMask.applyRule(rule, sstr);
+                if (!result)
+                    return buffer;
+                buffer+= result;
+                i+= result.length;
+                j = k;
+            }
+            return buffer;
+        }
+
+    };
 
 /* -------------------------------------------------------------------------
  * Component
@@ -34,7 +84,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
         if (!args)
             throw MSG_INVALID_ARGUMENT_LIST;
         this.private("label",  args.label || "");
-        this.private("childs", new Array());
+        this.private("children", new Array());
         this.private("id",     args.id);
         this.private("target", document.getElementById(args.id));
         this.configure(args);
@@ -49,18 +99,18 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
             var child = arguments[i];
             if (!child instanceof Component)
                 throw MSG_INVALID_ARGUMENT
-                	+ ": childs must be instance of Component class.";
-            this.childs.append(child);
+                	+ ": child must be instance of Component class.";
+            this.children.append(child);
             if (child.id)
                 this[child.id] = child;
         }
     };
-    
+
     Component.prototype.setVisible = function (visible) {
     	if (visible) this.show();
     	else this.hide();
     };
-    
+
     Component.prototype.isVisible = function (){
     	return this.target.style.display != "none";
     };
@@ -107,6 +157,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 
     Widget.prototype.configure = function (args) {
         this.private("required", args.required);
+        delete this.addChild;
     };
 
     Widget.prototype.getValue = function () {
@@ -130,13 +181,25 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- * BOX Implementation
+ * BOX
  * ------------------------------------------------------------------------- */
     Box = Class(Component);
     Box.prototype.toString = function () { return "Box Object"; };
 
 /* -------------------------------------------------------------------------
- * FormItem Implementation
+ * Text
+ * ------------------------------------------------------------------------- */
+    Text = Class(Component);
+    Text.prototype.configure = function (args) {
+    	this.private ("label", args.label);
+    }
+    Text.prototype.setLabel = function (label) {
+    	this.target.innerHTML = label;
+    	this.label = label;
+    };
+
+/* -------------------------------------------------------------------------
+ * FormItem
  * ------------------------------------------------------------------------- */
     FormItem = Class(Component);
     FormItem.prototype.toString = function () { return "FormItem Object"; };
@@ -152,7 +215,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- * Panel Implementation
+ * Panel
  * ------------------------------------------------------------------------- */
     Panel = Class(Component);
     Panel.prototype.toString = function () { return "Panel Object"; };
@@ -205,7 +268,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- * DialogPanel Implementation
+ * DialogPanel
  * ------------------------------------------------------------------------- */
     DialogPanel = Class(Panel);
     DialogPanel.prototype.toString = function () { return "DialogPanel Object"; };
@@ -230,13 +293,13 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     		this.private("closeButton", closeBtn);
 	    	DomUtil.addEventListener(closeBtn, "click",
 					this.getMethod("onCloseClick"));
-	    	
+
 	    	if (args.onclose) {
 	    		this.event ("close", function(){
 	    			eval(args.onclose);
 	    		});
 	    	}
-	    	
+
     	}
 
     	if (this.visible && this.modal)
@@ -271,8 +334,9 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	bg.style.top = "0px";
     	bg.style.left = "0px";
     	bg.style.zIndex = "500";
-    	bg.style.background = "#000000";
+    	bg.style.background = "#cdcdcd";
 
+    	DomUtil.applyOpacity (bg, 0);
     	DomUtil.fadeIn(bg, 70);
 
     	document.getElementsByTagName("body")[0].appendChild(bg);
@@ -311,13 +375,27 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- * TextInput Implementation
+ * TextInput
  * ------------------------------------------------------------------------- */
     TextInput = Class(Widget);
     TextInput.prototype.toString = function () { return "TextInput Object"; };
 
+    TextInput.prototype.configure = function (args) {
+    	this.private("mask", args.mask);
+    	DomUtil.addEventListener(this.target, "keyup",
+				this.getMethod("onKeyUp"));
+    };
+
+    TextInput.prototype.onKeyUp = function (){
+    	if (!this.mask)
+    		return;
+
+        var str = this.target.value;
+        this.target.value = TextMask.applyMask(str, this.mask);
+    };
+
 /* -------------------------------------------------------------------------
- * Checkbox Implementation
+ * Checkbox
  * ------------------------------------------------------------------------- */
     Checkbox = Class(Widget);
     Checkbox.prototype.toString = function () { return "Checkbox Object"; };
@@ -333,13 +411,13 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- *  Textarea Implementation
+ *  Textarea
  * ------------------------------------------------------------------------- */
     Textarea = Class(TextInput);
     Textarea.prototype.toString = function () { return "Textarea Object"; };
 
 /* -------------------------------------------------------------------------
- *  Button Implementation
+ *  Button
  * ------------------------------------------------------------------------- */
     Button = Class(Component);
     Button.prototype.toString = function () { return "Button Object"; };
@@ -354,19 +432,19 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- *  ComboBox Implementation
+ *  ComboBox
  * ------------------------------------------------------------------------- */
     ComboBox = Class(Widget);
     ComboBox.prototype.toString = function () { return "ComboBox Object"; };
 
 /* -------------------------------------------------------------------------
- *  Radiobox Implementation
+ *  Radiobox
  * ------------------------------------------------------------------------- */
     Radiobox = Class(Checkbox);
     Radiobox.prototype.toString = function () { return "Radiobox Object"; };
 
 /* -------------------------------------------------------------------------
- *  Radiobox Implementation
+ *  RadioGroup 
  * ------------------------------------------------------------------------- */
     RadioGroup = Class(Widget);
     RadioGroup.prototype.toString = function () { return "RadioGroup Object"; };
@@ -402,7 +480,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- *  Grid Implementation
+ *  Grid
  * ------------------------------------------------------------------------- */
     Grid = Class(Widget);
     Grid.prototype.toString = function () { return "Grid Object"; };
@@ -781,7 +859,9 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
     Tree.prototype.requestChildrenService = function (child) {
-    	if (!child.hasChildren || child.children.size() > 0)
+    	if (!this.service
+		||  !child.hasChildren
+		||   child.children.size() > 0)
     		return;
 
     	var treeitem = this;
@@ -799,7 +879,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- *  Tree
+ *  TreeItem
  * ------------------------------------------------------------------------- */
     TreeItem = Class();
     TreeItem.prototype.constructor = function (args) {

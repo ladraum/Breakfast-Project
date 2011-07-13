@@ -19,6 +19,7 @@
 
 	<properties>
 		<coffee.version>${project.version}</coffee.version>
+		<javaee.version>6.0</javaee.version>
 	</properties>
 	
 	<modules>

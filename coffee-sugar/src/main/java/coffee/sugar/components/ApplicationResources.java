@@ -59,7 +59,7 @@ public class ApplicationResources extends Component {
 	public void renderScriptInclude (PrintWriter writer, String url) {
 		writer.append("<script src=\"");
 
-		if (url.charAt(0) != '/')
+		if (url.matches("^[a-z0-9].*") && !url.contains(":"))
 			writer.append(getCoffeeContext().getContextPath()).append('/');
 
 		writer.append(url).append("\" type=\"text/javascript\"></script>");

@@ -73,5 +73,15 @@ public abstract class Widget extends Component {
 			return getId();
 		return label;
 	}
+	
+	@Override
+	public String getId() {
+		String id = super.getId();
+		if (Util.isNull(id)) {
+			id = getCoffeeContext().getNextId();
+			super.setId(id);
+		}
+		return id;
+	}
 
 }

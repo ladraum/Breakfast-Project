@@ -26,8 +26,10 @@ public class TemplateComponentFactory extends AbstractComponentFactory {
 
 	@Override
 	public void configure() {
-		register("var", Var.class);
 		register("define", Define.class);
+		register("foreach", Foreach.class);
+		register("include", Template.class);
+		register("var", Var.class);
 		register("template", Template.class);
 	}
 

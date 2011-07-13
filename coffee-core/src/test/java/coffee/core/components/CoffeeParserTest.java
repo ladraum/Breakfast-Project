@@ -13,8 +13,7 @@ import org.xml.sax.SAXException;
 
 import coffee.core.CoffeeParser;
 import coffee.core.CoffeeResource;
-import coffee.core.CoffeeResourceLoader;
-import coffee.core.components.IComponent;
+import coffee.core.loader.CoffeeResourceLoader;
 
 public class CoffeeParserTest {
 

@@ -72,34 +72,6 @@
 					<downloadSources>true</downloadSources>
 				</configuration>
 			</plugin>
-            <!--plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>maven-minify-plugin</artifactId>
-                <version>1.3.3</version>
-                <executions>
-                    <execution>
-                        <id>default-minify</id>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <cssSourceDir>css</cssSourceDir>
-                            <cssSourceIncludes>
-                                <cssSourceInclude>**</cssSourceInclude>
-                            </cssSourceIncludes>
-                            <cssFinalFile>sugar.css</cssFinalFile>
-                            <jsSourceDir>js</jsSourceDir>
-                            <jsSourceIncludes>
-                                <jsSourceInclude>sugar-core-application.js</jsSourceInclude>
-                                <jsSourceInclude>sugar-core-components.js</jsSourceInclude>
-                                <jsSourceInclude>sugar-core.js</jsSourceInclude>
-                            </jsSourceIncludes>
-                            <jsFinalFile>sugar.js</jsFinalFile>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-              </plugin-->
 		</plugins>
 	</build>
 </project>

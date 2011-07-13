@@ -54,7 +54,7 @@ public class Dialog extends Panel {
 	public String getHeight() {
 		String height = super.getHeight();
 		if (StringUtil.isEmpty(height)) {
-			height = "150px";
+			height = "80px";
 			super.setHeight(height);
 		}
 		return height;

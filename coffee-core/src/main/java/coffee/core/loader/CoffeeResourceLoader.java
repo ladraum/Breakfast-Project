@@ -2,6 +2,8 @@
  * Based on Tornado's way of registering web resources.
  * Thanks to Richard Kuesters from his suggestion that makes my job easier.
  * Thanks to Victor Tatai from his collaboration at http://snippets.dzone.com/posts/show/4831
+ * Thanks to Bill Burke from his his enlightening content at 
+ *   http://bill.burkecentral.com/2008/01/14/scanning-java-annotations-at-runtime/
  * 
  * Copyright 2011 Miere Liniel Teixeira
  *
@@ -17,24 +19,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package coffee.core;
+package coffee.core.loader;
 
 import static coffee.core.util.Util.isNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import coffee.core.CoffeeContext;
+import coffee.core.CoffeeParser;
+import coffee.core.CoffeeResource;
 import coffee.core.annotation.WebResource;
 import coffee.core.components.IComponent;
 import coffee.core.util.Util;
@@ -46,9 +47,11 @@ public class CoffeeResourceLoader {
 	private Map<String, CoffeeResource> registeredResources;
 	private HashMap<String, IComponent> resourceCache;
 	
-	private Object resourceLoader;
+	private ServletContext servletContext;
 	private boolean cacheEnabled;
 	private Boolean populated = false;
+
+	private AbstractSystemResourceLoader[] resourceLoaders;
 
 	private CoffeeResourceLoader() {
 		registeredResources = new HashMap<String,CoffeeResource>();
@@ -84,7 +87,7 @@ public class CoffeeResourceLoader {
 
 		return application;
 	}
-	
+
 /**
  * Scans all classes accessible from the context class loader which belong to the given package and sub-packages.
  * Based on this Victor's snippet code at http://snippets.dzone.com/posts/show/4831.
@@ -94,86 +97,39 @@ public class CoffeeResourceLoader {
  * @throws ClassNotFoundException
  * @throws IOException
  */
-	public void initialize() throws IOException
+	public void initialize() throws IOException, ClassNotFoundException
     {
 		synchronized (populated) {
-			if (populated)
-				return;
+			if (populated) return;
 
-			ClassLoader classLoader = getClassLoader();
-			String path = "";
+			resourceLoaders = new AbstractSystemResourceLoader[] {
+				new ServletContextResourceLoader(getServletContext(), getClassLoader()),
+				new ClassPathResourceLoader(getClassLoader())
+			};
 
-			Enumeration<URL> resources = classLoader.getResources(path);
-			while (resources.hasMoreElements()) {
-				URL resource = resources.nextElement();
-				String fileName = resource.getFile();
-				String fileNameDecoded = URLDecoder.decode(fileName, "UTF-8");
-				File file = new File(fileNameDecoded);
-				if (!file.exists())
-					continue;
-				findClasses(file, path);
+			for (AbstractSystemResourceLoader loader : resourceLoaders) {
+				for (Class<?> clazz : loader.retrieveAvailableClasses())
+					registerResource(clazz);
 			}
 
 			populated = true;
 		}
     }
 
-/**
- * Recursive method used to find all classes in a given directory and subdirs.
- *
- * @param directory   The base directory
- * @param packageName The package name for classes found inside the base directory
- * @return The classes
- * @throws ClassNotFoundException
- */
-	public void findClasses(File directory, String packageName) {
-        for (File file : directory.listFiles()) {
-        	String fileName = file.getName();
-            if (file.isDirectory()) {
-                assert !fileName.contains(".");
-            	findClasses(file, packageName + "." + fileName);
-            }
-
-            if (!fileName.endsWith(".class") || fileName.contains("$"))
-            	continue;
-
-			try {
-				String className = packageName + '.' + fileName.substring(0, fileName.length() - 6);
-				Class<?> clazz = getClassLoader().loadClass(
-						normalizeClassName(className));
-
-				WebResource webresource = clazz.getAnnotation(WebResource.class);
-				if (!isNull(webresource))
-					registerResource(webresource, clazz);
-
-			} catch (ClassNotFoundException e) {
-				continue;
-			} catch (NoClassDefFoundError e) {
-				continue;
-			}
-        }
-    }
-
-	public void registerResource(WebResource webresource, Class<?> clazz) {
+	public void registerResource(Class<?> clazz) {
+		WebResource webresource = clazz.getAnnotation(WebResource.class);
+		if (Util.isNull(webresource))
+			return;
+		
 		String pattern = webresource.pattern();
 
 		CoffeeResource data = new CoffeeResource();
 		data.setClazz(clazz);
 		data.setPattern(pattern);
 		data.setTemplate(webresource.template());
-		
-		registeredResources.put(pattern, data);
-	}
 
-/**
- * Retrieves a className with a normalized notation (ex. no (back)slashes or dots at
- * beginning, etc.).
- * 
- * @param className
- * @return
- */
-	public String normalizeClassName(String className) {
-		return className.replaceFirst("^\\.+", "");
+		System.out.println("Registered Resource: " + clazz.getCanonicalName());
+		registeredResources.put(pattern, data);
 	}
 
 /**
@@ -185,8 +141,7 @@ public class CoffeeResourceLoader {
  * @throws IOException
  */
 	public InputStream loadTemplate(String path) throws IOException {
-		InputStream stream = getResourceAsStream(path);
-		return stream;
+		return getResourceAsStream(path);
 	}
 
 /**
@@ -209,18 +164,30 @@ public class CoffeeResourceLoader {
  * 
  * @param resourceName
  * @return
+ * @throws IOException 
  */
-	public InputStream getResourceAsStream(String resourceName) {
-		try {
-			Object loader = getCurrentResourceLoader();
-			if (isNull(loader))
-				loader = getClassLoader();
-			Method getResourceMethod = loader.getClass().getMethod("getResourceAsStream", String.class);
-			return (InputStream)getResourceMethod.invoke(loader, resourceName);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+	public InputStream getResourceAsStream(String resourceName) throws IOException {
+		InputStream stream = null;
+		resourceName = resourceName.replaceAll("^/+", "");
+
+		for (AbstractSystemResourceLoader loader: resourceLoaders)
+			for (String url : loader.retrieveAvailableResources()){
+				String parsedUrl = url.replaceAll("^/+", "");
+				if (parsedUrl.equals(resourceName)) {
+					stream = openStream(parsedUrl);
+					if (!Util.isNull(stream))
+						return stream;
+				}
+			}
+
+		return stream;
+	}
+
+	public InputStream openStream(String url) {
+		InputStream stream = getClassLoader().getResourceAsStream(url);
+		if (Util.isNull(stream) && !Util.isNull(getServletContext()))
+			stream = getServletContext().getResourceAsStream("/" + url);
+		return stream;
 	}
 
 	public CoffeeResource getResource(String uri) {
@@ -247,14 +214,6 @@ public class CoffeeResourceLoader {
 		return registeredResources;
 	}
 
-	public void setCurrentResourceLoader(Object resourceLoader) {
-		this.resourceLoader = resourceLoader;
-	}
-
-	public Object getCurrentResourceLoader() {
-		return resourceLoader;
-	}
-
 	public void setCacheEnabled(boolean cacheEnabled) {
 		this.cacheEnabled = cacheEnabled;
 	}
@@ -266,7 +225,22 @@ public class CoffeeResourceLoader {
 	public static CoffeeResourceLoader getInstance() {
 		if (isNull(instance))
 			instance = new CoffeeResourceLoader();
-		//XXX: instance.initialize();
 		return instance;
+	}
+
+	public void setResourceLoader(ServletContext resourceLoader) {
+		this.servletContext = resourceLoader;
+	}
+
+	public ServletContext getResourceLoader() {
+		return servletContext;
+	}
+
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+
+	public ServletContext getServletContext() {
+		return servletContext;
 	}
 }

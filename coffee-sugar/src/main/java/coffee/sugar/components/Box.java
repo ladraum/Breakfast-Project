@@ -78,10 +78,10 @@ public class Box extends Component {
 	public void setDirection(String direction) {
 		this.direction = direction;
 	}
-	
+
 	public String getDirection() {
 		if (Util.isNull(direction))
-			return DIRECTION_HORIZONTAL;
+			return DIRECTION_VERTICAL;
 		return direction;
 	}
 

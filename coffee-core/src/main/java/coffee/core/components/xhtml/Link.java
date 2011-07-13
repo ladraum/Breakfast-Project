@@ -23,13 +23,13 @@ public class Link extends XHtmlComponent {
 	public void configure() {
 		setComponentName("link");
 	}
-	
+
 	public String getHref() {
 		return href;
 	}
 
 	public void setHref(String value) {
-		if (value.charAt(0) != '/')
+		if (value.matches("^[a-z0-9].*") && !value.contains(":"))
 			value = getCoffeeContext().getContextPath() + "/" + value;
 		this.href = value;
 	}

@@ -7,9 +7,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import coffee.core.CoffeeContext;
-import coffee.core.CoffeeResourceLoader;
 import coffee.core.components.IComponent;
 import coffee.core.components.xhtml.XHtmlComponent;
+import coffee.core.loader.CoffeeResourceLoader;
 import coffee.core.util.Util;
 import coffee.sugar.Component;
 
@@ -35,15 +35,17 @@ public class Application extends Component {
 		try {
 			CoffeeContext context = getCoffeeContext();
 
-			XHtmlComponent form = new XHtmlComponent("form");
-			form.setAttribute("class", "Application");
-			form.setAttribute("method", getHttpMethod());
-			form.setAttribute("onsubmit", "return application.getMethod('validate')(event);");
-			form.setAttribute("style", getStyleDefinition());
-			form.setCoffeeContext(getCoffeeContext());
-			form.setChildren(getChildren());
+			IComponent form = new XHtmlComponent("form")
+				//.setAttribute("id", "applicationForm")
+				.setAttribute("class", "Application")
+				.setAttribute("method", getHttpMethod())
+				.setAttribute("onsubmit", "return application.getMethod('validate')(event);")
+				.setAttribute("style", getStyleDefinition())
+				.setCoffeeContext(getCoffeeContext())
+				.setChildren(getChildren());
+
 			context.put(ApplicationBody.SUGAR_APPLICATION_BODY, form);
-			
+
 			CoffeeResourceLoader resourceLoader = CoffeeResourceLoader.getInstance();
 			IComponent compiledTemplate = resourceLoader.compile(template, context);
 			compiledTemplate.render();

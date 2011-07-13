@@ -20,6 +20,7 @@ public class FormItem extends Box {
 	private String label;
 	private String labelWidth;
 	private String labelAlign;
+	private String direction;
 
 	@Override
 	public void configure() {
@@ -35,7 +36,8 @@ public class FormItem extends Box {
 		ArrayList<IComponent> customChildren = new ArrayList<IComponent>();
 		
 		if (!Util.isNull(getLabel())) {
-			Label labelComponent = new Label();
+			Text labelComponent = new Text();
+			labelComponent.setClassName("Label");
 
 			if (!Util.isNull(getLabelAlign()))
 				labelComponent.setAlign(getLabelAlign());
@@ -86,6 +88,10 @@ public class FormItem extends Box {
 	public void setRequired(String required) {
 		this.required = Boolean.parseBoolean(required);
 	}
+	
+	public void setRequired (Boolean required) {
+		this.required = required;
+	}
 
 	public boolean isRequired() {
 		return required;
@@ -101,7 +107,7 @@ public class FormItem extends Box {
 
 	public String getLabelWidth() {
 		if (Util.isNull(labelWidth))
-			return "200px";
+			return "120px";
 		return labelWidth;
 	}
 
@@ -111,7 +117,17 @@ public class FormItem extends Box {
 
 	public String getLabelAlign() {
 		if (Util.isNull(labelAlign))
-			return LABEL_ALIGN_RIGHT;
+			return LABEL_ALIGN_LEFT;
 		return labelAlign;
+	}
+	
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public String getDirection() {
+		if (Util.isNull(direction))
+			return DIRECTION_HORIZONTAL;
+		return direction;
 	}
 }

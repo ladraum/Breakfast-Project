@@ -7,7 +7,7 @@ import coffee.core.util.Util;
 import coffee.sugar.Component;
 
 
-public class Label extends Component {
+public class Text extends Component {
 	
 	private String className;
 
@@ -17,7 +17,7 @@ public class Label extends Component {
 	@Override
 	public void render() throws IOException {
 		PrintWriter writer = getWriter();
-		writer.append("<span class=\"").append(getClassName()).append("\" ")
+		writer.append("<span class=\"").append(getClassName()).append(' ').append(getSkin()).append("\" ")
 					.append("style=\"").append(getStyleDefinition()).append("\" ");
 
 		if (!Util.isNull(getId()))
@@ -38,7 +38,7 @@ public class Label extends Component {
 
 	public String getClassName() {
 		if (Util.isNull(className))
-			return "Label";
+			className = "";
 		return className;
 	}
 

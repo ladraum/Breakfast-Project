@@ -8,11 +8,15 @@ form.Application {
 }
 
 form.Application * {
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 14px;
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	font-size: 13px;
 	margin: 0px;
 	padding: 0px;
 	overflow: hidden;
+}
+
+form.Application *:focus {
+	/* outline: 1px solid #898989; */
 }
 
 /* Box Container */
@@ -42,64 +46,119 @@ div.FormItem span.required {
 }
 
 /* Widgets */
-form.Application button,
-form.Application input[type="BUTTON"],
-form.Application input[type="SUBMIT"],
-form.Application select,
-form.Application textarea,
-form.Application input[type="TEXT"] {
+button,
+input[type="BUTTON"],
+input[type="SUBMIT"],
+select,
+textarea,
+input[type="TEXT"],
+input[type="PASSWORD"] {
 	border: 1px solid #cdcdcd;
 	border-right-color: #898989;
 	border-bottom-color: #898989;
 	font-family: sans-serif;
 }
 
-form.Application input[type="CHECKBOX"] {
+input[type="CHECKBOX"] {
 	position: relative;
 	top: 5px;
 }
 
-form.Application select {
+select {
 	background-image: url(../imgs/combobox-bg.png);
 	background-repeat: repeat-x;
 	padding: 5px;
 }
 
-form.Application textarea,
-form.Application input[type="TEXT"] {
-	background-color: white;
+textarea,
+input[type="TEXT"],
+input[type="PASSWORD"] {
+	background: #fcfeff; /* Old browsers */
+	background: -moz-linear-gradient(top, #fcfeff 0%, #ffffff 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfeff), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fcfeff 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #fcfeff 0%,#ffffff 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #fcfeff 0%,#ffffff 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfeff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #fcfeff 0%,#ffffff 100%); /* W3C */
+
 	padding: 5px;
 	font-family: monospace;
 }
 
-form.Application button,
-form.Application input[type="BUTTON"],
-form.Application input[type="SUBMIT"] {
-	background-image: url(../imgs/combobox-bg.png);
-	background-repeat: repeat-x;
+textarea:hover,
+input[type="TEXT"]:hover,
+select:hover {
+/* 	border-color: #0066AA; */
+	outline: 1px solid #898989;
+}
+
+textarea:focus,
+input[type="TEXT"]:focus,
+input[type="PASSWORD"]:focus {
+/* 	border-color: #0066AA; */
+	outline: 1px solid #898989;
+}
+
+button,
+input[type="BUTTON"],
+input[type="SUBMIT"] {
+	/*background-image: url(../imgs/combobox-bg.png);
+	background-repeat: repeat-x;*/
+
+	/* background */
+	background: #eeeeee; /* Old browsers */
+	background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* W3C */
+
+	border: 1px solid #898998;
 	border-radius: 5px;
 	padding: 5px 8px;
 	min-width: 80px;
 }
 
+button:focus,
+button:hover,
+input[type="BUTTON"]:focus,
+input[type="BUTTON"]:hover,
+input[type="SUBMIT"]:focus,
+input[type="SUBMIT"]:hover {
+	background: #f2f5f6; /* Old browsers */
+	background: -moz-linear-gradient(top, #f2f5f6 0%, #e3eaed 37%, #a5c1ce 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#e3eaed), color-stop(100%,#a5c1ce)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#a5c1ce',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* W3C */
+
+	border: 1px solid #0066AA;
+	outline: none;
+}
+
 /* Button Bar */
-form.Application ul.ButtonBar {
+ul.ButtonBar {
 	list-style: none;
 	overflow: hidden;
 	padding: 5px 10px 5px;
 }
 
-form.Application ul.ButtonBar li {
+ul.ButtonBar li {
 	display: inline;
 	margin-left: 10px;
 }
 
 /* Grid */
-form.Application div.Grid {
+div.Grid {
     background: white;
     border: 1px solid #cecece;
 }
-form.Application div.Grid ul {
+div.Grid ul {
     border-bottom: 1px dotted #dedede;
     display: block;
     height: 29px;
@@ -107,97 +166,100 @@ form.Application div.Grid ul {
     overflow: hidden;
     width: 100%;
 }
-form.Application div.Grid ul li {
+div.Grid ul li {
     border-left: 1px solid transparent;
     display: block;
     float: left;
     overflow: hidden;
     padding: 6px 6px 4px;
 }
-form.Application div.Grid ul.highlighted {
+div.Grid ul.highlighted {
     background: #f7f7f7;
 }
-form.Application div.Grid ul.selected {
+div.Grid ul.selected {
     background: #cdf;
     font-weight: bolder;
 }
-form.Application div.Grid ul:hover {
+div.Grid ul:hover {
     background: #def;
     cursor: pointer;
 }
-form.Application div.Grid ul.GridHeader {
+div.Grid ul.GridHeader {
     background: url(../imgs/grid-header-bg.png) repeat-x;
     border-bottom: 1px solid #dedede;
 }
-form.Application div.Grid ul.GridHeader li {
+div.Grid ul.GridHeader li {
     border-left: 1px solid #dedede;
     font-family: sans-serif;
     font-weight: bold;
     padding-top: 6px;
 }
-form.Application div.Grid div.GridBody {
+div.Grid div.GridBody {
 	overflow: auto;
 	overflow-x: hidden;
 }
-form.Application div.Grid div.GridBody ul li {
+div.Grid div.GridBody ul li {
 	font-family: monospace;
 }
 
 /* RadioGroup */
-form.Application ul.RadioGroup {
+ul.RadioGroup {
 	list-style: none;
 	padding-top: 2px;
 }
-form.Application ul.RadioGroup input[type="RADIO"] {
+ul.RadioGroup input[type="RADIO"] {
 	margin-right: 5px;
 	position: relative;
 	top: 1px;
 }
-form.Application ul.RadioGroup label {
+ul.RadioGroup label {
 	padding-right: 10px;
 }
 
 /* Panel */
-form.Application div.Panel {
-    padding: 67px 10px 40px 10px;
-    position: relative;
-}
-form.Application div.Panel div.PanelBar {
-    border-bottom: 1px solid #ababab;
+div.Panel {
+    border-top: 1px solid #dedede;
+	margin: 15px 0px;
+    padding: 10px 0px 0px 0px;
+    position: relative; }
+div.Panel div.Container {
+	margin: 0px 0px 0px 160px;
+	padding: 15px 10px 10px; }
+div.Panel div.PanelBar {
     color: black;
     display: block;
-    height: 37px;
+    /* height: 37px; */
     left: 0px;
-    overflow: hidden;
+    overflow: visible;
     position: absolute;
-    top: 0px;
-    width: 100%;
-}
-form.Application div.Panel div.PanelBar span {
-    font-size: 18px;
-    left: 24px;
+    top: 20px;
+    width: 150px; }
+div.Panel div.PanelBar span {
+	font-size: 14px;
+    font-weight: bold;
+    left: 10px;
     position: relative;
-    text-transform: uppercase;
-    top: 13px;
+    /* text-transform: uppercase; */
+    top: 3px;
 }
-form.Application div.Collapsed {
+div.Collapsed {
 	height: 0px;
 	padding: 45px 0px 0px;
 }
-form.Application div.Collapsed * { display: none; }
-form.Application div.Collapsed div.PanelBar,
-form.Application div.Collapsed div.PanelBar * { display:block;}
-form.Application div.Collapsed div.PanelBar {
+div.Collapsed * { display: none; }
+div.Collapsed div.PanelBar,
+div.Collapsed div.PanelBar * { display:block;}
+div.Collapsed div.PanelBar {
 	background: url(../imgs/panel-pointer-collapsed.png) 0% 16px no-repeat;
 }
-form.Application div.Elapsed div.PanelBar {
+div.Elapsed div.PanelBar {
 	background: url(../imgs/panel-pointer-elapsed.png) 0% 16px no-repeat;
 }
-form.Application div.Collapsed div.PanelBar:hover,
-form.Application div.Elapsed div.PanelBar:hover { cursor: pointer; }
+div.Collapsed div.PanelBar:hover,
+div.Elapsed div.PanelBar:hover { cursor: pointer; }
 
 /* Dialog Panel */
-form.Application div.DialogPanel {
+div.DialogPanel {
 	background: #fefefe;
 	background-image: url(../imgs/panel-gradient-bg.png);
 	background-position: 100% 100%;
@@ -226,20 +288,23 @@ form.Application div.DialogPanel {
 	box-shadow: 0 0 5px #888;
 
 	padding: 45px 0px 0px;
-	margin-bottom: 15px;
+/* 	margin-bottom: 15px; */
+	margin: 0px;
 	position: relative;
 }
-form.Application div.DialogPanel div.PanelBar {
+div.DialogPanel div.PanelBar {
 	border-bottom: 0px;
+	top: 0px;
+	width: 100%;
 }
-form.Application div.DialogPanel div.PanelBar span {
+div.DialogPanel div.PanelBar span {
 	color: #222;
 	font-size: 14px;
 	font-weight: bold;
 	left: 20px;
 	top: 14px;
 }
-form.Application div.DialogPanel div.PanelBar a.CloseButton {
+div.DialogPanel div.PanelBar a.CloseButton {
 	background: url(../imgs/panel-button-close.gif) no-repeat;
 	border: none;
 	display: block;
@@ -250,65 +315,45 @@ form.Application div.DialogPanel div.PanelBar a.CloseButton {
 	top: 12px;
 	width: 16px;
 }
-form.Application div.DialogPanel div.PanelBar a.CloseButton:hover {
+div.DialogPanel div.PanelBar a.CloseButton:hover {
 /* 	opacity: 0.8; */
 	cursor: pointer;
 	text-decoration: none;
 }
-form.Application div.DialogPanel ul.ButtonBar {
-	position: relative;
+div.DialogPanel div.Container {
+	margin: 0px;
+	padding: 0px; }
+div.DialogPanel ul.ButtonBar {
 	display: block;
+	position: absolute;
+	bottom: 10px;
 }
-
-/* FIXME continuar */
-form.Application div.Modal {
-	
-}
-
-form.Application div.Error{
-	padding: 67px 30px 30px;
-	border-color: red;
-}
-form.Application div.Error div.PanelBar {
-	background-color: #f1f1f1;
-	background-image: -moz-linear-gradient(top, #ffaaaa, #ee9999); 
-	background-image: -ms-linear-gradient(top, #ffaaaa, #ee9999); 
-	background-image: -o-linear-gradient(top, #ffaaaa, #ee9999); 
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffAAaa), to(#ee9999)); 
-	background-image: -webkit-linear-gradient(top, #ffaaaa, #ee9999); 
-	background-image: linear-gradient(top, #ffaaaa, #ee9999);
-	border-color: red;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffAAaa', EndColorStr='#ee9999');
-}
-
-form.Application div.Warning {
-	padding: 67px 30px 30px;
-}
-
-form.Application div.Warning p {
-	text-align: center;
-}
+div.DialogPanel span.AlertMessage {
+	font-size: 13px;
+	display: block;
+	padding: 15px;
+	text-align: center; }
 
 /* Tree Component */
-form.Application div.Tree { overflow: auto; }
-form.Application div.Tree ul { clear: both; display: block; list-style: none; }
-form.Application div.Tree ul li { overflow: hidden; display: block; width: 100%; }
-form.Application div.Tree ul li a { border: 0px; display: block; width: 12px; height: 22px; float: left; text-decoration: none; }
-form.Application div.Tree ul li label {
+div.Tree { overflow: auto; }
+div.Tree ul { clear: both; display: block; list-style: none; }
+div.Tree ul li { overflow: hidden; display: block; width: 100%; }
+div.Tree ul li a { border: 0px; display: block; width: 12px; height: 22px; float: left; text-decoration: none; }
+div.Tree ul li label {
 	float: left;
 	display: block;
 	padding: 5px 0px 5px 10px;
 }
-form.Application div.Tree ul li a.collapsed {
+div.Tree ul li a.collapsed {
 	background-image: url(../imgs/tree-pointer-collapsed.png);
 	background-repeat: no-repeat;
 	background-position: 0px center;
 }
-/*form.Application div.Tree ul li.collapsed ul { display: none; }*/
-form.Application div.Tree ul li a.elapsed {
+/*div.Tree ul li.collapsed ul { display: none; }*/
+div.Tree ul li a.elapsed {
 	background-image: url(../imgs/tree-pointer-elapsed.png);
 	background-repeat: no-repeat;
 	background-position: 0px center;
 }
-form.Application div.Tree ul li label input[type="CHECKBOX"] { top: 1px; margin-right: 5px; }
-form.Application div.Tree ul li ul { margin-left: 30px; }
+div.Tree ul li label input[type="CHECKBOX"] { top: 1px; margin-right: 5px; }
+div.Tree ul li ul { margin-left: 30px; }

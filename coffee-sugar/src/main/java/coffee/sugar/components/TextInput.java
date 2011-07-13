@@ -8,6 +8,10 @@ import coffee.sugar.Widget;
 
 
 public class TextInput extends Widget {
+	
+	private boolean passwordMask = false;
+	private String mask;
+	private String maxLength;
 
 	@Override
 	public void configure() {}
@@ -17,13 +21,21 @@ public class TextInput extends Widget {
 		
 		PrintWriter writer = getWriter();
 		writer
-			.append("<input type=\"text\" name=\"")
-			.append(getId())
+			.append("<input type=\"")
+				.append(getType())
+			.append("\" name=\"")
+				.append(getId())
 			.append("\" id=\"")
-			.append(getId())
+				.append(getId())
 			.append("\" style=\"")
-			.append(getStyleDefinition())
+				.append(getStyleDefinition())
 			.append("\" ");
+
+		if (!Util.isNull(maxLength))
+			writer
+				.append("maxlength=\"")
+				.append(getMaxLength())
+				.append("\" ");
 
 		String value = getAttributeValue("value");
 		if (!Util.isNull(value))
@@ -31,22 +43,50 @@ public class TextInput extends Widget {
 
 		writer
 			.append(getEventsDefinition())
-			.append(" />");
-		
-		writer
+			.append(" />")
 			.append("<script>application.addChild(new TextInput( {required:")
 			.append(isRequired().toString())
 			.append(",label:\"")
 				.append(getLabel())
-			.append("\",");
-		
-		if (!Util.isNull(getId()))
+			.append("\",")
+			.append("id:\"")
+				.append(getId())
+			.append("\"");
+
+		if (!Util.isNull(getMask()))
 			writer
-				.append("id:\"")
-					.append(getId())
-				.append("\",");
-		
+				.append(",mask:\"")
+					.append(getMask())
+				.append("\"");
+
 		writer.append("}));</script>");
 	}
 
+	public void setPasswordMask(String passwordMask) {
+		this.passwordMask = Boolean.parseBoolean(passwordMask);
+	}
+
+	public boolean isPasswordMask() {
+		return passwordMask;
+	}
+
+	public String getType() {
+		return isPasswordMask() ? "password" : "text";
+	}
+
+	public void setMask(String mask) {
+		this.mask = mask;
+	}
+
+	public String getMask() {
+		return mask;
+	}
+
+	public void setMaxLength(String maxlength) {
+		this.maxLength = maxlength;
+	}
+
+	public String getMaxLength() {
+		return maxLength;
+	}
 }

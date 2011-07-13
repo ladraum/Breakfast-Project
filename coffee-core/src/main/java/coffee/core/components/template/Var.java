@@ -34,6 +34,9 @@ public class Var extends AbstractComponent {
 	@Override
 	public void render() throws IOException {
 		Object definedValue = getValue();
+		
+		if (Util.isNull(definedValue))
+			return;
 
 		if (IComponent.class.isInstance(definedValue)) {
 			((IComponent)definedValue).render();

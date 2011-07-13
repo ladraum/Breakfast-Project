@@ -8,13 +8,13 @@ public interface ITreeItem {
 
 	void setLabel(String label);
 
-	Integer getParentId();
+	Long getParentId();
 
-	void setParentId(Integer parentId);
+	void setParentId(Long parentId);
 
-	void setId(Integer id);
+	void setId(Long id);
 
-	Integer getId();
+	Long getId();
 
 	void setChildren(Collection<? extends ITreeItem> children);
 

@@ -22,6 +22,13 @@
 		</license>
 	</licenses>
 
+	<repositories>
+		<repository>
+	  		<id>Java.Net</id>
+	  		<url>http://download.java.net/maven/2/</url>
+	  	</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -30,9 +37,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-servlet_3.0_spec</artifactId>
+			<version>1.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>${javaee.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

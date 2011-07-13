@@ -33,19 +33,19 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import coffee.core.CoffeeContext;
-import coffee.core.ICoffeeContextFactory;
-import coffee.core.CoffeeResourceLoader;
-import coffee.core.CoffeeResource;
 import coffee.core.CoffeeContextFactory;
+import coffee.core.CoffeeResource;
+import coffee.core.ICoffeeContextFactory;
 import coffee.core.IResource;
 import coffee.core.components.IComponent;
+import coffee.core.loader.CoffeeResourceLoader;
 
-
+//@WebFilter("/*")
 public class CoffeeFilter implements Filter {
-	
-	private FilterConfig filterConfig;
-	private ICoffeeContextFactory contextFactory;
-	private CoffeeResourceLoader resourceLoader;
+
+	protected FilterConfig filterConfig;
+	protected ICoffeeContextFactory contextFactory;
+	protected CoffeeResourceLoader resourceLoader;
 
 	@Override
 /**
@@ -62,9 +62,13 @@ public class CoffeeFilter implements Filter {
 
 		try {
 			resourceLoader = CoffeeResourceLoader.getInstance();
+			resourceLoader.setServletContext(getServletContext());
 			resourceLoader.initialize();
 		} catch (IOException e) {
 			throw new ServletException(e.getMessage(), e);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -87,8 +91,7 @@ public class CoffeeFilter implements Filter {
  */
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		resourceLoader.setCurrentResourceLoader(getServletContext());
-		
+
 		try {
 			CoffeeContext coffeeContext = createCoffeeContext(request, response, getServletContext());
 			CoffeeResource resource = resourceLoader.getResource(coffeeContext.getRelativePath());

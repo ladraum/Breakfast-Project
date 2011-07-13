@@ -29,7 +29,7 @@ public class Script extends XHtmlComponent {
 	}
 
 	public void setSrc(String value) {
-		if (value.charAt(0) != '/')
+		if (value.matches("^[a-z0-9].*") && !value.contains(":"))
 			value = getCoffeeContext().getContextPath() + "/" + value;
 		this.src = value;
 	}

@@ -3,6 +3,7 @@ package coffee.sugar.components;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import coffee.core.binding.CoffeeBinder;
 import coffee.core.util.StringUtil;
 import coffee.core.util.Util;
 import coffee.sugar.Component;
@@ -12,6 +13,7 @@ public class Panel extends Component {
 	private boolean collapsed = false;
 	private boolean collapsible = false;
 	private String styleClassNames;
+	private String label;
 
 	@Override
 	public void configure() {
@@ -43,8 +45,10 @@ public class Panel extends Component {
 		writer
 			.append("</span></div><div id=\"")
 				.append(getId()).append("Container")
-			.append("\" style=\"overflow: auto; height: 100%;\">");
+			.append("\" class=\"Container\" style=\"overflow: auto; height: 100%;\">");
+
 		renderChildren();
+
 		writer.append("</div></div>");
 	}
 	
@@ -88,6 +92,14 @@ public class Panel extends Component {
 
 	public String getStyleClassNames() {
 		return styleClassNames;
+	}
+	
+	@Override
+	public String getLabel() {
+		String superclassLabel = super.getLabel();
+		if (Util.isNull(label) && !Util.isNull(superclassLabel))
+			label = (String) CoffeeBinder.getValue(superclassLabel, coffeeContext);
+		return label;
 	}
 
 }

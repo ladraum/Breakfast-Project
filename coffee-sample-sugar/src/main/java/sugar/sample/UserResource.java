@@ -4,7 +4,7 @@ import coffee.core.XHtmlResource;
 import coffee.core.annotation.WebResource;
 
 @WebResource(
-		pattern="/usuario/([0-9]+)",
+		pattern="/usuario/.*",
 		template="templates/User.xhtml" )
 public class UserResource extends XHtmlResource {
 
@@ -18,6 +18,7 @@ public class UserResource extends XHtmlResource {
 
 	@Override
 	public void process() {
+		
 		// try {
 		// h.newSession
 		// u = new UserService ( session )

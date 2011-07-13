@@ -118,17 +118,18 @@
 		this.xmlHttp.onreadystatechange = this.getMethod("responseHandler");
 		this.xmlHttp.send( content );
 	};
-	
+
 	HttpRequest.prototype.responseHandler = function () {
 		var http = this.xmlHttp;
-		if (http.status != "200" && http.status != 200)
+		if (http.readyState ==4 && http.status != "200" && http.status != 200)
 			throw "HTTP ERROR: " + http.statusText;
 
 		var state = ["uninitialized", "loading", "loaded", "interactive", "ready"];
 
 		this.dispatch(
 		   state[http.readyState],
-		   http.responseText);
+		   http.readyState ==4 ? 
+			   http.responseText : null);
 	};
 
 	HttpRequest.prototype.addHttpHeader = function (header, value) {
@@ -197,13 +198,10 @@
     DomUtil = {
 	    applyOpacity: function (target, opacity) {
 	    	if (!target) return;
-
 	    	target.style.opacity = opacity/100;
-	    	if (navigator.appName.indexOf("Netscape")!=-1&&parseInt(navigator.appVersion)>=5)
-	    		target.style.MozOpacity=opacity/100;
-	    	else if (navigator.appName.indexOf("Microsoft")!=-1&&parseInt(navigator.appVersion)>=4)
-	    		target.filters.alpha.opacity=opacity;
+	    	target.style.filter = 'alpha(opacity=' + opacity + ')';
 	    },
+
 	    fadeIn: function (target, opacity, initialOpacity) {
 	    	opacity = opacity || 50;
 	    	var speed = (opacity > 50 ) ? 5 : 10;
@@ -216,14 +214,60 @@
 	    		})(i);
 	    	}
 	    },
+
+	    resizeHeight: function (target, endHeight, startHeight, callback) {
+	    	if (!startHeight && startHeight != 0)
+	    		startHeight = parseInt(DomUtil.getStyle(target, "clientHeight")) || 0;
+	    	endHeight = parseInt(endHeight);
+	    	var range = Math.abs(endHeight - startHeight);
+	    	var speed = range < 500 ? 2 : 1;
+	    	if (startHeight < endHeight)
+	    		for (var i=0; i<=range; i++)
+	    			DomUtil.setHeight(target, (i+startHeight) + "px", i * speed);
+	    	else
+	    		for (var i=range; i>=0; i--)
+	    			DomUtil.setHeight(target,(i+endHeight) + "px", (range - i) * speed);
+	    	if (callback)
+	    		setTimeout(callback, range*speed);
+	    },
+
+	    getWidth: function (target) {
+	    	return target.display.width;
+	    },
+	    setWidth: function (target, width, timeout) {
+	    	timeout = timeout || 1;
+	    	setTimeout(function(){
+	    		target.style.width = width;
+	    	}, timeout);
+	    },
+
+	    getHeight: function (target) {
+	    	return target.display.height;
+	    },
+	    setHeight: function (target, height, timeout) {
+	    	timeout = timeout || 1;
+	    	setTimeout(function(){
+	    		target.style.height = height;
+	    	}, timeout);
+	    },
+
+	    getStyle: function (target,styleProp) {
+	    	if (target.currentStyle)
+	    		var y = target.currentStyle[styleProp];
+	    	else if (window.getComputedStyle)
+	    		var y = document.defaultView.getComputedStyle(target,null).getPropertyValue(styleProp);
+	    	return y;
+	    },
+
 	    getWindowWidth: function (){
 	    	var html = document.getElementsByTagName("html")[0];
-	    	return Math.max(html.scrollWidth, window.innerWidth);
+	    	return Math.max(html.scrollWidth || 0, window.innerWidth || 0);
 	    },
 	    getWindowHeight: function (){
 	    	var html = document.getElementsByTagName("html")[0];
-	    	return Math.max(html.scrollHeight, window.innerHeight);
+	    	return Math.max(html.scrollHeight || 0, window.innerHeight || 0);
 	    },
+
         addEventListener: function(target, eventName, callback) {
 	        if (!target) throw "addEventListener: null target";
 	        if (target.attachEvent){
@@ -233,11 +277,19 @@
 	        }
 	        if (!target.addEventListener)
 		        throw "addEventListener: bad target";
-	        target.addEventListener(eventName,
-                    function(e){
-			            if (!e) e = window.event;
-			            callback(e);
-		            }, null);
+	        target.addEventListener(eventName, callback, null);
+        },
+        removeEventListener: function(target, eventName, callback) {
+	        if (!target) throw "addEventListener: null target";
+	        if (target.detachEvent){
+		        target.removeEventListener = target.detachEvent;
+		        if (eventName.indexOf("on") != 0)
+			        eventName = "on" + eventName;
+	        }
+	        if (!target.removeEventListener)
+		        throw "addEventListener: bad target";
+	        target.removeEventListener(eventName,
+                    callback, null);
         }
     };
 

@@ -31,6 +31,7 @@ import coffee.core.components.IComponentFactory;
 import coffee.core.components.TextNode;
 import coffee.core.components.template.TemplateComponentFactory;
 import coffee.core.components.xhtml.XHtmlComponentFactory;
+import coffee.core.loader.CoffeeResourceLoader;
 import coffee.core.util.Util;
 
 
@@ -104,17 +105,20 @@ public class CoffeeParser extends DefaultHandler {
 		extractTextContentBeforeNesting();
 		
 		try {
+			
+			
 			IComponentFactory factory = CoffeeContext.getComponentFactory(uri);
 			IComponent newComponent = factory.newComponent(localName, context);
 
 			if (Util.isNull(newComponent))
 				throw new SAXException("Can't parse the unknown element '" + localName + "'");
 
-			for (int i=0; i<attributes.getLength();i++)
+			for (int i=0; i<attributes.getLength();i++) {
 				newComponent.setAttribute(
 						attributes.getQName(i),
 						attributes.getValue(i)
 					);
+			}
 
 			if (!Util.isNull(currentComponent)) {
 				newComponent.setParent(currentComponent);
