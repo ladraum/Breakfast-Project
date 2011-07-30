@@ -300,7 +300,7 @@ public abstract class Component extends AbstractComponent {
 		this.visible = visible;
 	}
 
-	public boolean isVisible() {
+	public Boolean isVisible() {
 		return visible;
 	}
 

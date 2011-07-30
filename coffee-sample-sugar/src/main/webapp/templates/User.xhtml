@@ -71,10 +71,10 @@
 
 	</ui:Panel>
 
-	<ui:Panel label="Dependentes" collapsible="true" >
+	<ui:Panel label="Dependentes" >
 		<ui:Grid id="dependents" height="200px" value="#{user.dependents}" >
-				<ui:GridColumn id="edit" value="../imgs/action-edit.png" click="onDependentsEditClick(data, index)" type="image" />
-				<ui:GridColumn id="remove" value="../imgs/action-remove.png" click="onDependentsRemoveClick(data, index)" type="image" />
+				<ui:GridColumn id="edit" value="../imgs/action-edit.png" click="onDependentsEditClick(rowdata, rowindex)" type="image" />
+				<ui:GridColumn id="remove" value="../imgs/action-remove.png" click="onDependentsRemoveClick(rowdata, rowindex)" type="image" />
 				<ui:GridColumn id="name" label="Nome" width="300px" />
 				<ui:GridColumn id="phone" label="Telefone" width="100px" />
 			</ui:Grid>

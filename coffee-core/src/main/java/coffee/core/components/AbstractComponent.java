@@ -171,7 +171,7 @@ public abstract class AbstractComponent implements IComponent {
 		Object object = attributes.get(attr);
 		if (isNull(object))
 			return null;
-		
+
 		Object value = CoffeeBinder.getValue(object.toString(), getCoffeeContext());
 		if (isNull(value))
 			return "";

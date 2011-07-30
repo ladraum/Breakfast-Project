@@ -40,7 +40,6 @@ public class ServletContextResourceLoader extends AbstractSystemResourceLoader {
 			return list;
 
 		for (String path : resourcePaths) {
-// FIXME:			System.out.println("Path in ServletContext: " + path);
 		    try {
 				if (path.endsWith(".jar")) {
 					List<String> jarResources = retrieveResourcesFromJar(path);

@@ -44,6 +44,9 @@ public class CoffeeBinder {
 	}
 
 	public static Object getValue(String expression, CoffeeContext context) {
+		if (Util.isNull(expression))
+			return null;
+
 		Matcher matcher = getMatcher(Evaluator.RE_IS_VALID_SINGLE_RETRIEVABLE_EXPRESSION, expression);
 		if (matcher.find())
 			return evaluateExpressionAsObject(context, matcher);

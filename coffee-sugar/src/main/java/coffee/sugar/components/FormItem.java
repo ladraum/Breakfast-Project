@@ -24,7 +24,6 @@ public class FormItem extends Box {
 
 	@Override
 	public void configure() {
-		setAttribute("class", "FormItem");
 		label = getAttributeValue("label");
 
 		if (!Util.isNull(id))
@@ -37,7 +36,7 @@ public class FormItem extends Box {
 		
 		if (!Util.isNull(getLabel())) {
 			Text labelComponent = new Text();
-			labelComponent.setClassName("Label");
+			labelComponent.setSkin("Label");
 
 			if (!Util.isNull(getLabelAlign()))
 				labelComponent.setAlign(getLabelAlign());
@@ -129,5 +128,13 @@ public class FormItem extends Box {
 		if (Util.isNull(direction))
 			return DIRECTION_HORIZONTAL;
 		return direction;
+	}
+	
+	@Override
+	public String getSkin() {
+		return new StringBuilder()
+			.append("FormItem ")
+			.append(super.getSkin())
+				.toString();
 	}
 }

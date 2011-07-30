@@ -24,7 +24,7 @@ public class Dialog extends Panel {
 	}
 
 	@Override
-	public boolean isVisible() {
+	public Boolean isVisible() {
 		return visible;
 	}
 

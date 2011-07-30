@@ -48,10 +48,24 @@ JSON.stringify = JSON.stringify || function (obj) {
 	}
 };
 
-
 // implement JSON.parse de-serialization
 JSON.parse = JSON.parse || function (str) {
 	if (str === "") str = '""';
 	eval("var p=" + str + ";");
 	return p;
+};
+
+// JSON asynchronous request
+JSON.request = function (url, callback, onloading) {
+	var request = new HttpRequest(url);
+	request.event ("ready", function (response) {
+		var parsedObject = JSON.parse(response);
+		callback(parsedObject);
+	});
+	request.event ("error", function (statusText) {
+		application.showMessage(statusText,"JSON ERROR");
+	});
+	if (onloading)
+		request.event("loading", onloading);
+	request.send();
 };

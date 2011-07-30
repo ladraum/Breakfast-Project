@@ -36,7 +36,7 @@ public class Application extends Component {
 			CoffeeContext context = getCoffeeContext();
 
 			IComponent form = new XHtmlComponent("form")
-				//.setAttribute("id", "applicationForm")
+				.setAttribute("id", "sugarApplicationForm")
 				.setAttribute("class", "Application")
 				.setAttribute("method", getHttpMethod())
 				.setAttribute("onsubmit", "return application.getMethod('validate')(event);")

@@ -137,16 +137,32 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.height = height;
     };
 
+    Component.prototype.setMinWidth = function (width) {
+    	if (!width)return;
+    	this.target.style.minWidth = width;
+    	this.minWidth = width;
+    };
+
+    Component.prototype.setMinHeight = function (height) {
+    	if (!height)return;
+    	this.target.style.minHeight = height;
+    	this.minHeight = height;
+    };
+
     // FIXME: Make me render myself!
     Component.prototype.render = function () {
     	throw MSG_NOT_IMPLEMENTED_YET + "render method.";
     };
 
+    // TODO: Check this event handler.
     Component.prototype.event = function (eventName, callback) {
-    	if (VALID_WIDGET_DOM_EVENTS.contains(eventName))
-    		DomUtil.addEventListener(this.target, eventName, callback);
-    	else
-    		Component.prototype.event.apply(this, [eventName, callback]);
+    	var self = this;
+    	if (VALID_WIDGET_DOM_EVENTS.contains(eventName)
+    			&& !this.events[eventName])
+    		DomUtil.addEventListener(this.target, eventName, function (){
+    			self.dispatch(eventName);
+    		});
+    	Class.prototype.event.apply(this, [eventName, callback]);
     };
 
 /* -------------------------------------------------------------------------
@@ -191,11 +207,11 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  * ------------------------------------------------------------------------- */
     Text = Class(Component);
     Text.prototype.configure = function (args) {
-    	this.private ("label", args.label);
-    }
-    Text.prototype.setLabel = function (label) {
-    	this.target.innerHTML = label;
-    	this.label = label;
+    	this.private ("text", args.text);
+    };
+    Text.prototype.setText = function (text) {
+    	this.target.innerHTML = text;
+    	this.text = text;
     };
 
 /* -------------------------------------------------------------------------
@@ -223,37 +239,21 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     Panel.prototype.configure = function (args){
     	this.private("labelComponent",
     			document.getElementById(args.id+"Label"));
-    	this.private("collapsible", args.collapsible);
 
     	var anchor = document.createElement("a");
     	anchor.setAttribute("name", args.id);
     	this.target.insertBefore(anchor, this.labelComponent.parentNode);
-
-    	if (this.collapsible) {
-    		this.private("collapsed");
-	    	DomUtil.addEventListener(
-	    			this.labelComponent.parentNode, "click",
-					this.getMethod("onToogleMode"));
-	    	this.setCollapsed(args.collapsed ? true : false);
-    	}
     };
+
+    /*Panel.prototype.setHeight = function (height) {
+    	Panel.prototype.setHeight.apply (this, [height]); // super
+    	if (height)
+    		this.target.style.overflow = "auto";
+    };*/
 
     Panel.prototype.setLabel = function (label) {
     	this.labelComponent.innerHTML = label;
     	this.label = label;
-    };
-
-    Panel.prototype.onToogleMode = function () {
-    	this.setCollapsed(!this.collapsed);
-    };
-
-    Panel.prototype.setCollapsed = function (mode) {
-    	this.collapsed = mode;
-    	var className = mode ? "Collapsed" : "Elapsed";
-    	this.target.className = "Panel " + className;
-    	
-    	var eventName = this.collapsed ? "collapse" : "elapse";
-    	this.dispatch (eventName);
     };
 
     Panel.prototype.addChild = function () {
@@ -335,11 +335,13 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	bg.style.left = "0px";
     	bg.style.zIndex = "500";
     	bg.style.background = "#cdcdcd";
-
-    	DomUtil.applyOpacity (bg, 0);
-    	DomUtil.fadeIn(bg, 70);
+    	bg.style.display = "none";
 
     	document.getElementsByTagName("body")[0].appendChild(bg);
+
+    	DomUtil.applyOpacity (bg, 0);
+    	bg.style.display = "";
+    	DomUtil.fade(bg, 0, 70);
     };
 
     DialogPanel.prototype.getLeftPosition = function (args) {
@@ -382,6 +384,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 
     TextInput.prototype.configure = function (args) {
     	this.private("mask", args.mask);
+    	this.private("readonly", args.readonly);
     	DomUtil.addEventListener(this.target, "keyup",
 				this.getMethod("onKeyUp"));
     };
@@ -393,12 +396,28 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
         var str = this.target.value;
         this.target.value = TextMask.applyMask(str, this.mask);
     };
+    
+    TextInput.prototype.setReadonly = function (value) {
+    	var isReadonly = (value && value != "false");
+    	this.target.setAttribute("readonly",
+    			isReadonly ? "readonly": "");
+    	this.readonly = isReadonly;
+    };
 
 /* -------------------------------------------------------------------------
  * Checkbox
  * ------------------------------------------------------------------------- */
     Checkbox = Class(Widget);
     Checkbox.prototype.toString = function () { return "Checkbox Object"; };
+    
+    Checkbox.prototype.configure = function (args) {
+    	this.labelComponent = document.getElementById(this.id);
+    };
+
+    Panel.prototype.setLabel = function (label) {
+    	this.labelComponent.innerHTML = label;
+    	this.label = label;
+    };
 
     Checkbox.prototype.isChecked = function () {
         return (this.target.checked == "checked"
@@ -408,6 +427,10 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     Checkbox.prototype.setChecked = function (value) {
         this.target.checked = (value == "checked" || value == true)
         							? "checked" : "";
+    };
+
+    Checkbox.prototype.getValue = function (value) {
+    	return this.isChecked() ? "on" : "";
     };
 
 /* -------------------------------------------------------------------------
@@ -462,16 +485,16 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
     RadioGroup.prototype.setValue = function (value) {
-        for (var i=0; i<this.childs.length; i++) {
-            var child = this.childs[i];
+        for (var i=0; i<this.children.length; i++) {
+            var child = this.children[i];
             var isChecked = child.getValue() == value;
             child.setChecked(isChecked);
         }
     };
 
     RadioGroup.prototype.getValue = function (value) {
-        for (var i=0; i<this.childs.length; i++) {
-            var child = this.childs[i];
+        for (var i=0; i<this.children.length; i++) {
+            var child = this.children[i];
             if (child.isChecked()) {
                 return child.getValue();
             }
@@ -482,6 +505,10 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 /* -------------------------------------------------------------------------
  *  Grid
  * ------------------------------------------------------------------------- */
+    var EVENT_GRIDCOLUMN_VISIBILITYCHANGE = "visibilityChange";
+    var EVENT_GRID_REQUESTFLUSH = "requestFlush";
+    var EVENT_GRID_SELECTROW = "selectrow";
+
     Grid = Class(Widget);
     Grid.prototype.toString = function () { return "Grid Object"; };
     Grid.prototype.configure = function (args) {
@@ -489,7 +516,8 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
         this.private("value");
         this.private("columns");
         this.private("rows");
-        this.private("selectedItems", null);
+        this.private("selectedItems", new Array());
+        this.private("multipleSelection", args.multipleSelection);
 
         this.configureGrid();
 
@@ -497,7 +525,9 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
         this.setValue( args.value || new Array() );
 
         this.setWidth ( args.width );
+        this.setMinWidth ( args.width );
         this.setHeight ( args.height );
+        this.setMinHeight ( args.height );
         this.flush();
     };
 
@@ -542,13 +572,13 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 
     Grid.prototype.clean = function () {
     	var body = this.gridBody;
-    	for (var i=body.childNodes.lenght-1; i>=0; i--)
+    	for (var i=body.childNodes.length-1; i>=0; i--)
     		body.removeChild(body.childNodes[i]);
     	this.rows = new Array();
     };
 
     Grid.prototype.setColumns = function (columns) {
-    	this.columns = columns;
+    	this.columns = new Array();//columns;
     	for (var i=0; i<columns.length; i++) {
     		var columnData = columns[i];
     		if (!columnData) continue;
@@ -559,11 +589,19 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 
     Grid.prototype.addColumn = function (columnData) {
     	var header = this.gridHeader;
+
     	var ColumnClass = GridColumnFactory
 				.registeredColumnTypes[
 				     unescape(columnData.type || "defaultColumn")];
-    	var column = new ColumnClass(columnData, this).render();
-		header.appendChild(column);
+
+    	var column = new ColumnClass(columnData, this);
+    	column.event(
+    			EVENT_GRID_REQUESTFLUSH,
+    			this.getMethod("flush")
+			);
+		header.appendChild(column.render());
+
+		return column;
     };
 
     Grid.prototype.addRow = function (rowData) {
@@ -579,8 +617,10 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.gridBody.removeChild ( row );
     };
 
-    Grid.prototype.removeRow = function (index) {
-    	var row = this.getRow(index);
+    Grid.prototype.removeRow = function (row) {
+    	if (this.selectedItems.contains(row))
+    		this.selectedItems.remove(row);
+
     	this.gridBody.removeChild(row.target);
 
     	var rows = new Array();
@@ -591,10 +631,18 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.rows = rows;
     	this.flush();
     	return row;
-    }
+    };
+
+    Grid.prototype.removeRowAt = function (index) {
+    	var row = this.getRow(index);
+    	return this.removeRow(row);
+    };
 
     Grid.prototype.registerRow = function (index, rowData) {
     	var row = new GridRow(rowData, index, this);
+    	row.event(
+			EVENT_GRID_REQUESTFLUSH,
+			this.getMethod("flush"));
     	this.rows[index] = row;
     	var renderedRow = row.render();
     	DomUtil.addEventListener(renderedRow, "click",
@@ -607,27 +655,44 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	return this.rows[index];
     };
 
-    Grid.prototype.onRowClick = function (event, row) {
-    	this.selectRow(row);
-    	this.dispatch ("rowclick", row);
+    Grid.prototype.onRowClick = function (row) {
+    	this.trySelectRow(row);
+    	this.dispatch (EVENT_GRID_SELECTROW, row);
     };
 
-    // FIXME: Make me select more than one row at once
+    Grid.prototype.trySelectRow = function (gridRow) {
+    	if (!this.multipleSelection) {
+	    	this.unselectRows();
+	    	this.selectRow(gridRow);
+    	} else if (gridRow.getSelected() == true)
+    		this.unselectRow(gridRow);
+    	else
+    		this.selectRow(gridRow);
+    };
+
     Grid.prototype.selectRow = function (gridRow) {
+    	gridRow.setSelected(true);
+    	this.selectedItems.append(gridRow);
+    };
+
+    Grid.prototype.unselectRow = function (gridRow) {
+    	gridRow.setSelected(false);
+    	this.selectedItems.remove(gridRow);
+    };
+
+    Grid.prototype.unselectRows = function (){
     	for (var i=0; i<this.rows.length; i++) {
     		var row = this.rows[i];
     		if (!row) continue;
-    		row.target.className = 
-    			row.target.className.replace("selected", "");
+    		this.unselectRow(row);
     	}
-    	gridRow.target.className+= " selected";
-    	this.selectedItems = [gridRow];
     };
 
     Grid.prototype.flush = function () {
     	var buffer = "";
     	var values = new Array();
-    	for (var index in this.rows) {
+    	for (var index=0; index<this.rows.length; index++) {
+    		this.rows[index].flush();
     		var item = this.rows[index].value;
     		values.append(item);
     		if (!item) continue;
@@ -657,12 +722,25 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.private ("highlighted", rowPos % 2 == 0);
     	this.private ("selected", false);
     	this.private ("index", rowPos);
+    	this.private ("columns", new Array())
+    };
+
+    GridRow.prototype.setSelected = function (selected){
+    	if (selected)
+    		this.target.className+= " selected";
+    	else
+    		this.target.className = 
+    			this.target.className
+    				.replace("selected", "")
+    				.replace("  "," ");
+
+    	this.selected = selected;
     };
 
     GridRow.prototype.render = function () {
     	var target = document.createElement("ul");
     	target.setAttribute ("id", this.id);
-    	
+
     	var className = "";
     	if (this.highlighted)
     		className = "highlighted";
@@ -673,26 +751,40 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	for (var i=0; i<this.parent.columns.length; i++) {
     		var headerColumn = this.parent.columns[i];
     		if (!headerColumn) continue;
-    		
+
     		var ColumnClass = GridColumnFactory
     				.registeredColumnTypes[
     				     unescape(headerColumn.type || "defaultColumn")];
-    		
+
     		var columnData = {
     			id: headerColumn.id,
     			value: this.value[headerColumn.id] || headerColumn.value,
     			width: headerColumn.width,
     			header: headerColumn
     		};
-    		
-    		var renderedColumn = new ColumnClass(columnData, this).render();
+
+    		var self = this;
+    		var column = new ColumnClass(columnData, this);
+    		column.event (
+    				EVENT_GRID_REQUESTFLUSH,
+    				this.getMethod("onColumnRequestFlush"));
+    		this.columns.append(column);
+
+    		var renderedColumn = column.render();
     		target.appendChild ( renderedColumn );
     	}
     	this.target = target;
     	return target;
     };
-    
-    GridRow.prototype.flush = function () { this.parent.flush(); };
+
+    GridRow.prototype.onColumnRequestFlush = function (){
+    	this.dispatch(EVENT_GRID_REQUESTFLUSH);
+    };
+
+    GridRow.prototype.flush = function () {
+    	for (var i=0; i<this.columns.length; i++)
+    		this.columns[i].flush();
+	};
 
 /* -------------------------------------------------------------------------
  *  GridColumn
@@ -703,6 +795,10 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.private ("id", unescape(args.id));
     	this.private ("value", unescape(args.value || args.label));
     	this.private ("width", unescape(args.width));
+    	this.private ("visible", (args.visible != false && args.visible != "false"));
+    	this.private ("header", args.header);
+    	this.private ("type", args.type);
+
     	this.configure(args);
     };
 
@@ -712,15 +808,33 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	var column = document.createElement("li");
 		column.appendChild(this.renderContent());
 		column.setAttribute("id", this.parent.id + "Column" + this.id);
+		this.target = column;
 
+		var style = "";
 		if (this.width)
-			column.setAttribute("style", "width:" + this.width);
+			style+= "width:" + this.width + ";";
+		if (!this.visible)
+			style+= "display: none;";
+
+		column.setAttribute("style", style);
 		return column;
+    };
+
+    GridColumn.prototype.setVisible = function (value) {
+    	this.visible = value;
+    	this.target.style.display = (this.visible) ? "" : "none";
+    	if (!this.header)
+    		this.dispatch(EVENT_GRID_REQUESTFLUSH);
+    };
+
+    GridColumn.prototype.isVisible = function (){
+    	return this.visible;
     };
 
     GridColumn.prototype.flush = function () {
     	this.parent.value[this.id] = this.getValue();
-    	this.parent.flush();
+    	if (this.header)
+    		this.setVisible(this.header.isVisible());
     };
 
     GridColumn.prototype.renderContent = function () {
@@ -734,10 +848,11 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     GridImageColumn.prototype.configure = function (args) {
     	if (args.header) {
     		var onclick = unescape(args.header.click);
-    		this.event ("iconclick", function (data, index) {
+    		this.event ("iconclick", function (rowdata, rowindex) {
     			eval(onclick);
     		});
-    	}
+    	} else
+    		this.private("click", args.click);
     };
 
     GridImageColumn.prototype.renderContent = function () {
@@ -751,9 +866,9 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
     GridImageColumn.prototype.onImageClick = function (event){
-    	var data = this.parent.value,
-			index = this.parent.index;
-    	this.dispatch("iconclick", data, index);
+    	var rowdata = this.parent.value,
+    		rowindex = this.parent.index;
+    	this.dispatch("iconclick", rowdata, rowindex);
     };
 
 /* -------------------------------------------------------------------------
@@ -783,6 +898,11 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	}));
 
     	this.render(args);
+    };
+    
+    Tree.prototype.clean = function () {
+    	this.root.clean();
+    	this.children = new Object();
     };
 
     Tree.prototype.setSelectedChildren = function (children) {
@@ -1008,5 +1128,16 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	var eventName = this.collapsed ? "collapse" : "elapse";
     	this.dispatch (eventName, this);
 
+    	this.flush();
+    };
+
+    TreeItem.prototype.clean = function () {
+    	var body = this.target;
+
+    	for (var i=body.childNodes.length-1; i>=0; i--)
+    		body.removeChild(body.childNodes[i]);
+
+    	this.children = new Array();
+    	this.collapsed = true;
     	this.flush();
     };

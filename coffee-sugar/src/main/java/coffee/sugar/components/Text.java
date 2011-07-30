@@ -9,15 +9,18 @@ import coffee.sugar.Component;
 
 public class Text extends Component {
 	
-	private String className;
+	private String textContent;
 
 	@Override
-	public void configure() {}
+	public void configure() {
+		if (!Util.isNull(getId()))
+			registerComponent("new Text( {id:\""+getId()+"\", text:\""+getTextContent()+"\"})");
+	}
 
 	@Override
 	public void render() throws IOException {
 		PrintWriter writer = getWriter();
-		writer.append("<span class=\"").append(getClassName()).append(' ').append(getSkin()).append("\" ")
+		writer.append("<span class=\"").append(getSkin()).append("\" ")
 					.append("style=\"").append(getStyleDefinition()).append("\" ");
 
 		if (!Util.isNull(getId()))
@@ -31,15 +34,12 @@ public class Text extends Component {
 			writer.append(textContent);
 		writer.append("</span>");
 	}
-
-	public void setClassName(String className) {
-		this.className = className;
-	}
-
-	public String getClassName() {
-		if (Util.isNull(className))
-			className = "";
-		return className;
+	
+	@Override
+	public String getTextContent() {
+		if (Util.isNull(textContent))
+			textContent = super.getTextContent();
+		return textContent;
 	}
 
 }

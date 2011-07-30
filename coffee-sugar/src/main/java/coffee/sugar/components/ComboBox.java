@@ -8,6 +8,9 @@ import coffee.core.util.Util;
 import coffee.sugar.Widget;
 
 public class ComboBox extends Widget {
+	
+	private Integer size;
+	private String selectedValue;
 
 	@Override
 	public void configure() {}
@@ -22,7 +25,15 @@ public class ComboBox extends Widget {
 			.append(getId())
 			.append("\" style=\"")
 			.append(getStyleDefinition())
-			.append("\" ")
+			.append("\" ");
+
+		if (getSize() > 0)
+			writer
+				.append("size=\"")
+				.append(getSize().toString())
+				.append("\" ");
+
+		writer
 			.append(getEventsDefinition())
 			.append(">");
 
@@ -34,29 +45,58 @@ public class ComboBox extends Widget {
 			.append("<script>application.addChild(new ComboBox( {required:")
 				.append(isRequired().toString())
 			.append(",label:\"")
-				.append(getAttributeValue("label"))
-			.append("\",");
+				.append(getLabel())
+			.append("\",selected:\"")
+				.append(getSelectedValue())
+			.append('"');
 
 		if (!Util.isNull(getId()))
 			writer
-				.append("id:\"")
+				.append(",id:\"")
 					.append(getId())
-				.append("\",");
+				.append('"');
 
 		writer.append("}));</script>");
 	}
 
 	@Override
 	public void renderChildren() throws IOException {
-		String value = getAttributeValue("value");
+		String value = getSelectedValue();
 		for (IComponent child : getChildren()) {
-			if (!ComboItem.class.isInstance(child))
-				continue;
-			ComboItem comboItem = (ComboItem)child;
-			if (comboItem.getAttributeValue("value").equals(value))
-				comboItem.setSelected(true);
-			comboItem.render();
+			if (ComboItem.class.isInstance(child)) {
+				ComboItem comboItem = (ComboItem)child;
+				if (comboItem.getAttributeValue("value").equals(value))
+					comboItem.setSelected(true);
+			}
+			child.render();
 		}
+	}
+
+	public void setSize(String size) {
+		this.size = Integer.parseInt(size);
+	}
+
+	public void setSize(Integer size) {
+		this.size = size;
+	}
+
+	public Integer getSize() {
+		if (Util.isNull(size))
+			size = 0;
+		return size;
+	}
+
+	public void setSelectedValue(String selectedValue) {
+		this.selectedValue = selectedValue;
+	}
+
+	public String getSelectedValue() {
+		if (Util.isNull(selectedValue)) {
+			selectedValue = getAttributeValue("value");
+			if (Util.isNull(selectedValue))
+				selectedValue = "";
+		}
+		return selectedValue;
 	}
 
 }

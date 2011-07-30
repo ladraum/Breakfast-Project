@@ -50,15 +50,6 @@ public abstract class Resource implements IResource {
 		context.setPath(uri);
 	}
 
-/**
- * 
- * @param parameters
- * @return
- */
-	public String getResourceURI() {
-		return context.getRelativePath();
-	}
-
 	public CoffeeContext getContext() {
 		return context;
 	}
@@ -73,5 +64,9 @@ public abstract class Resource implements IResource {
 
 	public void setContentType(String contentType) {
 		getContext().getResponse().setContentType(contentType);
+	}
+	
+	public String getParameter(String param) {
+		return getContext().getRequest().getParameter(param);
 	}
 }

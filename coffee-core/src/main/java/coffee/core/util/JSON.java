@@ -32,27 +32,32 @@ public class JSON {
 		buffer.append('{');
 		
 		boolean isFirst = true;
-		Field[] fields = target.getClass().getDeclaredFields();
+		Class<? extends Object> clazz = target.getClass();
+		while (!clazz.equals(Object.class)) {
+			Field[] fields = clazz.getDeclaredFields();
 
-		for (Field field : fields) {
-			try {
-				Method getter = Reflection.extractGetterFor(field.getName(), target);
-				Object object = getter.invoke(target);
-				
-				if (Util.isNull(object))
-					continue;
-
-				if (!isFirst) buffer.append(',');
-				isFirst = false;
-
-				buffer.append('"')
-					.append(field.getName())
-					.append("\":");
-
-				buffer.append(serialize(object));
-			} catch (Exception e) {
-				// XXX: ignoring non changeable fields
+			for (Field field : fields) {
+				try {
+					Method getter = Reflection.extractGetterFor(field.getName(), target);
+					Object object = getter.invoke(target);
+					
+					if (Util.isNull(object))
+						continue;
+	
+					if (!isFirst) buffer.append(',');
+					isFirst = false;
+	
+					buffer.append('"')
+						.append(field.getName())
+						.append("\":");
+	
+					buffer.append(serialize(object));
+				} catch (Exception e) {
+					// XXX: ignoring non changeable fields
+				}
 			}
+			
+			clazz = clazz.getSuperclass();
 		}
 
 		buffer.append('}');

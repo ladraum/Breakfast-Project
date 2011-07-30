@@ -6,11 +6,13 @@ import java.util.Collection;
 
 import coffee.core.binding.CoffeeBinder;
 import coffee.core.components.IComponent;
+import coffee.core.util.JSON;
 import coffee.core.util.Util;
 import coffee.sugar.Widget;
-import coffee.sugar.helper.GridUtils;
 
 public class Grid extends Widget {
+	
+	private boolean multipleSelection;
 
 	@Override
 	public void configure() {}
@@ -24,17 +26,35 @@ public class Grid extends Widget {
 			.append("\" class=\"Grid\" style=\"")
 			.append(getStyleDefinition())
 			.append("\"></div>")
-			
+
 			.append("<script>application.addChild(new Grid( {label:\"")
 				.append(getAttributeValue("label"))
 			.append("\",id:\"")
 				.append(getId())
-			.append("\",");
+			.append("\",visible:")
+				.append(isVisible().toString())
+			.append(",multipleSelection:")
+				.append(isMultipleSelection().toString());
 
 		if (!Util.isNull(getHeight()))
-			writer.append("height:\"")
+			writer.append(",height:\"")
 				  .append(getHeight())
-				  .append("\",");
+				  .append("\"");
+
+		if (!Util.isNull(getMinHeight()))
+			writer.append(",minHeight:\"")
+				  .append(getMinHeight())
+				  .append("\"");
+
+		if (!Util.isNull(getMinWidth()))
+			writer.append(",minWidth:\"")
+				  .append(getMinWidth())
+				  .append("\"");
+
+		if (!Util.isNull(getWidth()))
+			writer.append(",width:\"")
+				  .append(getWidth())
+				  .append("\"");
 
 		renderColumns(writer);
 		renderValue(writer);
@@ -50,37 +70,54 @@ public class Grid extends Widget {
 			return;
 
 		Collection<? extends Object> value = (Collection<? extends Object>) collectionOfValues;
-
-		writer.append("value:[");
-		for (Object item : value) {
-			try {
-				StringBuilder serializedItem = GridUtils.serializeItem(item);
-				writer.append(serializedItem).append(',');
-			} catch (Exception e) {}
-		}
-		writer.append("],");
+		writer
+			.append(",value:")
+			.append(JSON.serializeArrayOfObjects(value));
 	}
 
 	public void renderColumns(PrintWriter buffer) {
-		buffer.append("columns:[");
+		buffer.append(",columns:[");
+		int counter = 0;
+		int attributeCounter = 0;
 		for (IComponent child : getChildren()){
 			if (!GridColumn.class.isInstance(child))
 				continue;
 			GridColumn column = (GridColumn)child;
+
+			if (counter > 0)
+				buffer.append(',');
+			counter++;
+
 			buffer.append('{');
 			
+			attributeCounter = 0;
 			for (String key : column.getAttributeKeys()) {
 				String attribute = column.getAttributeValue(key);
-				if (!Util.isNull(attribute))
+				if (!Util.isNull(attribute)) {
+					if (attributeCounter > 0)
+						buffer.append(',');
 					buffer
 						.append(key)
 						.append(":\"")
 						.append(attribute)
-						.append("\",");
+						.append('"');
+				}
+				attributeCounter++;
 			}
-
-			buffer.append("},");
+			buffer.append("}");
 		}
-		buffer.append("],");
+		buffer.append("]");
+	}
+
+	public void setMultipleSelection(String multipleSelection) {
+		this.multipleSelection = Boolean.parseBoolean(multipleSelection);
+	}
+
+	public void setMultipleSelection(boolean multipleSelection) {
+		this.multipleSelection = multipleSelection;
+	}
+
+	public Boolean isMultipleSelection() {
+		return multipleSelection;
 	}
 }

@@ -35,6 +35,12 @@
             this[child.id] = child;
     };
 
+    Application.prototype.registerObject = function (name, value) {
+    	if (this[name])
+    		this.showMessage("[Development failure] Duplicated id '" + name + "'.")
+    	this[name] = value;
+    };
+
     Application.prototype.addValidator = function (validator) {
         if (!validator instanceof Validator)
             throw MSG_INVALID_ARGUMENT + "'validator' argument must be from a 'Validator'.";
@@ -57,9 +63,13 @@
             return false;
         }
     };
+    
+    Application.prototype.showMessage = function (message) {
+    	alert(message);
+    };
 
     Application.prototype.onValidationFail = function (validator) {
-        alert(validator.getErrorMessage());
+        this.showMessage(validator.getErrorMessage());
     };
 
     Application.prototype.onValidationSuccess = function () {
@@ -68,12 +78,16 @@
     Application.prototype.submit = function () {
     	try {
     		if (this.validate() && this.widgets.length> 0) {
-	    		var form = this.widgets[0].target.form;
+	    		var form = document.getElementById("sugarApplicationForm");
 	    		form.submit();
 	    	}
     	} catch (e) {
-            alert("ERROR: " + e);
+            this.showMessage("ERROR: " + e);
     	}
+    };
+    
+    Application.prototype.redirect = function (url) {
+    	document.location.href=url;
     };
 
 /* -------------------------------------------------------------------------

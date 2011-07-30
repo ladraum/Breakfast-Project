@@ -21,7 +21,7 @@ form.Application *:focus {
 
 /* Box Container */
 div.Box {
-	float: left;
+	/* float: left; */
 	margin: 0px;
 	position: relative;
     overflow: hidden;
@@ -29,6 +29,7 @@ div.Box {
 
 /* FormItem Container */
 div.FormItem {
+	float: none;
 	margin-bottom: 10px;
     overflow: hidden;
 }
@@ -37,6 +38,17 @@ div.FormItem span.Label {
 	display: block;
 	padding: 3px 7px 0px 0px;
 }
+
+div.FormItem label { padding-top: 2px; }
+/* div.FormItem label input, */
+div.FormItem label input[TYPE="CHECKBOX"] {
+	margin-right: 5px;
+	top: 1px; }
+	
+div.FormItem input[TYPE="TEXT"],
+div.FormItem input[TYPE="BUTTON"],
+div.FormItem button {
+	margin-right: 5px; }
 
 div.FormItem span.required {
 	color: red;
@@ -64,15 +76,11 @@ input[type="CHECKBOX"] {
 	top: 5px;
 }
 
-select {
-	background-image: url(../imgs/combobox-bg.png);
-	background-repeat: repeat-x;
-	padding: 5px;
-}
-
-textarea,
-input[type="TEXT"],
-input[type="PASSWORD"] {
+form.Application select,
+select,
+form.Application textarea,
+form.Application input[type="TEXT"],
+form.Application input[type="PASSWORD"] {
 	background: #fcfeff; /* Old browsers */
 	background: -moz-linear-gradient(top, #fcfeff 0%, #ffffff 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfeff), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
@@ -100,26 +108,21 @@ input[type="PASSWORD"]:focus {
 	outline: 1px solid #898989;
 }
 
+form.Application textarea.readonly,
+form.Application input[type="TEXT"].readonly,
+form.Application input[type="PASSWORD"].readonly {
+	background: #eeeeee;
+	color: #898989;
+}
+
 button,
 input[type="BUTTON"],
 input[type="SUBMIT"] {
-	/*background-image: url(../imgs/combobox-bg.png);
-	background-repeat: repeat-x;*/
-
-	/* background */
-	background: #eeeeee; /* Old browsers */
-	background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Opera11.10+ */
-	background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* IE10+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
-	background: linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* W3C */
-
-	border: 1px solid #898998;
-	border-radius: 5px;
-	padding: 5px 8px;
-	min-width: 80px;
+	background: #f4f4f4;
+	border: 1px solid #cdcdcd;
+	border-radius: 3px;
+	font-weight: bold;
+	padding: 5px 15px;
 }
 
 button:focus,
@@ -128,17 +131,15 @@ input[type="BUTTON"]:focus,
 input[type="BUTTON"]:hover,
 input[type="SUBMIT"]:focus,
 input[type="SUBMIT"]:hover {
-	background: #f2f5f6; /* Old browsers */
-	background: -moz-linear-gradient(top, #f2f5f6 0%, #e3eaed 37%, #a5c1ce 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#e3eaed), color-stop(100%,#a5c1ce)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* Opera11.10+ */
-	background: -ms-linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* IE10+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#a5c1ce',GradientType=0 ); /* IE6-9 */
-	background: linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#a5c1ce 100%); /* W3C */
-
+	background: #f2f5f6;
 	border: 1px solid #0066AA;
 	outline: none;
+}
+
+button:active,
+input[type="BUTTON"]:active,
+input[type="SUBMIT"]:active {
+	border: 1px solid #0066AA;
 }
 
 /* Button Bar */
@@ -240,23 +241,8 @@ div.Panel div.PanelBar span {
     left: 10px;
     position: relative;
     /* text-transform: uppercase; */
-    top: 3px;
+    top: 7px;
 }
-div.Collapsed {
-	height: 0px;
-	padding: 45px 0px 0px;
-}
-div.Collapsed * { display: none; }
-div.Collapsed div.PanelBar,
-div.Collapsed div.PanelBar * { display:block;}
-div.Collapsed div.PanelBar {
-	background: url(../imgs/panel-pointer-collapsed.png) 0% 16px no-repeat;
-}
-div.Elapsed div.PanelBar {
-	background: url(../imgs/panel-pointer-elapsed.png) 0% 16px no-repeat;
-}
-div.Collapsed div.PanelBar:hover,
-div.Elapsed div.PanelBar:hover { cursor: pointer; }
 
 /* Dialog Panel */
 div.DialogPanel {
@@ -283,9 +269,9 @@ div.DialogPanel {
 	-moz-border-radius-bottomleft: 3px;
 	-webkit-border-bottom-left-radius: 3px;
 
-	-moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px #888;
-	box-shadow: 0 0 5px #888;
+	-moz-box-shadow: 0 0 35px #888;
+	-webkit-box-shadow: 0 0 35px #888;
+	box-shadow: 0 0 35px #888;
 
 	padding: 45px 0px 0px;
 /* 	margin-bottom: 15px; */
@@ -321,7 +307,9 @@ div.DialogPanel div.PanelBar a.CloseButton:hover {
 	text-decoration: none;
 }
 div.DialogPanel div.Container {
+	height: 100%;
 	margin: 0px;
+	overflow: auto;
 	padding: 0px; }
 div.DialogPanel ul.ButtonBar {
 	display: block;

@@ -2,18 +2,10 @@ package coffee.sample;
 
 import java.util.List;
 
-public class SampleEntity {
-	private Integer id;
+public class SampleEntity extends GenericEntity {
+
 	private String name;
-	private List<String> animals; 
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	private List<Animal> animals;
 
 	public String getName() {
 		return name;
@@ -23,11 +15,11 @@ public class SampleEntity {
 		this.name = name;
 	}
 
-	public void setAnimals(List<String> animals) {
+	public void setAnimals(List<Animal> animals) {
 		this.animals = animals;
 	}
 
-	public List<String> getAnimals() {
+	public List<Animal> getAnimals() {
 		return animals;
 	}
 }

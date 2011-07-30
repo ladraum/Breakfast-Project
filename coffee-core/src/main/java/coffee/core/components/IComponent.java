@@ -86,10 +86,10 @@ public interface IComponent extends Cloneable {
 	public List<IComponent> getChildren();
 
 /**
- * Set text content of the component. Some components is designed to
- * handle the markup's <i>default value</i> of the tag (<code><i>&lt;ns:component&gt;Here
+ * Set text content of the component. Some components are designed to
+ * handle the tag's markup <i>default value</i> (<code><i>&lt;ns:component&gt;Here
  * goes the default value&lt;/ns:component&gt;</i></code>). By default this method
- * should stores the <i>default value</i> into a String field inside of component.
+ * should store the <i>default value</i> into a String field inside the component.
  * 
  * @param content
  * @return 

@@ -28,40 +28,40 @@ public class TreeItem extends AbstractComponent {
 	}
 
 	public IComponent setId(String id) {
-		this.id = CoffeeBinder.getValue(
-							id, coffeeContext).toString();
+		this.id = id;
 		return this;
 	}
 
 	public String getId() {
-		return id;
+		return CoffeeBinder.getValue(
+				id, coffeeContext).toString();
 	}
 
 	public void setLabel(String label) {
-		this.label = CoffeeBinder.getValue(
-							label, coffeeContext).toString();
+		this.label = label;
 	}
 
 	public String getLabel() {
-		return label;
+		return CoffeeBinder.getValue(
+				label, coffeeContext).toString();
 	}
 
 	public void setParentId(String parentId) {
-		this.parentId = CoffeeBinder.getValue(
-							parentId, coffeeContext).toString();
+		this.parentId = parentId;
 	}
 
 	public String getParentId() {
-		return parentId;
+		return CoffeeBinder.getValue(
+				parentId, coffeeContext).toString();
 	}
 
 	public void setHasChildren(String hasChildren) {
-		this.hasChildren = CoffeeBinder.getValue(
-				hasChildren, coffeeContext).toString();
+		this.hasChildren = hasChildren;
 	}
 
 	public String getHasChildren() {
-		return hasChildren;
+		return CoffeeBinder.getValue(
+				hasChildren, coffeeContext).toString();
 	}
 
 }

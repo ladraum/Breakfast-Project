@@ -8,28 +8,26 @@ import coffee.core.util.StringUtil;
 import coffee.core.util.Util;
 import coffee.sugar.Component;
 
-
 public class Box extends Component {
-	
+
 	public static final String DIRECTION_HORIZONTAL = "horizontal";
 	public static final String DIRECTION_VERTICAL = "vertical";
-	
+
 	protected String id;
 	private String direction;
 
 	@Override
 	public void configure() {
 		if (!Util.isNull(id))
-			registerComponent("new Box( {id:"+id+"} )");
-		setAttribute("class", "Box");
+			registerComponent("new Box( {id:\""+id+"\"} )");
 	}
 
 	@Override
 	public void render() throws IOException {
 		PrintWriter writer = getWriter();
 		writer
-			.append("<div class=\"")
-			.append(getAttribute("class").toString())
+			.append("<div class=\"Box ")
+			.append(getSkin())
 			.append("\" ");
 
 		if (!Util.isNull(id))

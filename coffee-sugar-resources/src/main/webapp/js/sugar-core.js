@@ -36,8 +36,13 @@
         clazz.prototype.valueOf = SuperClass.prototype.valueOf;
         clazz.prototype.private = Class.prototype.private;
         clazz.prototype.getMethod = Class.prototype.wrapMethod;
-        clazz.prototype.event = Class.prototype.event;
-        clazz.prototype.dispatch = Class.prototype.dispatch;
+        
+        if (!clazz.prototype.event)
+        	clazz.prototype.event = Class.prototype.event;
+        if (!clazz.prototype.dispatch)
+        	clazz.prototype.dispatch = Class.prototype.dispatch;
+        if (!clazz.prototype.cleanEvents)
+        	clazz.prototype.cleanEvents = Class.prototype.cleanEvents;
         return clazz;
     };
 
@@ -84,9 +89,12 @@
     	for (var i=1; i<arguments.length; i++)
 			args.append(arguments[i]);
 
-    	for (var i=0; i<events.size(); i++) {
+    	for (var i=0; i<events.size(); i++)
     		events[i].apply(window, args);
-    	}
+    };
+    
+    Class.prototype.cleanEvents = function () {
+    	this.events = new Object();
     };
 
 /* -------------------------------------------------------------------------
@@ -121,8 +129,11 @@
 
 	HttpRequest.prototype.responseHandler = function () {
 		var http = this.xmlHttp;
-		if (http.readyState ==4 && http.status != "200" && http.status != 200)
-			throw "HTTP ERROR: " + http.statusText;
+		if (http.readyState == 4 && http.status != "200" && http.status != 200) {
+			this.dispatch("error", http.statusText);
+			//throw "HTTP ERROR: " + http.statusText;
+			return;
+		}
 
 		var state = ["uninitialized", "loading", "loaded", "interactive", "ready"];
 
@@ -146,14 +157,22 @@
     Array.prototype.foreach = function(method) {
     	for (var i=0; i<this.length; i++)
     		method(this[i], i);
+    	return this;
     };
 
     Array.prototype.size = function () {
     	return this.length;
     };
+    
+    Array.prototype.addAll = function (list) {
+    	for (var i=0;i<list.length; i++)
+    		this.append(list[i]);
+    	return this;
+    };
 
-    Array.prototype.append = function (item) {
+    Array.prototype.append = Array.prototype.append || function (item) {
     	this[this.length] = item;
+    	return this;
     };
     
     Array.prototype.contains = Array.prototype.contains || function (value) {
@@ -196,26 +215,43 @@
  * 
  * ------------------------------------------------------------------------- */
     DomUtil = {
-	    applyOpacity: function (target, opacity) {
+	    applyOpacity: function (target, opacity, timeout) {
 	    	if (!target) return;
-	    	target.style.opacity = opacity/100;
-	    	target.style.filter = 'alpha(opacity=' + opacity + ')';
+	    	target = target.target || target;
+
+	    	timeout = timeout || 1;
+	    	setTimeout(function(){
+		    	target.style.opacity = opacity/100;
+		    	target.style.filter = 'alpha(opacity=' + opacity + ')';
+		    	//target.style.display = (opacity > 0) ? "" : "none";
+	    	}, timeout);
 	    },
 
-	    fadeIn: function (target, opacity, initialOpacity) {
-	    	opacity = opacity || 50;
-	    	var speed = (opacity > 50 ) ? 5 : 10;
+	    fade: function (target, initialOpacity, opacity, callback) {
+	    	if (!target) return;
+
+	    	target = target.target || target;
 	    	initialOpacity = initialOpacity || 0;
-	    	for (var i=initialOpacity; i<(opacity+1); i++) {
-	    		(function(pos){
-	    			setTimeout(function (){
-	    				DomUtil.applyOpacity (target, pos)
-					},pos*speed);
-	    		})(i);
-	    	}
+	    	opacity = !opacity && opacity != 0 ? 100 : opacity;
+	    	var speed = (opacity > 50 ) ? 5 : 10;
+	    	var max = Math.abs(opacity - initialOpacity) * speed;
+
+	    	$range(initialOpacity, opacity, function (currentOpacity){
+	    		var currentTimeout = currentOpacity*speed;
+	    		if (initialOpacity > opacity)
+	    			currentTimeout = max - currentTimeout;
+	    		DomUtil.applyOpacity (target, currentOpacity,
+	    				currentTimeout);
+	    	});
+
+	    	if (callback)
+	    		setTimeout(callback, Math.max(opacity, initialOpacity)*speed);
 	    },
 
 	    resizeHeight: function (target, endHeight, startHeight, callback) {
+	    	if (!target) return;
+	    	target = target.target || target;
+	    	
 	    	if (!startHeight && startHeight != 0)
 	    		startHeight = parseInt(DomUtil.getStyle(target, "clientHeight")) || 0;
 	    	endHeight = parseInt(endHeight);
@@ -232,9 +268,18 @@
 	    },
 
 	    getWidth: function (target) {
+	    	if (!target) return;
+	    	target = target.target || target;
+
 	    	return target.display.width;
 	    },
 	    setWidth: function (target, width, timeout) {
+	    	if (!target) return;
+	    	target = target.target || target;
+	    	
+	    	if (typeof(width) == "number")
+	    		width+= "px";
+
 	    	timeout = timeout || 1;
 	    	setTimeout(function(){
 	    		target.style.width = width;
@@ -242,9 +287,18 @@
 	    },
 
 	    getHeight: function (target) {
+	    	if (!target) return;
+	    	target = target.target || target;
+
 	    	return target.display.height;
 	    },
 	    setHeight: function (target, height, timeout) {
+	    	if (!target) return;
+	    	target = target.target || target;
+	    	
+	    	if (typeof(height) == "number")
+	    		height+= "px";
+
 	    	timeout = timeout || 1;
 	    	setTimeout(function(){
 	    		target.style.height = height;
@@ -252,6 +306,9 @@
 	    },
 
 	    getStyle: function (target,styleProp) {
+	    	if (!target) return;
+	    	target = target.target || target;
+
 	    	if (target.currentStyle)
 	    		var y = target.currentStyle[styleProp];
 	    	else if (window.getComputedStyle)
@@ -269,6 +326,9 @@
 	    },
 
         addEventListener: function(target, eventName, callback) {
+        	if (!target) return;
+	    	target = target.target || target;
+
 	        if (!target) throw "addEventListener: null target";
 	        if (target.attachEvent){
 		        target.addEventListener = target.attachEvent;
@@ -280,6 +340,9 @@
 	        target.addEventListener(eventName, callback, null);
         },
         removeEventListener: function(target, eventName, callback) {
+        	if (!target) return;
+	    	target = target.target || target;
+
 	        if (!target) throw "addEventListener: null target";
 	        if (target.detachEvent){
 		        target.removeEventListener = target.detachEvent;
@@ -311,4 +374,10 @@
 		return buffer;
 	};
 
-
+	var $range = function (start, end, callback) {
+        var i= start;
+        while((start <=end && i<=end)||(start > end && i>=end)){
+            callback(i);
+            if (start<=end) i++; else i--;
+        }
+    };

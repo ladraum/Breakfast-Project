@@ -9,19 +9,13 @@ import coffee.core.util.Util;
 import coffee.sugar.Component;
 
 public class Panel extends Component {
-
-	private boolean collapsed = false;
-	private boolean collapsible = false;
-	private String styleClassNames;
+	private String styleClassNames = "Panel";
 	private String label;
 
 	@Override
 	public void configure() {
-		setStyleClassNames("Panel");
-
-		registerComponent("new Panel( {" +
-								"id:\""+getId()+"\", label:\"" + getLabel() + "\", " +
-								"collapsible:"+collapsible+", collapsed:"+collapsed+"} )");
+		registerComponent("new Panel( {id:\""+
+					getId()+"\", label:\"" + getLabel() + "\"} )");
 	}
 
 	@Override
@@ -45,7 +39,7 @@ public class Panel extends Component {
 		writer
 			.append("</span></div><div id=\"")
 				.append(getId()).append("Container")
-			.append("\" class=\"Container\" style=\"overflow: auto; height: 100%;\">");
+			.append("\" class=\"Container\">"); // style=\"overflow: auto; height: 100%;\"
 
 		renderChildren();
 
@@ -61,36 +55,19 @@ public class Panel extends Component {
 		}
 		return id;
 	}
-	
-	public void setCollapsed(String collapsed) {
-		setCollapsed(Boolean.parseBoolean(collapsed));
-	}
-
-	public void setCollapsed(boolean collapsed) {
-		this.collapsed = collapsed;
-	}
-
-	public boolean isCollapsed() {
-		return collapsed;
-	}
-
-	public void setCollapsible(String collapsible) {
-		setCollapsible(Boolean.parseBoolean(collapsible));
-	}
-
-	public void setCollapsible(boolean collapsible) {
-		this.collapsible = collapsible;
-	}
-
-	public boolean isCollapsible() {
-		return collapsible;
-	}
 
 	public void setStyleClassNames(String styleClassNames) {
 		this.styleClassNames = styleClassNames;
 	}
 
 	public String getStyleClassNames() {
+		if (!Util.isNull(getSkin()))
+			return new StringBuilder()
+				.append(styleClassNames)
+				.append(' ')
+				.append(getSkin())
+					.toString();
+
 		return styleClassNames;
 	}
 	

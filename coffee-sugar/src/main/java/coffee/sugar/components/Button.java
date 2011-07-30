@@ -18,7 +18,9 @@ public class Button extends Widget {
 	public void render() throws IOException {
 		PrintWriter writer = getWriter();
 		writer
-			.append("<input type=\"button\" style=\"")
+			.append("<input type=\"button\" class=\"")
+				.append(getSkin())
+			.append("\" style=\"")
 			.append(getStyleDefinition())
 			.append("\" ");
 

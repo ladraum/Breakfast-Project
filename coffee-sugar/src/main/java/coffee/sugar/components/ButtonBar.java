@@ -19,7 +19,9 @@ public class ButtonBar extends Component {
 	public void render() throws IOException {
 		PrintWriter writer = getWriter();
 		writer
-			.append("<ul class=\"ButtonBar\" ");
+			.append("<ul class=\"ButtonBar ")
+			.append(getSkin())
+			.append("\" ");
 
 		if (!Util.isNull(getId()))
 			writer.append("id=\"").append(getId()).append("\" ");

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import coffee.core.components.IComponent;
 import coffee.core.util.JSON;
@@ -52,22 +53,29 @@ public class Tree extends Widget {
 		Collection<?> selectedChildren = (Collection<?>)getAttribute("selectedChildren");
 		if (Util.isNull(selectedChildren))
 			return null;
-		return JSON.serializeArrayOfObjects(selectedChildren);
+		return JSON.serialize(selectedChildren);
 	}
 
 	@SuppressWarnings("unchecked")
 	public StringBuilder getChildrenAsJSON(){
-		Collection<Object> children = new ArrayList<Object>();
+		List<Object> children = new ArrayList<Object>();
 
-		for (IComponent child : getChildren())
+		for (IComponent child : getChildren()) {
+			child.setParent(null);
 			if (TreeItem.class.isInstance(child))
 				children.add(child);
+		}
 
 		Collection<Object> childrenAttribute = (Collection<Object>)getAttribute("childrenNodes");
 		if (!Util.isNull(childrenAttribute))
-			children.addAll(childrenAttribute);
+			for (Object child : childrenAttribute) {
+				if (!IComponent.class.isInstance(child))
+					continue;
+				((IComponent)child).setParent(null);
+				children.add(child);
+			}
 
-		return JSON.serializeArrayOfObjects(children);
+		return JSON.serialize(children);
 	}
 
 	@Override
@@ -78,4 +86,7 @@ public class Tree extends Widget {
 		return id;
 	}
 
+	public void setSelectedChildren(String value) {
+		holdValue(value);
+	}
 }

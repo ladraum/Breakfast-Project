@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import coffee.core.util.JSON;
+import coffee.sample.Animal;
 import coffee.sample.SampleEntity;
 
 public class JSONTest {
@@ -17,9 +18,9 @@ public class JSONTest {
 
 	@Before
 	public void setup() {
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("Dog");
-		list.add("Cat");
+		ArrayList<Animal> list = new ArrayList<Animal>();
+		list.add(new Animal("Dog"));
+		list.add(new Animal("Cat"));
 
 		entity = new SampleEntity();
 		entity.setId(12);
@@ -32,9 +33,9 @@ public class JSONTest {
 			IllegalArgumentException, NoSuchMethodException,
 			IllegalAccessException, InvocationTargetException
 	{
-		String expected = "{\"id\":\"12\",\"name\":\"Joseph Smith\",\"animals\":[\"Dog\",\"Cat\"]}";
+		String expected = "{\"name\":\"Joseph Smith\",\"animals\":[{\"name\":\"Dog\"},{\"name\":\"Cat\"}],\"id\":\"12\"}";
 		StringBuilder serialized = JSON.serialize(entity);
-		
+
 		if (!expected.equals(serialized.toString())) {
 			System.out.println("'" + expected + "'");
 			System.out.println("'" + serialized + "'");

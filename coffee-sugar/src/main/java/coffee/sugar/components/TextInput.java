@@ -12,6 +12,7 @@ public class TextInput extends Widget {
 	private boolean passwordMask = false;
 	private String mask;
 	private String maxLength;
+	private boolean readonly = false;
 
 	@Override
 	public void configure() {}
@@ -29,8 +30,12 @@ public class TextInput extends Widget {
 				.append(getId())
 			.append("\" style=\"")
 				.append(getStyleDefinition())
+			.append("\" class=\"")
+				.append(getSkin())
 			.append("\" ");
-
+		
+		if (isReadonly())
+			writer.append(" readonly=\"readonly\" ");
 		if (!Util.isNull(maxLength))
 			writer
 				.append("maxlength=\"")
@@ -51,7 +56,8 @@ public class TextInput extends Widget {
 			.append("\",")
 			.append("id:\"")
 				.append(getId())
-			.append("\"");
+			.append("\", readonly:")
+				.append(isReadonly().toString());
 
 		if (!Util.isNull(getMask()))
 			writer
@@ -88,5 +94,29 @@ public class TextInput extends Widget {
 
 	public String getMaxLength() {
 		return maxLength;
+	}
+	
+	public void setReadonly(String readonly) {
+		this.readonly = Boolean.parseBoolean(readonly);;
+	}
+	
+	public String getReadonly() {
+		return isReadonly() ? "readonly" : "";
+	}
+
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
+	}
+
+	public Boolean isReadonly() {
+		return readonly;
+	}
+	
+	@Override
+	public String getSkin() {
+		return new StringBuilder()
+				.append(super.getSkin())
+				.append(getReadonly())
+					.toString();
 	}
 }
