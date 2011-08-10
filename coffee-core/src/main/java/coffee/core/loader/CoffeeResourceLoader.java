@@ -21,8 +21,6 @@
  */
 package coffee.core.loader;
 
-import static coffee.core.util.Util.isNull;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -42,8 +40,6 @@ import coffee.core.util.Util;
 
 public class CoffeeResourceLoader {
 
-	private static CoffeeResourceLoader instance;
-
 	private Map<String, CoffeeResource> registeredResources;
 	private HashMap<String, IComponent> resourceCache;
 	
@@ -53,10 +49,10 @@ public class CoffeeResourceLoader {
 
 	private AbstractSystemResourceLoader[] resourceLoaders;
 
-	private CoffeeResourceLoader() {
+	public CoffeeResourceLoader() {
 		registeredResources = new HashMap<String,CoffeeResource>();
-		resourceCache = new HashMap<String, IComponent>();
 		cacheEnabled = true;
+		resourceCache = new HashMap<String, IComponent>();
 	}
 
 /**
@@ -108,8 +104,9 @@ public class CoffeeResourceLoader {
 			};
 
 			for (AbstractSystemResourceLoader loader : resourceLoaders) {
-				for (Class<?> clazz : loader.retrieveAvailableClasses())
+				for (Class<?> clazz : loader.retrieveAvailableClasses()) {
 					registerResource(clazz);
+				}
 			}
 
 			populated = true;
@@ -128,7 +125,7 @@ public class CoffeeResourceLoader {
 		data.setPattern(pattern);
 		data.setTemplate(webresource.template());
 
-		System.out.println("Registered Resource: " + clazz.getCanonicalName());
+		System.out.println("Registered Resource " + clazz.getCanonicalName() + " for pattern '" + pattern + "'.");
 		registeredResources.put(pattern, data);
 	}
 
@@ -142,21 +139,6 @@ public class CoffeeResourceLoader {
  */
 	public InputStream loadTemplate(String path) throws IOException {
 		return getResourceAsStream(path);
-	}
-
-/**
- * Instantiate the className
- * @param className
- * @return
- */
-	public Object instanceForName (String className) {
-		try {
-			Class<?> clazz = getClassLoader().loadClass(className);
-			return clazz.newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 /**
@@ -191,9 +173,10 @@ public class CoffeeResourceLoader {
 	}
 
 	public CoffeeResource getResource(String uri) {
-		for (String resourcePattern : registeredResources.keySet())
+		for (String resourcePattern : registeredResources.keySet()) {
 			if (uri.matches(resourcePattern))
 				return registeredResources.get(resourcePattern);
+		}
 		return null;
 	}
 
@@ -220,12 +203,6 @@ public class CoffeeResourceLoader {
 
 	public boolean isCacheEnabled() {
 		return cacheEnabled;
-	}
-	
-	public static CoffeeResourceLoader getInstance() {
-		if (isNull(instance))
-			instance = new CoffeeResourceLoader();
-		return instance;
 	}
 
 	public void setResourceLoader(ServletContext resourceLoader) {

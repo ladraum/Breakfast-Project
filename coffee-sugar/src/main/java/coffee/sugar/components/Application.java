@@ -6,6 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import coffee.core.Cafeteria;
 import coffee.core.CoffeeContext;
 import coffee.core.components.IComponent;
 import coffee.core.components.xhtml.XHtmlComponent;
@@ -46,7 +47,7 @@ public class Application extends Component {
 
 			context.put(ApplicationBody.SUGAR_APPLICATION_BODY, form);
 
-			CoffeeResourceLoader resourceLoader = CoffeeResourceLoader.getInstance();
+			CoffeeResourceLoader resourceLoader = Cafeteria.getResourceLoader(getCoffeeContext());
 			IComponent compiledTemplate = resourceLoader.compile(template, context);
 			compiledTemplate.render();
 		} catch (IOException e) {
@@ -56,6 +57,8 @@ public class Application extends Component {
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

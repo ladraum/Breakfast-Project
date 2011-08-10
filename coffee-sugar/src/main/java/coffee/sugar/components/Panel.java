@@ -61,16 +61,13 @@ public class Panel extends Component {
 	}
 
 	public String getStyleClassNames() {
-		if (!Util.isNull(getSkin()))
 			return new StringBuilder()
 				.append(styleClassNames)
 				.append(' ')
 				.append(getSkin())
 					.toString();
-
-		return styleClassNames;
 	}
-	
+
 	@Override
 	public String getLabel() {
 		String superclassLabel = super.getLabel();

@@ -33,18 +33,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import coffee.core.CoffeeContext;
-import coffee.core.CoffeeContextFactory;
+import coffee.core.Cafeteria;
 import coffee.core.CoffeeResource;
-import coffee.core.ICoffeeContextFactory;
 import coffee.core.IResource;
 import coffee.core.components.IComponent;
 import coffee.core.loader.CoffeeResourceLoader;
 
-//@WebFilter("/*")
 public class CoffeeFilter implements Filter {
 
 	protected FilterConfig filterConfig;
-	protected ICoffeeContextFactory contextFactory;
 	protected CoffeeResourceLoader resourceLoader;
 
 	@Override
@@ -57,18 +54,15 @@ public class CoffeeFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		setFilterConfig(filterConfig);
 
-		// TODO: Allow to use a custom context factory by setting a new one at Initial-Parameter 
-		contextFactory = new CoffeeContextFactory();
-
 		try {
-			resourceLoader = CoffeeResourceLoader.getInstance();
-			resourceLoader.setServletContext(getServletContext());
+			ServletContext servletContext = getServletContext();
+			resourceLoader = Cafeteria.getResourceLoader(servletContext.getContextPath());
+			resourceLoader.setServletContext(servletContext);
 			resourceLoader.initialize();
 		} catch (IOException e) {
 			throw new ServletException(e.getMessage(), e);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ServletException(e.getMessage(), e);
 		}
 	}
 
@@ -138,7 +132,7 @@ public class CoffeeFilter implements Filter {
 	public CoffeeContext createCoffeeContext(ServletRequest request,
 			ServletResponse response, ServletContext servletContext) {
 		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		CoffeeContext context = contextFactory.createContext();
+		CoffeeContext context = Cafeteria.createContext();
 		context.setRequest(request);
 		context.setResponse(response);
 		context.setServletContext(servletContext);
@@ -166,14 +160,6 @@ public class CoffeeFilter implements Filter {
 
 	public FilterConfig getFilterConfig() {
 		return filterConfig;
-	}
-
-	public void setContextFactory(ICoffeeContextFactory contextFactory) {
-		this.contextFactory = contextFactory;
-	}
-
-	public ICoffeeContextFactory getContextFactory() {
-		return contextFactory;
 	}
 
 }

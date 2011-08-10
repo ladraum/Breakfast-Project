@@ -31,9 +31,8 @@ import coffee.core.components.IComponentFactory;
 import coffee.core.components.TextNode;
 import coffee.core.components.template.TemplateComponentFactory;
 import coffee.core.components.xhtml.XHtmlComponentFactory;
-import coffee.core.loader.CoffeeResourceLoader;
+import coffee.core.util.Reflection;
 import coffee.core.util.Util;
-
 
 /**
  * @since Coffee 1.0
@@ -44,11 +43,8 @@ public class CoffeeParser extends DefaultHandler {
 	private IComponent currentComponent;
 	private StringBuffer textContent;
 	private CoffeeContext context;
-	private CoffeeResourceLoader resourceLoader;
 
 	public CoffeeParser() {
-		resourceLoader = CoffeeResourceLoader.getInstance();
-
 		this.textContent = new StringBuffer();
 		CoffeeContext.registerNamespace(
 				"http://www.w3.org/1999/xhtml", new XHtmlComponentFactory());
@@ -87,7 +83,7 @@ public class CoffeeParser extends DefaultHandler {
 		String className = String.format("%s.ComponentFactory",
 			Util.join(
 				uri.replace("urn:", "").split(":"), "."));
-		IComponentFactory factory = (IComponentFactory)resourceLoader.instanceForName(className);
+		IComponentFactory factory = (IComponentFactory)Reflection.instanceForName(className);
 
 		if (Util.isNull(factory))
 			throw new NullPointerException("The 'factory' object is null: Can't find components factory for class " + className);
@@ -105,8 +101,6 @@ public class CoffeeParser extends DefaultHandler {
 		extractTextContentBeforeNesting();
 		
 		try {
-			
-			
 			IComponentFactory factory = CoffeeContext.getComponentFactory(uri);
 			IComponent newComponent = factory.newComponent(localName, context);
 

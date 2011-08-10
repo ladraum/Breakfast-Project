@@ -158,6 +158,9 @@ ul.ButtonBar li {
 div.Grid {
     background: white;
     border: 1px solid #cecece;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
 }
 div.Grid ul {
     border-bottom: 1px dotted #dedede;
@@ -311,7 +314,7 @@ div.DialogPanel div.Container {
 	margin: 0px;
 	overflow: auto;
 	padding: 0px; }
-div.DialogPanel ul.ButtonBar {
+div.DialogPanel ul.BottomButtonBar {
 	display: block;
 	position: absolute;
 	bottom: 10px;

@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import coffee.core.Cafeteria;
 import coffee.core.CoffeeParser;
 import coffee.core.CoffeeResource;
 import coffee.core.loader.CoffeeResourceLoader;
@@ -20,7 +21,7 @@ public class CoffeeParserTest {
 	private CoffeeResourceLoader resourceLoader;
 
 	public CoffeeParserTest() throws ClassNotFoundException, IOException {
-		resourceLoader = CoffeeResourceLoader.getInstance();
+		resourceLoader = Cafeteria.getResourceLoader("/test");
 		resourceLoader.initialize();
 	}
 

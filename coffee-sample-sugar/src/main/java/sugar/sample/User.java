@@ -1,6 +1,6 @@
 package sugar.sample;
 
-public class Usuario {
+public class User {
 	private String name;
 	private String civilstate;
 	private String isActiveUser;

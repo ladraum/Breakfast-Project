@@ -23,8 +23,6 @@ public abstract class AbstractSystemResourceLoader {
 						normalizeClassName(resource));
 				classes.add(clazz);
 			} catch (Throwable e) {
-				// Ignoring NoClassDefFound Exception
-				// e.printStackTrace();
 			}
 		}
 

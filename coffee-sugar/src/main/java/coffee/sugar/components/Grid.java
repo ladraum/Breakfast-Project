@@ -23,8 +23,10 @@ public class Grid extends Widget {
 		writer
 			.append("<div id=\"")
 			.append(getId())
-			.append("\" class=\"Grid\" style=\"")
-			.append(getStyleDefinition())
+			.append("\" class=\"Grid ")
+				.append(getSkin())
+			.append("\" style=\"")
+				.append(getStyleDefinition())
 			.append("\"></div>")
 
 			.append("<script>application.addChild(new Grid( {label:\"")

@@ -53,4 +53,19 @@ public class Reflection {
 				attribute.substring(1));
 		return target.getClass().getMethod(setter, value.getClass());
 	}
+
+	/**
+	 * Instantiate the className
+	 * @param className
+	 * @return
+	 */
+	public static Object instanceForName (String className) {
+		try {
+			Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
+			return clazz.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

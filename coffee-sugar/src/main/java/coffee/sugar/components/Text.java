@@ -10,6 +10,7 @@ import coffee.sugar.Component;
 public class Text extends Component {
 	
 	private String textContent;
+	private boolean bold = false;
 
 	@Override
 	public void configure() {
@@ -36,10 +37,32 @@ public class Text extends Component {
 	}
 	
 	@Override
+	public StringBuilder getStyleDefinition() {
+		StringBuilder definition = super.getStyleDefinition();
+		
+		if (isBold())
+			definition.append("font-weight: bold;");
+		
+		return definition;
+	}
+	
+	@Override
 	public String getTextContent() {
 		if (Util.isNull(textContent))
 			textContent = super.getTextContent();
 		return textContent;
+	}
+
+	public void setBold(String bold) {
+		this.bold = Boolean.parseBoolean(bold);
+	}
+
+	public void setBold(Boolean bold) {
+		this.bold = bold;
+	}
+
+	public Boolean isBold() {
+		return bold;
 	}
 
 }

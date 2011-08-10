@@ -49,8 +49,9 @@ public class ServletContextResourceLoader extends AbstractSystemResourceLoader {
 					List<String> resources = retrieveAvailableResources(path);
 					if (!Util.isNull(resources))
 						list.addAll(resources);
-		    	} else
+		    	} else {
 		    		list.add(path);
+		    	}
 		    } catch (MalformedURLException e) {
 	    		throw new RuntimeException(e);
 		    } catch (FileNotFoundException e) {
@@ -68,17 +69,17 @@ public class ServletContextResourceLoader extends AbstractSystemResourceLoader {
 	public List<String> retrieveResourcesFromJar(String jarName) throws IOException,
 			ClassNotFoundException {
 		ArrayList<String> list = new ArrayList<String>();
-
 		JarInputStream stream = new JarInputStream
 			(servletContext.getResourceAsStream(jarName));
 
 		while(true) {
 			JarEntry entry = stream.getNextJarEntry();
-			if (!Util.isNull(entry))
+			if (Util.isNull(entry))
 				break;
 			list.add(entry.getName());
 		}
 
+		stream.close();
 		return list;
 	}
 

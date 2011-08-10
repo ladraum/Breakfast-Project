@@ -11,20 +11,22 @@
 	<ui:Script src="templates/User.js" />
 
 	<ui:Dialog id="dependentsDialog" label="Cadastro de dependentes" height="140px">
-		<ui:FormItem label="Nome:" labelWidth="100px" marginTop="10px">
-			<ui:TextInput id="depName" />
-		</ui:FormItem>
-
-		<ui:FormItem label="Telefone:" labelWidth="100px">
-			<ui:TextInput id="depPhone" />
-		</ui:FormItem>
-
-		<ui:ButtonBar align="center">
-			<ui:Button label="Salvar" click="onDependentsDialogSaveClick()"/>
-			<ui:Button label="Cancelar" click="application.dependentsDialog.hide()" />
-		</ui:ButtonBar>
-
-		<ui:TextInput id="depIndex" visible="false" />
+		<ui:Box margin="10px">
+			<ui:FormItem label="Nome:" labelWidth="100px" marginTop="10px">
+				<ui:TextInput id="depName" />
+			</ui:FormItem>
+	
+			<ui:FormItem label="Telefone:" labelWidth="100px">
+				<ui:TextInput id="depPhone" />
+			</ui:FormItem>
+	
+			<ui:ButtonBar align="center">
+				<ui:Button label="Salvar" click="onDependentsDialogSaveClick()"/>
+				<ui:Button label="Cancelar" click="application.dependentsDialog.hide()" />
+			</ui:ButtonBar>
+	
+			<ui:TextInput id="depIndex" visible="false" />
+		</ui:Box>
 	</ui:Dialog>
 
 	<ui:Dialog id="branchDialog" label="Unidades" closable="true" >

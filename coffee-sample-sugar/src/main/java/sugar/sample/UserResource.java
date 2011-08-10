@@ -4,29 +4,20 @@ import coffee.core.XHtmlResource;
 import coffee.core.annotation.WebResource;
 
 @WebResource(
-		pattern="/usuario/.*",
+		pattern="/user/.*",
 		template="templates/User.xhtml" )
 public class UserResource extends XHtmlResource {
 
-	private Usuario user;
+	private User user;
 
 	@Override
 	public void configure() {
-		user = new Usuario();
+		user = new User();
 		context.put("user", user);
 	}
 
 	@Override
 	public void process() {
-		
-		// try {
-		// h.newSession
-		// u = new UserService ( session )
-		// u.createUser ( user )
-		// h.commit ()
-		// } catch (BusinessErroFail failure) {
-		// context.put ("error", failure.getMessage());
-		// }
 	}
 
 }

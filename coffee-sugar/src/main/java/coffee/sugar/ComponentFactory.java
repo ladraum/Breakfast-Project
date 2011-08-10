@@ -14,6 +14,7 @@ import coffee.sugar.components.Dialog;
 import coffee.sugar.components.FormItem;
 import coffee.sugar.components.Grid;
 import coffee.sugar.components.GridColumn;
+import coffee.sugar.components.Image;
 import coffee.sugar.components.ObjectComponent;
 import coffee.sugar.components.Text;
 import coffee.sugar.components.Panel;
@@ -42,6 +43,7 @@ public class ComponentFactory extends TemplateComponentFactory {
 		register("FormItem", FormItem.class);
 		register("Grid", Grid.class);
 		register("GridColumn", GridColumn.class);
+		register("Image", Image.class);
 		register("Object", ObjectComponent.class);
 		register("Panel", Panel.class);
 		register("RadioGroup", RadioGroup.class);

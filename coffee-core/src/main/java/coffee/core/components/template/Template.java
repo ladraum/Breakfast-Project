@@ -21,6 +21,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import coffee.core.Cafeteria;
 import coffee.core.components.AbstractComponent;
 import coffee.core.components.IComponent;
 import coffee.core.loader.CoffeeResourceLoader;
@@ -35,7 +36,7 @@ public class Template extends AbstractComponent {
 	@Override
 	public void render() throws IOException {
 		try {
-			CoffeeResourceLoader resourceLoader = CoffeeResourceLoader.getInstance();
+			CoffeeResourceLoader resourceLoader = Cafeteria.getResourceLoader(getCoffeeContext());
 			IComponent template = resourceLoader.compile(src, getCoffeeContext());
 			template.render();
 		} catch (ParserConfigurationException e) {
@@ -43,6 +44,8 @@ public class Template extends AbstractComponent {
 		} catch (SAXException e) {
 			throw new IOException(e);
 		} catch (CloneNotSupportedException e) {
+			throw new IOException(e);
+		} catch (ClassNotFoundException e) {
 			throw new IOException(e);
 		}
 	}

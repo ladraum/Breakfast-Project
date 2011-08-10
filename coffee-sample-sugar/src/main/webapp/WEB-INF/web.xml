@@ -5,4 +5,14 @@
 
 	<display-name>coffee-sample</display-name>
 
+	<filter>
+		<filter-name>Coffee</filter-name>
+		<filter-class>coffee.core.filter.CoffeeFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>Coffee</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 </web-app>

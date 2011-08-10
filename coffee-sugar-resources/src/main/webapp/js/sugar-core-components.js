@@ -200,7 +200,22 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  * BOX
  * ------------------------------------------------------------------------- */
     Box = Class(Component);
-    Box.prototype.toString = function () { return "Box Object"; };
+    Box.prototype.toString = function () { return "Box"; };
+
+/* -------------------------------------------------------------------------
+ * Image
+ * ------------------------------------------------------------------------- */
+    Image = Class(Component);
+    Image.prototype.toString = function () { return "Image"; };
+
+    Image.prototype.configure = function (args) {
+    	this.private("location", args.location);
+    };
+
+    Image.prototype.setLocation = function (location) {
+    	this.target.setAttribute("href", location);
+    	this.location=location;
+    };
 
 /* -------------------------------------------------------------------------
  * Text
@@ -218,7 +233,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  * FormItem
  * ------------------------------------------------------------------------- */
     FormItem = Class(Component);
-    FormItem.prototype.toString = function () { return "FormItem Object"; };
+    FormItem.prototype.toString = function () { return "FormItem"; };
 
     FormItem.prototype.configure = function (args) {
     	this.private ("label", args.label);
@@ -234,7 +249,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  * Panel
  * ------------------------------------------------------------------------- */
     Panel = Class(Component);
-    Panel.prototype.toString = function () { return "Panel Object"; };
+    Panel.prototype.toString = function () { return "Panel"; };
 
     Panel.prototype.configure = function (args){
     	this.private("labelComponent",
@@ -268,12 +283,12 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- * DialogPanel
+ * Dialog
  * ------------------------------------------------------------------------- */
-    DialogPanel = Class(Panel);
-    DialogPanel.prototype.toString = function () { return "DialogPanel Object"; };
+    Dialog = Class(Panel);
+    Dialog.prototype.toString = function () { return "Dialog"; };
 
-    DialogPanel.prototype.configure = function (args){
+    Dialog.prototype.configure = function (args){
     	Panel.prototype.configure.apply (this, [args]); // super
     	this.private("closable", args.closable);
     	this.private("modal", args.modal);
@@ -282,7 +297,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	if (args.width)
     		this.setWidth(args.width);
 
-    	if (args.height)
+    	if (args.height || args.height != "null")
     		this.setHeight(args.height);
 
     	if (this.closable) {
@@ -308,7 +323,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     		this.hide();
     };
 
-    DialogPanel.prototype.configureAsModal = function () {
+    Dialog.prototype.configureAsModal = function () {
     	if (!this.width || !this.height)
     		return;
 
@@ -321,21 +336,27 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.configureModalBackground();
     };
 
-    DialogPanel.prototype.configureModalBackground = function () {
+    Dialog.prototype.configureModalBackground = function () {
     	var bg = document.getElementById ( "modalbg" );
     	if (!bg) {
 	    	bg = document.createElement("div");
 	    	bg.setAttribute("id", "modalbg");
     	}
+    	
+    	var windowSize = DomUtil.getWindowDimensions();
+    	var scrollSize = DomUtil.getWindowScroll();
+    	var windowWidth = windowSize.width + scrollSize.x,
+    		windowHeight = windowSize.height + scrollSize.y;
 
     	bg.style.position = "absolute";
-    	bg.style.width = DomUtil.getWindowWidth() + "px";
-    	bg.style.height = DomUtil.getWindowHeight() + "px";
+    	bg.style.width = windowWidth + "px";
+    	bg.style.height = windowHeight + "px";
     	bg.style.top = "0px";
     	bg.style.left = "0px";
     	bg.style.zIndex = "500";
     	bg.style.background = "#cdcdcd";
     	bg.style.display = "none";
+    	DomUtil.applyOpacity (bg, 0);
 
     	document.getElementsByTagName("body")[0].appendChild(bg);
 
@@ -344,25 +365,24 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	DomUtil.fade(bg, 0, 70);
     };
 
-    DialogPanel.prototype.getLeftPosition = function (args) {
-    	var pos = ((DomUtil.getWindowWidth()
+    Dialog.prototype.getLeftPosition = function (args) {
+    	var pos = ((DomUtil.getWindowDimensions().width
     					- this.width.replace("px","")) / 2);
     	return pos;
     };
 
-    DialogPanel.prototype.getTopPosition = function (args) {
-    	var pos = ((DomUtil.getWindowHeight()
-    					- this.height.replace("px","")) / 2) - 100;
+    Dialog.prototype.getTopPosition = function (args) {
+    	var pos = (DomUtil.getWindowScroll().y) + 100;
     	return pos;
     };
 
-    DialogPanel.prototype.show = function () {
+    Dialog.prototype.show = function () {
     	Component.prototype.show.apply(this);
     	if (this.modal)
     		this.configureAsModal();
     };
     
-    DialogPanel.prototype.hide = function () {
+    Dialog.prototype.hide = function () {
     	Component.prototype.hide.apply(this);
     	if (this.modal) {
         	var bg = document.getElementById ( "modalbg" );
@@ -371,7 +391,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	}
     };
 
-    DialogPanel.prototype.onCloseClick = function (){
+    Dialog.prototype.onCloseClick = function (){
     	this.hide();
     	this.dispatch ("close");
     };
@@ -380,9 +400,10 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  * TextInput
  * ------------------------------------------------------------------------- */
     TextInput = Class(Widget);
-    TextInput.prototype.toString = function () { return "TextInput Object"; };
+    TextInput.prototype.toString = function () { return "TextInput"; };
 
     TextInput.prototype.configure = function (args) {
+    	Widget.prototype.configure.apply (this, [args]);
     	this.private("mask", args.mask);
     	this.private("readonly", args.readonly);
     	DomUtil.addEventListener(this.target, "keyup",
@@ -408,7 +429,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  * Checkbox
  * ------------------------------------------------------------------------- */
     Checkbox = Class(Widget);
-    Checkbox.prototype.toString = function () { return "Checkbox Object"; };
+    Checkbox.prototype.toString = function () { return "Checkbox"; };
     
     Checkbox.prototype.configure = function (args) {
     	this.labelComponent = document.getElementById(this.id);
@@ -437,13 +458,13 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  *  Textarea
  * ------------------------------------------------------------------------- */
     Textarea = Class(TextInput);
-    Textarea.prototype.toString = function () { return "Textarea Object"; };
+    Textarea.prototype.toString = function () { return "Textarea"; };
 
 /* -------------------------------------------------------------------------
  *  Button
  * ------------------------------------------------------------------------- */
     Button = Class(Component);
-    Button.prototype.toString = function () { return "Button Object"; };
+    Button.prototype.toString = function () { return "Button"; };
 
     Button.prototype.setLabel = function (value) {
     	this.target.value = value;
@@ -458,19 +479,19 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  *  ComboBox
  * ------------------------------------------------------------------------- */
     ComboBox = Class(Widget);
-    ComboBox.prototype.toString = function () { return "ComboBox Object"; };
+    ComboBox.prototype.toString = function () { return "ComboBox"; };
 
 /* -------------------------------------------------------------------------
  *  Radiobox
  * ------------------------------------------------------------------------- */
     Radiobox = Class(Checkbox);
-    Radiobox.prototype.toString = function () { return "Radiobox Object"; };
+    Radiobox.prototype.toString = function () { return "Radiobox"; };
 
 /* -------------------------------------------------------------------------
  *  RadioGroup 
  * ------------------------------------------------------------------------- */
     RadioGroup = Class(Widget);
-    RadioGroup.prototype.toString = function () { return "RadioGroup Object"; };
+    RadioGroup.prototype.toString = function () { return "RadioGroup"; };
 
     RadioGroup.prototype.configure = function (args) {
     	Widget.prototype.configure.apply (this, [args]);
@@ -510,7 +531,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     var EVENT_GRID_SELECTROW = "selectrow";
 
     Grid = Class(Widget);
-    Grid.prototype.toString = function () { return "Grid Object"; };
+    Grid.prototype.toString = function () { return "Grid"; };
     Grid.prototype.configure = function (args) {
     	Widget.prototype.configure.apply (this, [args]);
         this.private("value");
@@ -714,7 +735,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
  *  GridColumn
  * ------------------------------------------------------------------------- */
     GridRow = Class();
-    GridRow.prototype.toString = function () { return "GridRow Object"; };
+    GridRow.prototype.toString = function () { return "GridRow"; };
     GridRow.prototype.constructor = function (values, rowPos, parent) {
     	this.private ("parent", parent);
     	this.private ("id", parent.id + "GridRow" + rowPos);

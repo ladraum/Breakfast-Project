@@ -20,8 +20,8 @@ public class CoffeeResourceLoaderTest {
 	public static final String PACKAGE_NAME = "coffee.sample";
 	private CoffeeResourceLoader resourceManager;
 
-	public CoffeeResourceLoaderTest() {
-		resourceManager = CoffeeResourceLoader.getInstance();
+	public CoffeeResourceLoaderTest() throws IOException, ClassNotFoundException {
+		resourceManager = Cafeteria.getResourceLoader("/test");
 	}
 	
 	@Before

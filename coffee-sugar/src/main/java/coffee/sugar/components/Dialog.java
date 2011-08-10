@@ -12,7 +12,7 @@ public class Dialog extends Panel {
 	public void configure() {
 		setStyleClassNames("Panel DialogPanel");
 
-		registerComponent("new DialogPanel( {modal:true,id:\""+getId()+"\",label:\""+getLabel()+
+		registerComponent("new Dialog( {modal:true,id:\""+getId()+"\",label:\""+getLabel()+
 								"\", closable:"+isClosable()+",width:\""+getWidth()+
 								"\", height:\""+getHeight()+"\",visible:"+isVisible()+"," +
 									"onclose:\""+ getOnclose() +"\"} )");
@@ -48,16 +48,6 @@ public class Dialog extends Panel {
 			super.setWidth(width);
 		}
 		return width;
-	}
-	
-	@Override
-	public String getHeight() {
-		String height = super.getHeight();
-		if (StringUtil.isEmpty(height)) {
-			height = "80px";
-			super.setHeight(height);
-		}
-		return height;
 	}
 
 	public void setOnclose(String onclose) {
