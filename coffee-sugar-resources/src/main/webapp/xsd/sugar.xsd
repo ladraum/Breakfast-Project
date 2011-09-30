@@ -72,7 +72,7 @@
 	<element name="Application" type="tns:Application"></element>
 	<complexType name="Application">
 		<complexContent>
-			<extension base="tns:AbstractComponent">
+			<extension base="tns:Component">
 				<attribute name="httpMethod" type="string"></attribute>
 				<attribute name="template" type="string"></attribute>
 				<attribute name="load" type="string"></attribute>
@@ -151,7 +151,9 @@
 	<element name="Dialog" type="tns:Dialog"></element>
 	<complexType name="Dialog">
 		<complexContent>
-			<extension base="tns:Component"></extension>
+			<extension base="tns:Component">
+				<attribute name="closable" type="boolean"></attribute>
+			</extension>
 		</complexContent>
 	</complexType>
 
@@ -184,6 +186,15 @@
 		</complexContent>
 	</complexType>
 
+	<element name="GridColumn" type="tns:GridColumn"></element>
+	<complexType name="GridColumn">
+		<complexContent>
+			<extension base="tns:Component">
+				<attribute name="label" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
 	<element name="Panel" type="tns:Panel"></element>
 	<complexType name="Panel">
 		<complexContent>
@@ -194,16 +205,8 @@
 	<element name="RadioGroup" type="tns:RadioGroup"></element>
 	<complexType name="RadioGroup">
 		<complexContent>
-			<extension base="tns:Widget"></extension>
-		</complexContent>
-	</complexType>
-
-	<element name="RadioItem" type="tns:RadioItem"></element>
-	<complexType name="RadioItem">
-		<complexContent>
 			<extension base="tns:Widget">
-				<attribute name="selected" type="boolean"></attribute>
-				<attribute name="name" type="string"></attribute>
+				<attribute name="direction" type="string"></attribute>
 				<attribute name="direction" default="vertical">
 					<simpleType>
 						<restriction base="string">
@@ -213,6 +216,16 @@
 						</restriction>
 					</simpleType>
 				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="RadioItem" type="tns:RadioItem"></element>
+	<complexType name="RadioItem">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="selected" type="boolean"></attribute>
+				<attribute name="name" type="string"></attribute>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -233,6 +246,7 @@
 	<complexType name="Tree">
 		<complexContent>
 			<extension base="tns:Widget">
+				<attribute name="children" type="string"></attribute>
 				<attribute name="service" type="string"></attribute>
 				<attribute name="selectedChildren" type="string"></attribute>
 			</extension>

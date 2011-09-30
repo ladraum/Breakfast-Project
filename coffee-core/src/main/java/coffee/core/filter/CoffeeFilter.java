@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,6 +40,7 @@ import coffee.core.IResource;
 import coffee.core.components.IComponent;
 import coffee.core.loader.CoffeeResourceLoader;
 
+@WebFilter("/*")
 public class CoffeeFilter implements Filter {
 
 	protected FilterConfig filterConfig;
