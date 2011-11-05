@@ -23,6 +23,7 @@ form.Application *:focus {
 div.Box {
 	/* float: left; */
 	margin: 0px;
+	padding: 0px;
 	position: relative;
     overflow: hidden;
 }
@@ -30,29 +31,41 @@ div.Box {
 /* FormItem Container */
 div.FormItem {
 	float: none;
+	margin: 0px;
+	padding: 0px;
 	margin-bottom: 10px;
     overflow: hidden;
 }
 
 div.FormItem span.Label {
 	display: block;
+	margin: 0px;
 	padding: 3px 7px 0px 0px;
 }
 
-div.FormItem label { padding-top: 2px; }
+div.FormItem label {
+	margin: 0px;
+	padding: 0px;
+	padding-top: 2px; }
 /* div.FormItem label input, */
 div.FormItem label input[TYPE="CHECKBOX"] {
+	margin: 0px;
 	margin-right: 5px;
+	padding: 0px;
 	top: 1px; }
 	
 div.FormItem input[TYPE="TEXT"],
 div.FormItem input[TYPE="BUTTON"],
 div.FormItem button {
+	margin: 0px;
+	padding: 0px;
 	margin-right: 5px; }
 
 div.FormItem span.required {
 	color: red;
 	font-weight: bolder;
+	margin: 0px;
+	padding: 0px;
 	position: relative;
 	top: 3px;
 }
@@ -69,9 +82,13 @@ input[type="PASSWORD"] {
 	border-right-color: #898989;
 	border-bottom-color: #898989;
 	font-family: sans-serif;
+	margin: 0px;
+	padding: 0px;
 }
 
 input[type="CHECKBOX"] {
+	margin: 0px;
+	padding: 0px;
 	position: relative;
 	top: 5px;
 }
@@ -90,6 +107,7 @@ form.Application input[type="PASSWORD"] {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfeff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 	background: linear-gradient(top, #fcfeff 0%,#ffffff 100%); /* W3C */
 
+	margin: 0px;
 	padding: 5px;
 	font-family: monospace;
 }
@@ -98,6 +116,8 @@ textarea:hover,
 input[type="TEXT"]:hover,
 select:hover {
 /* 	border-color: #0066AA; */
+	margin: 0px;
+	padding: 0px;
 	outline: 1px solid #898989;
 }
 
@@ -105,6 +125,8 @@ textarea:focus,
 input[type="TEXT"]:focus,
 input[type="PASSWORD"]:focus {
 /* 	border-color: #0066AA; */
+	margin: 0px;
+	padding: 0px;
 	outline: 1px solid #898989;
 }
 
@@ -113,6 +135,8 @@ form.Application input[type="TEXT"].readonly,
 form.Application input[type="PASSWORD"].readonly {
 	background: #eeeeee;
 	color: #898989;
+	margin: 0px;
+	padding: 0px;
 }
 
 button,
@@ -122,6 +146,7 @@ input[type="SUBMIT"] {
 	border: 1px solid #cdcdcd;
 	border-radius: 3px;
 	font-weight: bold;
+	margin: 0px;
 	padding: 5px 15px;
 }
 
@@ -133,6 +158,8 @@ input[type="SUBMIT"]:focus,
 input[type="SUBMIT"]:hover {
 	background: #f2f5f6;
 	border: 1px solid #0066AA;
+	margin: 0px;
+	padding: 0px;
 	outline: none;
 }
 
@@ -146,12 +173,15 @@ input[type="SUBMIT"]:active {
 ul.ButtonBar {
 	list-style: none;
 	overflow: hidden;
+	margin: 0px;
 	padding: 5px 10px 5px;
 }
 
 ul.ButtonBar li {
 	display: inline;
+	margin: 0px;
 	margin-left: 10px;
+	padding: 0px;
 }
 
 /* Grid */
@@ -161,12 +191,16 @@ div.Grid {
     border-bottom-color: transparent;
     border-left-color: transparent;
     border-right-color: transparent;
+	margin: 0px;
+	padding: 0px;
 }
 div.Grid ul {
     border-bottom: 1px dotted #dedede;
     display: block;
     height: 29px;
     list-style: none;
+	margin: 0px;
+	padding: 0px;
     overflow: hidden;
     width: 100%;
 }
@@ -174,23 +208,36 @@ div.Grid ul li {
     border-left: 1px solid transparent;
     display: block;
     float: left;
-    overflow: hidden;
+	margin: 0px;
     padding: 6px 6px 4px;
+    overflow: hidden;
 }
 div.Grid ul.highlighted {
     background: #f7f7f7;
+	margin: 0px;
+	padding: 0px;
 }
 div.Grid ul.selected {
-    background: #cdf;
+    /*background: #cdf;*/
+    background: #9a9a9a;
+    color: white;
     font-weight: bolder;
+	margin: 0px;
+	padding: 0px;
 }
 div.Grid ul:hover {
-    background: #def;
+    /*background: #def;*/
+    background: #cdcdcd;
+    color: black;
     cursor: pointer;
+	margin: 0px;
+	padding: 0px;
 }
 div.Grid ul.GridHeader {
     background: url(../imgs/grid-header-bg.png) repeat-x;
     border-bottom: 1px solid #dedede;
+	margin: 0px;
+	padding: 0px;
 }
 div.Grid ul.GridHeader li {
     border-left: 1px solid #dedede;
@@ -199,6 +246,8 @@ div.Grid ul.GridHeader li {
     padding-top: 6px;
 }
 div.Grid div.GridBody {
+	margin: 0px;
+	padding: 0px;
 	overflow: auto;
 	overflow-x: hidden;
 }
@@ -209,14 +258,20 @@ div.Grid div.GridBody ul li {
 /* RadioGroup */
 ul.RadioGroup {
 	list-style: none;
+	margin: 0px;
+	padding: 0px;
 	padding-top: 2px;
 }
 ul.RadioGroup input[type="RADIO"] {
+	margin: 0px;
 	margin-right: 5px;
+	padding: 0px;
 	position: relative;
 	top: 1px;
 }
 ul.RadioGroup label {
+	margin: 0px;
+	padding: 0px;
 	padding-right: 10px;
 }
 
@@ -234,6 +289,8 @@ div.Panel div.PanelBar {
     display: block;
     /* height: 37px; */
     left: 0px;
+	margin: 0px;
+	padding: 0px;
     overflow: visible;
     position: absolute;
     top: 20px;
@@ -242,6 +299,8 @@ div.Panel div.PanelBar span {
 	font-size: 14px;
     font-weight: bold;
     left: 10px;
+	margin: 0px;
+	padding: 0px;
     position: relative;
     /* text-transform: uppercase; */
     top: 7px;
@@ -276,9 +335,9 @@ div.DialogPanel {
 	-webkit-box-shadow: 0 0 35px #888;
 	box-shadow: 0 0 35px #888;
 
-	padding: 45px 0px 0px;
-/* 	margin-bottom: 15px; */
 	margin: 0px;
+/* 	margin-bottom: 15px; */
+	padding: 45px 0px 0px;
 	position: relative;
 }
 div.DialogPanel div.PanelBar {
@@ -291,6 +350,8 @@ div.DialogPanel div.PanelBar span {
 	font-size: 14px;
 	font-weight: bold;
 	left: 20px;
+	margin: 0px;
+	padding: 0px;
 	top: 14px;
 }
 div.DialogPanel div.PanelBar a.CloseButton {
@@ -298,6 +359,8 @@ div.DialogPanel div.PanelBar a.CloseButton {
 	border: none;
 	display: block;
 	height: 16px;
+	margin: 0px;
+	padding: 0px;
 	position: absolute;
 	right: 13px;
 	text-decoration: none;
@@ -307,6 +370,8 @@ div.DialogPanel div.PanelBar a.CloseButton {
 div.DialogPanel div.PanelBar a.CloseButton:hover {
 /* 	opacity: 0.8; */
 	cursor: pointer;
+	margin: 0px;
+	padding: 0px;
 	text-decoration: none;
 }
 div.DialogPanel div.Container {
@@ -315,36 +380,52 @@ div.DialogPanel div.Container {
 	overflow: auto;
 	padding: 0px; }
 div.DialogPanel ul.BottomButtonBar {
-	display: block;
-	position: absolute;
 	bottom: 10px;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
 }
 div.DialogPanel span.AlertMessage {
 	font-size: 13px;
 	display: block;
+	margin: 0px;
 	padding: 15px;
 	text-align: center; }
 
 /* Tree Component */
 div.Tree { overflow: auto; }
-div.Tree ul { clear: both; display: block; list-style: none; }
-div.Tree ul li { overflow: hidden; display: block; width: 100%; }
-div.Tree ul li a { border: 0px; display: block; width: 12px; height: 22px; float: left; text-decoration: none; }
+div.Tree ul { clear: both; display: block; list-style: none; margin: 0px; padding: 0px; }
+div.Tree ul li { overflow: hidden; display: block; width: 100%; margin: 0px; padding: 0px; }
+div.Tree ul li a { border: 0px; display: block; width: 12px; height: 22px; float: left; text-decoration: none; margin: 0px; padding: 0px; }
 div.Tree ul li label {
 	float: left;
 	display: block;
+	margin: 0px;
 	padding: 5px 0px 5px 10px;
 }
 div.Tree ul li a.collapsed {
 	background-image: url(../imgs/tree-pointer-collapsed.png);
 	background-repeat: no-repeat;
 	background-position: 0px center;
+	margin: 0px;
+	padding: 0px;
 }
 /*div.Tree ul li.collapsed ul { display: none; }*/
 div.Tree ul li a.elapsed {
 	background-image: url(../imgs/tree-pointer-elapsed.png);
 	background-repeat: no-repeat;
 	background-position: 0px center;
+	margin: 0px;
+	padding: 0px;
 }
-div.Tree ul li label input[type="CHECKBOX"] { top: 1px; margin-right: 5px; }
-div.Tree ul li ul { margin-left: 30px; }
+div.Tree ul li label input[type="CHECKBOX"] {
+	top: 1px;
+	margin: 0px;
+	padding: 0px;
+	margin-right: 5px; }
+div.Tree ul li ul {
+	margin: 0px;
+	padding: 0px;
+	margin-left: 30px;
+}

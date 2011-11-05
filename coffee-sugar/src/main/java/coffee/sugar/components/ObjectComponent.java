@@ -3,8 +3,8 @@ package coffee.sugar.components;
 import java.io.IOException;
 
 import coffee.core.binding.CoffeeBinder;
-import coffee.core.util.JSON;
 import coffee.core.util.Util;
+import coffee.core.util.json.JSON;
 import coffee.sugar.Component;
 
 public class ObjectComponent extends Component {
@@ -27,7 +27,7 @@ public class ObjectComponent extends Component {
 			.append("<script>application.registerObject(\"")
 				.append(getId())
 				.append("\",")
-				.append(JSON.serialize(value))
+				.append(new JSON().serialize(value))
 				.append(");</script>");
 	}
 

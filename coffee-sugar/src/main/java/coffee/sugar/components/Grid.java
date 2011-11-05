@@ -2,17 +2,28 @@ package coffee.sugar.components;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import coffee.core.binding.CoffeeBinder;
 import coffee.core.components.IComponent;
-import coffee.core.util.JSON;
+import coffee.core.util.Reflection;
 import coffee.core.util.Util;
 import coffee.sugar.Widget;
 
 public class Grid extends Widget {
 	
 	private boolean multipleSelection;
+	private String dateMask;
+	private String timeMask;
+	private String timestampMask;
+	
+	private List<GridColumn> columns;
 
 	@Override
 	public void configure() {}
@@ -71,21 +82,75 @@ public class Grid extends Widget {
 		if ( Util.isNull(collectionOfValues) )
 			return;
 
-		Collection<? extends Object> value = (Collection<? extends Object>) collectionOfValues;
-		writer
-			.append(",value:")
-			.append(JSON.serializeArrayOfObjects(value));
+		Collection<? extends Object> values = (Collection<? extends Object>) collectionOfValues;
+		writer.append(",value:[");
+
+		boolean isFirstValue = true;
+		for (Object target : values) {
+			
+			if (!isFirstValue)
+				writer.append(',');
+			isFirstValue = false;
+			
+			writer.append("{");
+			
+			Field[] fields = target.getClass().getDeclaredFields();
+			boolean isFirst = true;
+			for (Field field : fields) {
+				try {
+					Method getter = Reflection.extractGetterFor(field.getName(), target);
+					Object object = getter.invoke(target);
+					
+					if (Util.isNull(object))
+						continue;
+	
+					if (!isFirst)
+						writer.append(',');
+					isFirst = false;
+
+					writer.append(serializeColumnValue(field.getName(), object));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			writer.append("}");
+		}
+		
+		writer.append(']');
+	}
+
+	public String serializeColumnValue (String columnId, Object value) {
+		StringBuilder buffer = new StringBuilder();
+
+		String columnType = getColumnType(columnId);
+		if (Util.isNull(columnType))
+			columnType = "";
+
+		buffer
+			.append('"')
+			.append(columnId)
+			.append("\":\"");
+
+		if (columnType.equals("time") && Date.class.isInstance(value))
+			buffer.append(new SimpleDateFormat(getTimeMask()).format(value));
+		else if (columnType.equals("date") && Date.class.isInstance(value))
+			buffer.append(new SimpleDateFormat(getDateMask()).format(value));
+		else if (columnType.equals("timestamp") && Date.class.isInstance(value))
+			buffer.append(new SimpleDateFormat(getTimestampMask()).format(value));
+		else
+			buffer.append(value.toString());
+
+		return buffer
+				.append('"')
+				.toString();
 	}
 
 	public void renderColumns(PrintWriter buffer) {
 		buffer.append(",columns:[");
 		int counter = 0;
 		int attributeCounter = 0;
-		for (IComponent child : getChildren()){
-			if (!GridColumn.class.isInstance(child))
-				continue;
-			GridColumn column = (GridColumn)child;
-
+		for (GridColumn column : getColumns()){
 			if (counter > 0)
 				buffer.append(',');
 			counter++;
@@ -121,5 +186,53 @@ public class Grid extends Widget {
 
 	public Boolean isMultipleSelection() {
 		return multipleSelection;
+	}
+
+	public void setDateMask(String dateMask) {
+		this.dateMask = dateMask;
+	}
+
+	public String getDateMask() {
+		return dateMask;
+	}
+
+	public void setTimestampMask(String timestampMask) {
+		this.timestampMask = timestampMask;
+	}
+
+	public String getTimestampMask() {
+		return timestampMask;
+	}
+
+	public void setTimeMask(String timeMask) {
+		this.timeMask = timeMask;
+	}
+
+	public String getTimeMask() {
+		return timeMask;
+	}
+
+	public void setColumns(List<GridColumn> columns) {
+		this.columns = columns;
+	}
+
+	public List<GridColumn> getColumns() {
+		if (Util.isNull(columns)) {
+			columns = new ArrayList<GridColumn>();
+			for (IComponent child : getChildren()){
+				if (!GridColumn.class.isInstance(child))
+					continue;
+				columns.add((GridColumn)child);
+			}
+		}
+		return columns;
+	}
+	
+	public String getColumnType(String id) {
+		for (GridColumn column : getColumns()) {
+			if (column.getId().equals(id))
+				return column.getAttributeValue("type");
+		}
+		return null;
 	}
 }

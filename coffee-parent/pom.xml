@@ -20,7 +20,21 @@
 	<properties>
 		<coffee.version>${project.version}</coffee.version>
 		<javaee.version>6.0</javaee.version>
+        <eclipse.plugin.version>2.8</eclipse.plugin.version>
 	</properties>
+
+    <build>
+        <plugins>			
+		    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-eclipse-plugin</artifactId>				
+                <version>${eclipse.plugin.version}</version>
+			    <configuration>
+				    <projectNameTemplate>[artifactId]</projectNameTemplate>
+			    </configuration>
+		    </plugin>
+        </plugins>
+    </build>
 	
 	<modules>
 		<module>../coffee-core</module>

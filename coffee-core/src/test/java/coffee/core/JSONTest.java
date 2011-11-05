@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import coffee.core.util.JSON;
+import coffee.core.util.json.JSON;
 import coffee.sample.Animal;
 import coffee.sample.SampleEntity;
 
@@ -34,7 +34,7 @@ public class JSONTest {
 			IllegalAccessException, InvocationTargetException
 	{
 		String expected = "{\"name\":\"Joseph Smith\",\"animals\":[{\"name\":\"Dog\"},{\"name\":\"Cat\"}],\"id\":\"12\"}";
-		StringBuilder serialized = JSON.serialize(entity);
+		StringBuilder serialized = new JSON().serialize(entity);
 
 		if (!expected.equals(serialized.toString())) {
 			System.out.println("'" + expected + "'");

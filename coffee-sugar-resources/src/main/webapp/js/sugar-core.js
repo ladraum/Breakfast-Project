@@ -103,6 +103,10 @@
 	HttpRequest = Class();
 	HttpRequest.prototype.toString = function () { return "HttpRequest Object"; };
 
+	HttpRequest.EVENT_READY = "ready";
+	HttpRequest.EVENT_ERROR = "error";
+	HttpRequest.EVENT_LOADING = "loading";
+
 	HttpRequest.prototype.constructor = function (url, method) {
 		this.xmlHttp = null;
 		this.method = method || "GET";
@@ -131,7 +135,6 @@
 		var http = this.xmlHttp;
 		if (http.readyState == 4 && http.status != "200" && http.status != 200) {
 			this.dispatch("error", http.statusText);
-			//throw "HTTP ERROR: " + http.statusText;
 			return;
 		}
 
@@ -149,6 +152,18 @@
 
 	HttpRequest.prototype.getHttpHeader = function (header) {
 		this.xmlHttp.getRequestHeader(header);
+	};
+
+	HttpRequest.request = function (url, data, callback, errorcallback, method) {
+		method = method || "POST";
+
+		var http = new HttpRequest(url, method);
+
+		http.event (HttpRequest.EVENT_READY, callback);
+		if (errorcallback)
+			http.event (HttpRequest.EVENT_ERROR, errorcallback);
+
+		http.send(data);
 	};
 
 /* -------------------------------------------------------------------------

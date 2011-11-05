@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.List;
 
 import coffee.core.components.IComponent;
-import coffee.core.util.JSON;
 import coffee.core.util.Util;
+import coffee.core.util.json.JSON;
 import coffee.sugar.Widget;
 
 public class Tree extends Widget {
@@ -53,7 +53,7 @@ public class Tree extends Widget {
 		Collection<?> selectedChildren = (Collection<?>)getAttribute("selectedChildren");
 		if (Util.isNull(selectedChildren))
 			return null;
-		return JSON.serialize(selectedChildren);
+		return new JSON().serialize(selectedChildren);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -75,7 +75,7 @@ public class Tree extends Widget {
 				children.add(child);
 			}
 
-		return JSON.serialize(children);
+		return new JSON().serialize(children);
 	}
 
 	@Override

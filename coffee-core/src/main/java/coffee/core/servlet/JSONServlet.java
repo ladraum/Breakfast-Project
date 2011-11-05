@@ -9,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import coffee.core.util.JSON;
+import coffee.core.util.json.JSON;
 
 public abstract class JSONServlet implements Servlet {
 
@@ -33,7 +33,7 @@ public abstract class JSONServlet implements Servlet {
 		if (!method.equals("GET"))
 			throw new ServletException("Method not allowed: " + method);
 
-		StringBuilder serializedObject = JSON.serialize(doGet(httpServletRequest));
+		StringBuilder serializedObject = new JSON().serialize(doGet(httpServletRequest));
 		response
 			.getWriter()
 			.append(serializedObject);

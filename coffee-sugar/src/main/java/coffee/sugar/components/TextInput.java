@@ -2,7 +2,10 @@ package coffee.sugar.components;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import coffee.core.binding.CoffeeBinder;
 import coffee.core.util.Util;
 import coffee.sugar.Widget;
 
@@ -13,6 +16,8 @@ public class TextInput extends Widget {
 	private String mask;
 	private String maxLength;
 	private boolean readonly = false;
+	
+	private String value;
 
 	@Override
 	public void configure() {}
@@ -42,7 +47,8 @@ public class TextInput extends Widget {
 				.append(getMaxLength())
 				.append("\" ");
 
-		String value = getAttributeValue("value");
+		//getAttributeValue("value");
+		String value = getValue();
 		if (!Util.isNull(value))
 				writer.append("value=\"").append(value).append("\" ");
 
@@ -66,6 +72,25 @@ public class TextInput extends Widget {
 				.append("\"");
 
 		writer.append("}));</script>");
+	}
+
+/**
+ * Retrieves the component held value.
+ */
+	public String getValue() {
+		String value = "";
+		Object unparsedValue = CoffeeBinder.getValue(this.value, getCoffeeContext());
+		if (!Util.isNull(unparsedValue))
+			if (unparsedValue.getClass().isAssignableFrom(Date.class)) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat(getMask());
+				value = dateFormat.format(unparsedValue);
+			} else
+				value = unparsedValue.toString();
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public void setPasswordMask(String passwordMask) {

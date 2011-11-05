@@ -24,7 +24,7 @@ public class BranchServlet extends JSONServlet {
 			Branch branch = new Branch();
 			branch.setId((long)currentId);
 			branch.setParentId((long)id);
-			branch.setLabel("Unidade " + currentId);
+			branch.setLabel("Branch " + currentId);
 			branch.setHasChildren(false);
 
 			list.add(branch);

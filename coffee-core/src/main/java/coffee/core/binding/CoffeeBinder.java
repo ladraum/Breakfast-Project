@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import coffee.core.CoffeeContext;
-import coffee.core.util.StringUtil;
+//import coffee.core.util.StringUtil;
 import coffee.core.util.Util;
 
 public class CoffeeBinder {
@@ -41,8 +41,9 @@ public class CoffeeBinder {
 		if (Util.isNull(target))
 			return;
 		
-		if (String.class.isInstance(value))
-			value = StringUtil.escape((String)value);
+		/* TODO: improve the security by parsing special characters
+		 * if (String.class.isInstance(value))
+			value = StringUtil.escape((String)value);*/
 
 		Evaluator.eval(target, expression).setValue(value);
 	}

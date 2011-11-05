@@ -31,6 +31,11 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 
         MASKS_FILTER: {
             '9':/\d/,
+            'd':/\d/,
+            'M':/\d/,
+            'm':/\d/,
+            'h':/\d/,
+            'y':/\d/,
             'Z':/[a-zA-Z]/,
             '#':/./
         },
@@ -455,10 +460,10 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
 /* -------------------------------------------------------------------------
- *  Textarea
+ *  TextArea
  * ------------------------------------------------------------------------- */
-    Textarea = Class(TextInput);
-    Textarea.prototype.toString = function () { return "Textarea"; };
+    TextArea = Class(TextInput);
+    TextArea.prototype.toString = function () { return "Textarea"; };
 
 /* -------------------------------------------------------------------------
  *  Button
@@ -730,6 +735,52 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 		if (!height) return;
 		this.gridBody.style.height = height;
 	};
+	
+/* -------------------------------------------------------------------------
+ *  GridUtils (static)
+ * ------------------------------------------------------------------------- */
+	GridUtils = {
+		getData: function (grid) {
+			var rows = grid.getRows();
+			var data = new Array();
+
+			for (var i=0; i<rows.length; i++)
+				data.append ( rows[i].getValue() );
+
+			return data;
+		},
+		getSelectedItemsData: function (grid) {
+			var rows = grid.getSelectedItems();
+			var data = new Array();
+
+			for (var i=0; i<rows.length; i++)
+				data.append ( rows[i].getValue() );
+
+			return data;
+		},
+		serializeData: function (grid) {
+			var data = GridUtils.getData(grid);
+			var buffer = "";
+			
+			for (var i=0; i<data.length; i++) {
+				for (var attr in data[i])
+	    			buffer+= attr + "=" + escape(data[i][attr] || "") + "&";
+	    		buffer+= "?";
+			}
+			return buffer;
+		},
+		serializeSelectedItemsData: function (grid) {
+			var data = GridUtils.getSelectedItemsData(grid);
+			var buffer = "";
+			
+			for (var i=0; i<data.length; i++) {
+				for (var attr in data[i])
+	    			buffer+= attr + "=" + escape(data[i][attr] || "") + "&";
+	    		buffer+= "?";
+			}
+			return buffer;
+		}
+	};
 
 /* -------------------------------------------------------------------------
  *  GridColumn
@@ -898,6 +949,9 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     GridColumnFactory = {
     	registeredColumnTypes: {
     		defaultColumn: GridColumn,
+    		date: GridColumn,
+    		time: GridColumn,
+    		timestamp: GridColumn,
     		image: GridImageColumn
 		},
     	register: function (columnType, clazz){

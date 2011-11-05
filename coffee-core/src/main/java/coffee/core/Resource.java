@@ -50,6 +50,10 @@ public abstract class Resource implements IResource {
 		context.setPath(uri);
 	}
 
+	public void redirectToResource(String url) {
+		redirect(context.getContextPath() + url);
+	}
+
 	public CoffeeContext getContext() {
 		return context;
 	}
@@ -66,7 +70,33 @@ public abstract class Resource implements IResource {
 		getContext().getResponse().setContentType(contentType);
 	}
 	
+/**
+ * Retrieves a sent parameter from request
+ * @param param
+ * @return
+ */
 	public String getParameter(String param) {
 		return getContext().getRequest().getParameter(param);
+	}
+
+/**
+ * @return true if the HTTP request mode is POST
+ */
+	public boolean isPost() {
+		return getHttpMethod().equals("POST");
+	}
+
+/**
+ * @return true if the HTTP request mode is GET
+ */
+	public boolean isGet() {
+		return getHttpMethod().equals("GET");
+	}
+
+/**
+ * @return the request HTTP method.
+ */
+	public String getHttpMethod() {
+		return getContext().getRequest().getMethod();
 	}
 }
