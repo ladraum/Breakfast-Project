@@ -1,0 +1,102 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>breakfast</groupId>
+		<version>1.0-SNAPSHOT</version>
+		<artifactId>breakfast-parent</artifactId>
+        <relativePath>../breakfast-parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>breakfast-samples-sugar</artifactId>
+	<name>Breakfast Project: Sugar Sample Implementation</name>
+	<description>The Sweet Flavor of RIA Web Development</description>
+	<packaging>war</packaging>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+    <dependencies>
+		<dependency>
+			<groupId>breakfast</groupId>
+			<artifactId>breakfast-coffee</artifactId>
+			<version>${breakfast.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>breakfast</groupId>
+			<artifactId>breakfast-sugar</artifactId>
+			<version>${breakfast.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>breakfast</groupId>
+			<artifactId>breakfast-sugar-resources</artifactId>
+			<version>${breakfast.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>${javaee.version}</version>
+            <scope>provided</scope>
+		</dependency>
+    </dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<filtering>false</filtering>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<optimize>true</optimize>
+					<debug>false</debug>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

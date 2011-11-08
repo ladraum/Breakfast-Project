@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:Application xmlns:ui="urn:breakfast:sugar"
+	template="templates/template.xhtml"
+	load="onApplicationLoad()"
+	httpMethod="POST"	
+
+	margin="30px auto"
+	width="80%"
+	minWidth="850px">
+
+	<ui:Script src="templates/User.js" />
+
+	<ui:Dialog id="dependentsDialog" label="Cadastro de dependentes" height="140px">
+		<ui:Box margin="10px">
+			<ui:FormItem label="Nome:" labelWidth="100px" marginTop="10px">
+				<ui:TextInput id="depName" />
+			</ui:FormItem>
+	
+			<ui:FormItem label="Telefone:" labelWidth="100px">
+				<ui:TextInput id="depPhone" />
+			</ui:FormItem>
+	
+			<ui:ButtonBar align="center">
+				<ui:Button label="Salvar" click="onDependentsDialogSaveClick()"/>
+				<ui:Button label="Cancelar" click="application.dependentsDialog.hide()" />
+			</ui:ButtonBar>
+	
+			<ui:TextInput id="depIndex" visible="false" />
+		</ui:Box>
+	</ui:Dialog>
+
+	<ui:Dialog id="branchDialog" label="Unidades" closable="true" >
+		<ui:Tree id="branchesTree" service="#{contextPath}/services/branch/"
+				 children="#{branches}" selectedChildren="#{user.branches}"
+				 padding="5px 7px">
+			<ui:TreeItem id="0" label="Raiz" hasChildren="true" />
+		</ui:Tree>
+	</ui:Dialog>
+
+	<ui:Panel label="Informações Gerais">
+
+		<ui:FormItem id="nameLabel" label="Nome Completo:" required="true" >
+			<ui:TextInput id="name" value="#{user.name}" />
+		</ui:FormItem>
+
+		<ui:FormItem label="Nome da Mãe:">
+			<ui:TextInput id="motherName" value="#{user.mother}" />
+		</ui:FormItem>
+
+		<ui:FormItem label="Estado Civil:" required="true">
+			<ui:ComboBox id="maritalstatus" value="#{user.maritalstatus}" >
+				<ui:ComboItem label="Casado" value="1" />
+				<ui:ComboItem label="Ajuntado" value="2" />
+				<ui:ComboItem label="Solteiro" value="3" />
+				<ui:ComboItem label="Divorciado" value="4" />
+			</ui:ComboBox>
+		</ui:FormItem>
+
+		<ui:FormItem  label="Usuário ativo:" >
+			<ui:CheckBox id="active" checked="#{user.isActiveUser}" />
+		</ui:FormItem>
+
+		<ui:FormItem label="Unidades:" >
+			<ui:TextInput id="selectedBranches" focus="onSelectedBranchesFocus()" />
+		</ui:FormItem>
+
+		<ui:FormItem label="Doador de Sangue:" required="true">
+			<ui:RadioGroup id="doador" value="#{user.doador}" direction="horizontal">
+				<ui:RadioItem label="Sim" value="1" />
+				<ui:RadioItem label="Não" value="2" />
+			</ui:RadioGroup>
+		</ui:FormItem>
+
+	</ui:Panel>
+
+	<ui:Panel label="Dependentes" >
+		<ui:Grid id="dependents" height="200px" value="#{user.dependents}" >
+				<ui:GridColumn id="edit" value="../imgs/action-edit.png" click="onDependentsEditClick(rowdata, rowindex)" type="image" />
+				<ui:GridColumn id="remove" value="../imgs/action-remove.png" click="onDependentsRemoveClick(rowdata, rowindex)" type="image" />
+				<ui:GridColumn id="name" label="Nome" width="300px" />
+				<ui:GridColumn id="phone" label="Telefone" width="100px" />
+			</ui:Grid>
+	</ui:Panel>
+
+	<ui:ButtonBar align="center">
+		<ui:Button label="Salvar" click="onSaveClick()"/>
+		<ui:Button label="Cadastrar dependentes" click="onNewDependentsBtnClick()" />
+	</ui:ButtonBar>
+
+</ui:Application>

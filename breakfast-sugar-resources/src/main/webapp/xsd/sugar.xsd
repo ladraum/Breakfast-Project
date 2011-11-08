@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:coffee:sugar"
+	targetNamespace="urn:breakfast:sugar">
+
+	<complexType name="AbstractComponent" abstract="true">
+		<sequence>
+			<any namespace="urn:breakfast:sugar" minOccurs="0" maxOccurs="unbounded"></any>
+		</sequence>
+	</complexType>
+
+	<complexType name="Component" abstract="true">
+		<complexContent>
+			<extension base="tns:AbstractComponent">
+				<attribute name="id" type="string"></attribute>
+				<attribute name="label" type="string"></attribute>
+				<attribute name="align" default="left">
+					<simpleType>
+						<restriction base="string">
+							<whiteSpace value="collapse"></whiteSpace>
+							<enumeration value="left"></enumeration>
+							<enumeration value="right"></enumeration>
+							<enumeration value="center"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="width" type="string"></attribute>
+				<attribute name="height" type="string"></attribute>
+				<attribute name="minWidth" type="string"></attribute>
+				<attribute name="minHeight" type="string"></attribute>
+				<attribute name="maxWidth" type="string"></attribute>
+				<attribute name="maxHeight" type="string"></attribute>
+				<attribute name="margin" type="string"></attribute>
+				<attribute name="marginTop" type="string"></attribute>
+				<attribute name="marginLeft" type="string"></attribute>
+				<attribute name="marginRight" type="string"></attribute>
+				<attribute name="marginBotttom" type="string"></attribute>
+				<attribute name="padding" type="string"></attribute>
+				<attribute name="paddingTop" type="string"></attribute>
+				<attribute name="paddingLeft" type="string"></attribute>
+				<attribute name="paddingRight" type="string"></attribute>
+				<attribute name="paddingBottom" type="string"></attribute>
+				<attribute name="border" type="string"></attribute>
+				<attribute name="skin" type="string"></attribute>
+				<attribute name="visible" type="boolean"></attribute>
+				<attribute name="floating" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Widget" abstract="true">
+		<complexContent>
+			<extension base="tns:Component">
+				<attribute name="value" type="string"></attribute>
+				<attribute name="blur" type="string"></attribute>
+				<attribute name="change" type="string"></attribute>
+				<attribute name="click" type="string"></attribute>
+				<attribute name="dbclick" type="string"></attribute>
+				<attribute name="focus" type="string"></attribute>
+				<attribute name="mousedown" type="string"></attribute>
+				<attribute name="mousemove" type="string"></attribute>
+				<attribute name="mouseout" type="string"></attribute>
+				<attribute name="mouseover" type="string"></attribute>
+				<attribute name="mouseup" type="string"></attribute>
+				<attribute name="keydown" type="string"></attribute>
+				<attribute name="keypress" type="string"></attribute>
+				<attribute name="keyup" type="string"></attribute>
+				<attribute name="select" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Application" type="tns:Application"></element>
+	<complexType name="Application">
+		<complexContent>
+			<extension base="tns:Component">
+				<attribute name="httpMethod" type="string"></attribute>
+				<attribute name="template" type="string"></attribute>
+				<attribute name="load" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Script" type="tns:Script"></element>
+	<complexType name="Script">
+		<complexContent>
+			<extension base="tns:AbstractComponent">
+				<attribute name="src" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Box" type="tns:Box"></element>
+	<complexType name="Box">
+		<complexContent>
+			<extension base="tns:Component">
+				<attribute name="direction" default="vertical">
+					<simpleType>
+						<restriction base="string">
+							<whiteSpace value="collapse"></whiteSpace>
+							<enumeration value="horizontal"></enumeration>
+							<enumeration value="vertical"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Button" type="tns:Button"></element>
+	<complexType name="Button">
+		<complexContent>
+			<extension base="tns:Widget"></extension>
+		</complexContent>
+	</complexType>
+
+	<element name="ButtonBar" type="tns:ButtonBar"></element>
+	<complexType name="ButtonBar">
+		<complexContent>
+			<extension base="tns:Component"></extension>
+		</complexContent>
+	</complexType>
+
+	<element name="CheckBox" type="tns:CheckBox"></element>
+	<complexType name="CheckBox">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="checked" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="ComboBox" type="tns:ComboBox"></element>
+	<complexType name="ComboBox">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="size" type="integer"></attribute>
+				<attribute name="selectedValue" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="ComboItem" type="tns:ComboItem"></element>
+	<complexType name="ComboItem">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="selected" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Dialog" type="tns:Dialog"></element>
+	<complexType name="Dialog">
+		<complexContent>
+			<extension base="tns:Component">
+				<attribute name="closable" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="FormItem" type="tns:FormItem"></element>
+	<complexType name="FormItem">
+		<complexContent>
+			<extension base="tns:Box">
+				<attribute name="labelAlign" default="left">
+					<simpleType>
+						<restriction base="string">
+							<whiteSpace value="collapse"></whiteSpace>
+							<enumeration value="left"></enumeration>
+							<enumeration value="right"></enumeration>
+							<enumeration value="center"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="labelWidth" type="string"></attribute>
+				<attribute name="required" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Grid" type="tns:Grid"></element>
+	<complexType name="Grid">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="required" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="GridColumn" type="tns:GridColumn"></element>
+	<complexType name="GridColumn">
+		<complexContent>
+			<extension base="tns:Component">
+				<attribute name="label" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Panel" type="tns:Panel"></element>
+	<complexType name="Panel">
+		<complexContent>
+			<extension base="tns:Component"></extension>
+		</complexContent>
+	</complexType>
+
+	<element name="RadioGroup" type="tns:RadioGroup"></element>
+	<complexType name="RadioGroup">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="direction" type="string"></attribute>
+				<attribute name="direction" default="vertical">
+					<simpleType>
+						<restriction base="string">
+							<whiteSpace value="collapse"></whiteSpace>
+							<enumeration value="horizontal"></enumeration>
+							<enumeration value="vertical"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="RadioItem" type="tns:RadioItem"></element>
+	<complexType name="RadioItem">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="selected" type="boolean"></attribute>
+				<attribute name="name" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="TextInput" type="tns:TextInput"></element>
+	<complexType name="TextInput">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="readonly" type="boolean"></attribute>
+				<attribute name="passwordMask" type="boolean"></attribute>
+				<attribute name="mask" type="string"></attribute>
+				<attribute name="maxLength" type="integer"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Tree" type="tns:Tree"></element>
+	<complexType name="Tree">
+		<complexContent>
+			<extension base="tns:Widget">
+				<attribute name="children" type="string"></attribute>
+				<attribute name="service" type="string"></attribute>
+				<attribute name="selectedChildren" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="TreeItem" type="tns:TreeItem"></element>
+	<complexType name="TreeItem">
+		<complexContent>
+			<extension base="tns:Component">
+				<attribute name="children" type="string"></attribute>
+				<attribute name="hasChildren" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+</schema>
