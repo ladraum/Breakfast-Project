@@ -36,8 +36,13 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
             'm':/\d/,
             'h':/\d/,
             'y':/\d/,
+            's':/\d/,
             'Z':/[a-zA-Z]/,
             '#':/./
+        },
+
+        MASKS_DEFAULTS: {
+        	'd':'0', 'M':'0', 'm':'0', 'y':'0', 'h':'0', 's':'0'
         },
 
         MASKS_ALIASES: {
@@ -70,6 +75,32 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
                 var result = TextMask.applyRule(rule, sstr);
                 if (!result)
                     return buffer;
+                buffer+= result;
+                i+= result.length;
+                j = k;
+            }
+            return buffer;
+        },
+
+        autoFillBasedOnMask: function (value, mask) {
+        	mask = TextMask.MASKS_ALIASES[mask] || mask;
+            var buffer = "";
+            for (var i=0, j=0; i<mask.length;) {// && i<value.length
+                var k = j + 1;
+                var rule = mask.substring(j,k);
+                var result = "";
+                
+                if (value.length > i) {
+	                var sstr = value.substring(i);
+	                result = TextMask.applyRule(rule, sstr);
+	                if (!result)
+	                    return buffer;
+                } else {
+                	result = TextMask.MASKS_DEFAULTS[rule];
+                	if (!result && result != 0)
+                		result = rule;
+                }
+
                 buffer+= result;
                 i+= result.length;
                 j = k;
@@ -413,6 +444,16 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.private("readonly", args.readonly);
     	DomUtil.addEventListener(this.target, "keyup",
 				this.getMethod("onKeyUp"));
+    	DomUtil.addEventListener(this.target, "change",
+				this.getMethod("onChange"));
+    };
+
+    TextInput.prototype.onChange = function (){
+    	if (!this.mask)
+    		return;
+
+        var str = this.target.value;
+        this.target.value = TextMask.autoFillBasedOnMask(str, this.mask);
     };
 
     TextInput.prototype.onKeyUp = function (){
@@ -422,7 +463,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
         var str = this.target.value;
         this.target.value = TextMask.applyMask(str, this.mask);
     };
-    
+
     TextInput.prototype.setReadonly = function (value) {
     	var isReadonly = (value && value != "false");
     	this.target.setAttribute("readonly",
@@ -618,7 +659,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 
     	var ColumnClass = GridColumnFactory
 				.registeredColumnTypes[
-				     unescape(columnData.type || "defaultColumn")];
+				     columnData.type || "defaultColumn"];
 
     	var column = new ColumnClass(columnData, this);
     	column.event(
@@ -826,11 +867,11 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
 
     		var ColumnClass = GridColumnFactory
     				.registeredColumnTypes[
-    				     unescape(headerColumn.type || "defaultColumn")];
+    				     headerColumn.type || "defaultColumn"];
 
     		var columnData = {
     			id: headerColumn.id,
-    			value: this.value[headerColumn.id] || headerColumn.value,
+    			value: this.value[headerColumn.id] /*|| headerColumn.value*/,
     			width: headerColumn.width,
     			header: headerColumn
     		};
@@ -864,12 +905,14 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     GridColumn = Class();
     GridColumn.prototype.constructor = function (args, parent) {
     	this.private ("parent", parent);
-    	this.private ("id", unescape(args.id));
-    	this.private ("value", unescape(args.value || args.label));
-    	this.private ("width", unescape(args.width));
+    	this.private ("id", args.id);
+    	this.private ("width", args.width);
     	this.private ("visible", (args.visible != false && args.visible != "false"));
     	this.private ("header", args.header);
     	this.private ("type", args.type);
+
+    	var value = args.value || args.label;
+    	this.private ("value", value ? StringUtil.escape(value) : "");
 
     	this.configure(args);
     };
@@ -910,7 +953,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     };
 
     GridColumn.prototype.renderContent = function () {
-    	return document.createTextNode(this.value);
+    	return document.createTextNode(this.value || "");
     };
 
 /* -------------------------------------------------------------------------
@@ -919,7 +962,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     GridImageColumn = Class(GridColumn);
     GridImageColumn.prototype.configure = function (args) {
     	if (args.header) {
-    		var onclick = unescape(args.header.click);
+    		var onclick = args.header.click;
     		this.event ("iconclick", function (rowdata, rowindex) {
     			eval(onclick);
     		});
@@ -1068,7 +1111,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     		}
     	}
 
-    	var http = new HttpRequest(this.service + "?id=" + child.id);
+    	var http = new HttpRequest(this.service + "?id=" + escape(child.id));
     	http.event("ready", handleResponse);
     	http.send();
     };
@@ -1084,7 +1127,7 @@ var VALID_WIDGET_DOM_EVENTS = ["blur", "change", "click",
     	this.private ("id", args.id);
     	this.private ("parentId", args.parentId);
     	this.private ("tree", args.tree);
-    	this.private ("label", args.label);
+    	this.private ("label", StringUtil.escape(args.label));
     	this.private ("hasChildren", (
 			args.hasChildren == "true" || args.hasChildren == true));
     	this.private ("children", new Array());

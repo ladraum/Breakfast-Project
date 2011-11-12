@@ -178,7 +178,6 @@ public class StringUtil {
 			case '€':
 				sb.append("&euro;");
 				break;
-			// be carefull with this one (non-breaking white space)
 			case ' ':
 				sb.append("&nbsp;");
 				break;

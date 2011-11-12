@@ -1,8 +1,10 @@
 package breakfast.sugar.components.binding;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -55,8 +57,10 @@ public class GridParser implements IParser {
 
 	public Object parseColumnValue(String attr, Object target, String value)
 			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
-				   ParseException, SecurityException, NoSuchFieldException
+				   ParseException, SecurityException, NoSuchFieldException, IOException
    {
+		value = URLDecoder.decode(value, "UTF-8");
+
 		String columnType = grid.getColumnType(attr);
 		if (StringUtil.isEmpty(columnType))
 			columnType = "default";

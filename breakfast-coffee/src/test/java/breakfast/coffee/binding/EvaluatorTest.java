@@ -17,6 +17,7 @@ public class EvaluatorTest {
 
 	private static final String HELLO_WORLD = "#{hello.world}";
 	private static final String WORLD_SIZE = "#{hello.size}";
+	private static final String HELLO_REAL_WORLD = "#{hello.realworld.name}";
 
 	@Test
 	public void testFindAttributesRegExp(){
@@ -49,6 +50,24 @@ public class EvaluatorTest {
 		evaluator.setValue(expected);
 		assertEquals(expected, hello.getWorld());
 	}
+
+	@Test
+	public void grantThatretrievesThreeLevelAttributes() {
+		String originalName = "Mercury";
+		World realworld = new World();
+		realworld.setName(originalName);
+		Hello hello = new Hello();
+		hello.setRealworld(realworld);
+		
+		Evaluator evaluator = Evaluator.eval(hello, HELLO_REAL_WORLD);
+		
+		Object value = evaluator.getValue();
+		assertEquals(originalName, value);
+		
+		String expected = "Jupter";
+		evaluator.setValue(expected);
+		assertEquals(expected, hello.getRealworld().getName());
+	}
 	
 	@Test
 	public void grantThatDefaultFieldParserConvertToInteger(){
@@ -70,6 +89,7 @@ public class EvaluatorTest {
 
 	public class Hello {
 		private String world; // = "Earth"
+		private World realworld;
 		private Integer size;
 		private ArrayList<String> countries;
 
@@ -96,5 +116,26 @@ public class EvaluatorTest {
 		public ArrayList<String> getCountries() {
 			return countries;
 		}
+
+		public void setRealworld(World realworld) {
+			this.realworld = realworld;
+		}
+
+		public World getRealworld() {
+			return realworld;
+		}
+	}
+	
+	public class World {
+		private String name;
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+		
 	}
 }

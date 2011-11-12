@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:coffee:sugar"
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:breakfast:sugar"
 	targetNamespace="urn:breakfast:sugar">
 
 	<complexType name="AbstractComponent" abstract="true">
 		<sequence>
 			<any namespace="urn:breakfast:sugar" minOccurs="0" maxOccurs="unbounded"></any>
+			<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"></any>
 		</sequence>
 	</complexType>
 
@@ -189,9 +190,7 @@
 	<element name="GridColumn" type="tns:GridColumn"></element>
 	<complexType name="GridColumn">
 		<complexContent>
-			<extension base="tns:Component">
-				<attribute name="label" type="string"></attribute>
-			</extension>
+			<extension base="tns:Component"></extension>
 		</complexContent>
 	</complexType>
 
@@ -206,7 +205,6 @@
 	<complexType name="RadioGroup">
 		<complexContent>
 			<extension base="tns:Widget">
-				<attribute name="direction" type="string"></attribute>
 				<attribute name="direction" default="vertical">
 					<simpleType>
 						<restriction base="string">

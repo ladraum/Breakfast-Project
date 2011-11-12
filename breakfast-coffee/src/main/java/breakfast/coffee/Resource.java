@@ -17,6 +17,8 @@ package breakfast.coffee;
 
 import java.io.IOException;
 
+import breakfast.coffee.binding.EJBManager;
+
 /**
  * Generic implementation for Web Resource. It is a robust abstract implementation
  * of {@link IResource} interface. It was designed to helps software developer handling
@@ -33,6 +35,7 @@ public abstract class Resource implements IResource {
 		setContext(context);
 		setCharacterEncoding("UTF-8");
 		setContentType("text/html");
+		EJBManager.manageBean(this);
 		configure();
 	}
 

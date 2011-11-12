@@ -85,7 +85,12 @@ public class Evaluator {
 		if (!matcher.find())
 			return this.target;
 
-		return getValue(this.target, matcher);
+		Object result = getValue(this.target, matcher);
+
+		if (String.class.isInstance(result))
+			result = StringUtil.escape((String)result);
+
+		return result;
 	}
 
 	public Object getValue(Object target, Matcher matcher) {
@@ -94,7 +99,7 @@ public class Evaluator {
 			Method method = Reflection.extractGetterFor(attribute, target);
 			Object object = method.invoke(target);
 			if (matcher.find())
-				getValue(object, matcher);
+				return getValue(object, matcher);
 			return object;
 		} catch (Exception e) {
 			// e.printStackTrace();

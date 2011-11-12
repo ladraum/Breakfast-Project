@@ -13,6 +13,7 @@ import java.util.List;
 import breakfast.coffee.binding.CoffeeBinder;
 import breakfast.coffee.components.IComponent;
 import breakfast.coffee.util.Reflection;
+import breakfast.coffee.util.StringUtil;
 import breakfast.coffee.util.Util;
 import breakfast.sugar.Widget;
 
@@ -138,6 +139,8 @@ public class Grid extends Widget {
 			buffer.append(new SimpleDateFormat(getDateMask()).format(value));
 		else if (columnType.equals("timestamp") && Date.class.isInstance(value))
 			buffer.append(new SimpleDateFormat(getTimestampMask()).format(value));
+		else if (String.class.isInstance(value))
+			buffer.append(StringUtil.escape(value.toString()));
 		else
 			buffer.append(value.toString());
 

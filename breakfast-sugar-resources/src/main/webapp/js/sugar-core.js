@@ -229,6 +229,30 @@
 /* -------------------------------------------------------------------------
  * 
  * ------------------------------------------------------------------------- */
+    StringUtil = {
+    	escape: function (str) {
+	    	var chars = {
+	    			  "&lt;": '<', "&gt;": '>', "&amp;": '&', "&quot;": '"',
+	    			  "&agrave;": 'à', "&Agrave;": 'À', "&acirc;": 'â', "&Acirc;": 'Â',
+	    			  "&auml;": 'ä', "&Auml;": 'Ä', "&aring;": 'å', "&Aring;": 'Å',
+	    			  "&aelig;": 'æ', "&AElig;": 'Æ', "&ccedil;": 'ç', "&Ccedil;": 'Ç',
+	    			  "&eacute;": 'é', "&Eacute;": 'É', "&egrave;": 'è', "&Egrave;": 'È',
+	    			  "&ecirc;": 'ê', "&Ecirc;": 'Ê', "&euml;": 'ë', "&Euml;": 'Ë',
+	    			  "&iuml;": 'ï', "&Iuml;": 'Ï', "&ocirc;": 'ô', "&Ocirc;": 'Ô',
+	    			  "&ouml;": 'ö', "&Ouml;": 'Ö', "&oslash;": 'ø', "&Oslash;": 'Ø',
+	    			  "&szlig;": 'ß', "&ugrave;": 'ù', "&Ugrave;": 'Ù', "&ucirc;": 'û',
+	    			  "&Ucirc;": 'Û', "&uuml;": 'ü', "&Uuml;": 'Ü', "&reg;": '®',
+	    			  "&copy;": '©', "&euro;": '€', "&nbsp;": ' '
+				};
+	    	for (var ch in chars)
+	    		str = str.replace(new RegExp(ch,'g'), chars[ch]);
+	    	return str;
+    	}
+    };
+
+/* -------------------------------------------------------------------------
+ * 
+ * ------------------------------------------------------------------------- */
     DomUtil = {
 	    applyOpacity: function (target, opacity, timeout) {
 	    	if (!target) return;

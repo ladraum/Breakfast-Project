@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 
 import breakfast.coffee.CoffeeContext;
 import breakfast.coffee.binding.IParser;
+import breakfast.coffee.util.StringUtil;
 import breakfast.sugar.components.TextInput;
 
 public class TextInputParser implements IParser {
@@ -20,6 +21,8 @@ public class TextInputParser implements IParser {
 	@Override
 	public Object parseValue(Object value, Class<?> type, Type[] genericTypes) {
 		try {
+			if (StringUtil.isEmpty((String)value))
+				return value;
 			return new SimpleDateFormat(textInput.getMask()).parse((String)value);
 		} catch (ParseException e) {
 			e.printStackTrace();
