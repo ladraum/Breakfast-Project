@@ -64,7 +64,7 @@ public class XHtmlComponent extends AbstractComponent {
 		PrintWriter writer = coffeeContext.getResponse().getWriter();
 		writer.append("<").append(componentName);
 
-		for (String attr : attributes.keySet()) {
+		for (String attr : getAttributes().keySet()) {
 			if (ignoredAttributes.contains(attr))
 				continue;
 			Object attributeValue = getAttribute(attr);

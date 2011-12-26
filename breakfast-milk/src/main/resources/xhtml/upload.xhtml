@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="urn:breakfast:sugar">
+	<head>
+		<title><ui:var name="title" /></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=100" />
+		<ui:ApplicationResources />
+		<style>
+			html { overflow: hidden; }
+			#uploadField {
+				opacity: 0.0;
+				-moz-opacity: 0.0;
+				filter: alpha(opacity=00);
+				margin: 0px;
+				padding: 5px;
+				position: absolute;
+				top: 0px; left: 0px; /*top-left-corner*/
+				width: 100%;
+				z-index: 100;
+			}
+			#fakeupload {
+				border: 1px solid #CDCDCD;
+				/*display: none;*/
+				position: absolute;
+				top: 0px; left: 0px; /*top-left-corner*/
+				width: 100%;
+				overflow: hidden;
+			}
+			#fakeupload span {
+				font-family: monospace;
+				overflow: hidden;
+				position: relative;
+				top: 4px; left: 4px;
+			}
+			#fakeupload input[type="BUTTON"] {
+				border: 0px;
+				border-left: 1px solid #CDCDCD;
+				border-right: 1px solid #CDCDCD;
+				float: right;
+				margin: 0px 1px 0px; }
+			#uploading { 
+				position: absolute;
+				top: 0px; left: 0px; /*top-left-corner*/
+				overflow: hidden; }
+			/*#searchButton { display: none; }*/
+
+		</style>
+		<script>
+			<![CDATA[
+			
+				function dispatchEvent(event, value) {
+					window.frameElement.dispatch(event, value);
+				} 
+			
+				function onUploadFileChange() {
+					var fileName = $dom.first('#uploadField').value;
+					fileName = fileName.split("/").last().split("\\").last();
+					$dom.first('#labelField').innerHTML = fileName;
+				}
+				
+				function main(){
+					if ( #{wasUploaded} )
+						showUploadedFile()
+					else
+						prepareToUpload();
+				}
+				
+				function prepareToUpload() {
+					$dom.first("#fakeupload").show();
+					$dom.first("#searchButton").show();
+				}
+				
+				function showUploadedFile() {
+					var info = {
+						id: "#{id}",
+						fileName: "#{fileName}"
+					};
+
+					$dom.first("#fakeupload").hide();
+					$dom.first("#uploading").show();
+					dispatchEvent (FileUpload.EVENT_UPLOAD_COMPLETE, info);
+				}
+				
+				function upload(){
+					if ( ! $dom.first("#uploadField").value ) {
+						dispatchEvent (FileUpload.EVENT_NO_FILE_SELECTED);
+						return;
+					}
+				
+					$dom.first("#fakeupload").hide();
+					$dom.first("#uploading").show();
+					$dom.first("form").submit();
+				}
+
+			]]>
+		</script>
+	</head>
+	<body onload="main()" style="padding:0px; margin:0px;">
+		<form method="POST" action="#{contextPath}/upload" enctype="multipart/form-data" style="padding:0px; margin:0px;">
+			<input type="file" id="uploadField" name="uploadField" size="20"
+				onchange="onUploadFileChange()" />
+			<div id="fakeupload">
+				<span id="labelField"></span>
+				<input id="searchButton" type="button" value="..." />
+			</div>
+			<img id="uploading" style="display:none;" src="#{contextPath}/imgs/uploading.gif" />
+		</form>
+	</body>
+</html>

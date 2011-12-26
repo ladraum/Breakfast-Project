@@ -21,29 +21,78 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import breakfast.coffee.annotation.Parser;
+import breakfast.coffee.binding.DefaultParser;
+import breakfast.coffee.binding.IParser;
+
 public class Reflection {
+
+	public static Object parseFieldValue(String attribute, Object target, Object value, Object ...optionalParams)
+			throws NoSuchFieldException, InstantiationException,
+			IllegalAccessException {
+		Parser parserData = (Parser)Reflection.extractAnnotationFor(attribute, target, Parser.class);
+		Class<?> type = Reflection.extractReturnTypeFor(attribute, target);
+		Type[] genericTypes = Reflection.extractGenericReturnTypeFor(attribute, target);
+
+		IParser parser = null;
+		if (parserData != null) {
+			Class<? extends IParser> parserClazz = parserData.value();
+			parser = parserClazz.newInstance();
+		} else
+			parser = new DefaultParser();
+
+		parser.configure(optionalParams);
+		return parser.parseValue(value, type, genericTypes);
+	}
 
 	public static Annotation[] extractAnnotationsFor(String attribute, Object target)
 			throws SecurityException, NoSuchFieldException {
-		Field field = target.getClass().getDeclaredField(attribute);
+		Field field = extractFieldFor(target, attribute);
+
+		if (Util.isNull(field))
+			return new Annotation[]{};
+
 		return field.getAnnotations();
 	}
 
 	public static Annotation extractAnnotationFor(String attribute, Object target, Class<? extends Annotation> annotation)
-			throws SecurityException, NoSuchFieldException {
-		Field field = target.getClass().getDeclaredField(attribute);
+			throws SecurityException {
+		Field field = extractFieldFor(target, attribute);
+
+		if (Util.isNull(field))
+			return null;
+
 		return field.getAnnotation(annotation);
+	}
+
+	public static Field extractFieldFor (Object target, String attribute) {
+		Class<? extends Object> clazz = target.getClass();
+		return extractFieldFor(attribute, clazz);
+	}
+
+	public static Field extractFieldFor (String attribute, Class<?> clazz) {
+		try {
+			if (clazz.equals(Object.class))
+				return null;
+			return clazz.getDeclaredField(attribute);
+		} catch (NoSuchFieldException e) {
+			return extractFieldFor(attribute, clazz.getSuperclass());
+		}
 	}
 
 	public static Class<?> extractReturnTypeFor (String attribute, Object target) 
 			throws SecurityException, NoSuchFieldException {
-		Field field = target.getClass().getDeclaredField(attribute);
+		Field field = extractFieldFor(target, attribute);
+		if (Util.isNull(field))
+			return null;
 		return field.getType();
 	}
 
 	public static Type[] extractGenericReturnTypeFor(String attribute, Object target)
-			throws SecurityException, NoSuchFieldException {
-		Field field = target.getClass().getDeclaredField(attribute);
+			throws SecurityException {
+		Field field = extractFieldFor(target, attribute);
+		if (Util.isNull(field))
+			return new Type[]{};
 		Type type = field.getGenericType();
 		if (!(type instanceof ParameterizedType))
 			return new Type[]{};
@@ -68,6 +117,22 @@ public class Reflection {
 		} catch (NoSuchMethodException e) {
 			return target.getClass().getMethod(getter.replaceFirst("get", "is"));
 		}
+	}
+
+	/**
+	 * @param attribute
+	 * @param target
+	 * @return
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 * @throws NoSuchFieldException 
+	 */
+	public static Method extractSetterFor(String attribute, Object target) throws SecurityException, NoSuchMethodException, NoSuchFieldException {
+		String setter = String.format("set%s%s",
+				attribute.substring(0, 1).toUpperCase(),
+				attribute.substring(1));
+		Class<?> returnTypeFor = extractReturnTypeFor(attribute, target);
+		return target.getClass().getMethod(setter, returnTypeFor);
 	}
 
 	/**

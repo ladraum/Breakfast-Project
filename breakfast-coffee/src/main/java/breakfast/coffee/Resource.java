@@ -29,13 +29,16 @@ import breakfast.coffee.binding.EJBManager;
 public abstract class Resource implements IResource {
 
 	protected CoffeeContext context;
+	
+	public Resource() {
+		EJBManager.manageBean(this);
+	}
 
 	@Override
 	public void configure(CoffeeContext context) throws IOException {
 		setContext(context);
 		setCharacterEncoding("UTF-8");
 		setContentType("text/html");
-		EJBManager.manageBean(this);
 		configure();
 	}
 
@@ -43,6 +46,19 @@ public abstract class Resource implements IResource {
  * @see IResource#configure(CoffeeContext)
  */
 	public abstract void configure() throws IOException;
+	
+	@Override
+	public void process() {
+		doRequest();
+		if (isGet())
+			doGet();
+		else if (isPost())
+			doPost();
+	}
+
+	public void doGet() {}
+	public void doPost() {}
+	public void doRequest() {}
 
 /**
  * Changes the context navigation. Whenever you chance the coffee context navigation
@@ -65,7 +81,8 @@ public abstract class Resource implements IResource {
 		this.context  = context;
 	}
 
-	public void setCharacterEncoding(String encoding) {
+	public void setCharacterEncoding(String encoding) throws IOException {
+		getContext().getRequest().setCharacterEncoding(encoding);
 		getContext().getResponse().setCharacterEncoding(encoding);
 	}
 

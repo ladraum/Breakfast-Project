@@ -7,9 +7,9 @@ import org.junit.Test;
 import breakfast.coffee.CoffeeContext;
 import breakfast.coffee.binding.CoffeeBinder;
 
-
 public class ExpressionTest {
 
+	private static final String COMPONENT_PATTER_NAME = "#{Component:usuario}blah";
 	private static final String CONTEXT = "#{usuario.context}";
 	private static final String HELLO = "Olá #{usuario.nome}!";
 	private static final String NAME = "#{usuario.nome}";
@@ -41,6 +41,17 @@ public class ExpressionTest {
 
 		String returnString = CoffeeBinder.getValue(TWO_EXPRESSIONS, context ).toString();
 		assertEquals("Miere will run till tomorrow.", returnString);
+	}
+	
+	@Test
+	public void evalComponentPattern() {
+		CoffeeContext context = new CoffeeContext();
+		context.put("Component:usuario", "blah");
+
+		Object value = CoffeeBinder.getValue(COMPONENT_PATTER_NAME, context );
+		assertNotNull(value);
+		String returnString = value.toString();
+		assertEquals("blahblah", returnString);
 	}
 
 	class Usuario {

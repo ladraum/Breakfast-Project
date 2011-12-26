@@ -39,7 +39,7 @@ public class Define extends AbstractComponent {
 		if (getNumChildren() == 0)
 			return CoffeeBinder.getValue(getValue(), coffeeContext);
 
-		TemplateComponent component = new TemplateComponent();
+		HolderComponent component = new HolderComponent();
 		component.setCoffeeContext(getCoffeeContext());
 		component.setChildren(getChildren());
 		return component;

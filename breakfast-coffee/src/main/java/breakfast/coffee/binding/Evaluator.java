@@ -16,22 +16,22 @@
 package breakfast.coffee.binding;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import breakfast.coffee.CoffeeContext;
-import breakfast.coffee.annotation.Parser;
 import breakfast.coffee.util.Reflection;
 import breakfast.coffee.util.StringUtil;
 
 
 public class Evaluator {
 
-	public static final String RE_IS_VALID_BINDABLE_EXPRESSION = "^#\\{+?\\w+?\\.[\\w\\.]+?\\}$";
-	public static final String RE_IS_VALID_RETRIEVABLE_EXPRESSION = "#\\{\\w+?[\\w\\.]+?\\}";
-	public static final String RE_IS_VALID_SINGLE_RETRIEVABLE_EXPRESSION = "^#\\{\\w+?[\\w\\.]+?\\}$";
-	public static final String RE_FIND_ATTR = "\\w[\\w\\d]*";
+	public static final String RE_EXTRACT_PLACEHOLDER = "[\\w:]+";
+	public static final String RE_IS_VALID_BINDABLE_EXPRESSION = "^#\\{+?[\\w:]+?\\.[\\w\\.]+?\\}$";
+	public static final String RE_IS_VALID_RETRIEVABLE_EXPRESSION = "#\\{[\\w:]+?[\\w\\.]+?\\}";
+	public static final String RE_IS_VALID_SINGLE_RETRIEVABLE_EXPRESSION = "^#\\{[\\w:]+?[\\w\\.]+?\\}$";
+	public static final String RE_FIND_ATTR = "\\w[\\w\\d:]*";
 
 	private Object target;
 	private String expression;
@@ -63,7 +63,7 @@ public class Evaluator {
 	}
 
 	public static String extractObjectPlaceholder(String expression) {
-		Matcher matcher = Pattern.compile("\\w+").matcher(expression);
+		Matcher matcher = Pattern.compile(RE_EXTRACT_PLACEHOLDER).matcher(expression);
 		if (matcher.find())
 			return matcher.group();
 		return null;
@@ -96,10 +96,14 @@ public class Evaluator {
 	public Object getValue(Object target, Matcher matcher) {
 		String attribute = matcher.group();
 		try {
+			if (Properties.class.isInstance(target))
+				return ((Properties)target).get(attribute);
+
 			Method method = Reflection.extractGetterFor(attribute, target);
 			Object object = method.invoke(target);
 			if (matcher.find())
 				return getValue(object, matcher);
+
 			return object;
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -123,7 +127,7 @@ public class Evaluator {
 		String attribute = matcher.group();
 		try {
 			if (!matcher.find()) {
-				value = tryToParseValue(attribute, target, value);
+				value = Reflection.parseFieldValue(attribute, target, value);
 				Method setter = Reflection.extractSetterFor(attribute, target, value);
 				setter.invoke(target, value);
 				return true;
@@ -134,27 +138,9 @@ public class Evaluator {
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
-			System.err.println("WARN: " + e.getMessage());
+			//System.err.println("WARN: " + e.getMessage());
 			return false;
 		}
-	}
-
-	public Object tryToParseValue(String attribute, Object target, Object value)
-			throws NoSuchFieldException, InstantiationException,
-			IllegalAccessException {
-		Parser parserData = (Parser)Reflection.extractAnnotationFor(attribute, target, Parser.class);
-		Class<?> type = Reflection.extractReturnTypeFor(attribute, target);
-		Type[] genericTypes = Reflection.extractGenericReturnTypeFor(attribute, target);
-
-		IParser parser = null;
-		if (parserData != null) {
-			Class<? extends IParser> parserClazz = parserData.value();
-			parser = parserClazz.newInstance();
-		} else
-			parser = new DefaultParser();
-
-		parser.configure(context);
-		return parser.parseValue(value, type, genericTypes);
 	}
 
 	public static Evaluator eval(Object target, String expression, CoffeeContext context) {

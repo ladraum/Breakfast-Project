@@ -26,7 +26,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,7 +40,7 @@ import breakfast.coffee.components.IComponent;
 import breakfast.coffee.loader.CoffeeResourceLoader;
 
 
-@WebFilter("/*")
+//@WebFilter(urlPatterns={"/*"}, asyncSupported=true)
 public class CoffeeFilter implements Filter {
 
 	protected FilterConfig filterConfig;
@@ -90,7 +89,7 @@ public class CoffeeFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 
 		try {
-			CoffeeContext coffeeContext = createCoffeeContext(request, response, getServletContext());
+			CoffeeContext coffeeContext = Cafeteria.createContext(request, response, getServletContext());
 			CoffeeResource resource = resourceLoader.getResource(coffeeContext.getRelativePath());
 
 			if (isNull(resource)) {
@@ -123,26 +122,6 @@ public class CoffeeFilter implements Filter {
 			throw new ServletException(e.getMessage(), e);
 		}
 
-	}
-
-/**
- * 
- * @param request
- * @param response
- * @param servletContext
- * @return
- */
-	public CoffeeContext createCoffeeContext(ServletRequest request,
-			ServletResponse response, ServletContext servletContext) {
-		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		CoffeeContext context = Cafeteria.createContext();
-		context.setRequest(request);
-		context.setResponse(response);
-		context.setServletContext(servletContext);
-		context.setPath(httpRequest.getRequestURI());
-		context.put("contextPath", httpRequest.getContextPath());
-		context.put("path", httpRequest.getRequestURI());
-		return context;
 	}
 
 /**

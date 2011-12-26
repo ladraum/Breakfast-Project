@@ -2,8 +2,6 @@ package breakfast.coffee.binding;
 
 import java.lang.reflect.Type;
 
-import breakfast.coffee.CoffeeContext;
-
 public class DefaultParser implements IParser {
 
 	@Override
@@ -28,6 +26,6 @@ public class DefaultParser implements IParser {
 	}
 
 	@Override
-	public void configure(CoffeeContext context) {}
+	public void configure(Object ...context) {}
 
 }

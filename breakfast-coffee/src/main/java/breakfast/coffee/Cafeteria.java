@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import breakfast.coffee.loader.CoffeeResourceLoader;
 import breakfast.coffee.util.Util;
 
@@ -26,15 +31,30 @@ import breakfast.coffee.util.Util;
 public class Cafeteria {
 	
 	private static final Map<String, CoffeeResourceLoader> resourceLoaders = new HashMap<String, CoffeeResourceLoader>();
+	private static boolean cacheEnabled = true;
 
-	public static CoffeeContext createContext() {
-		return new CoffeeContext();
+	public static CoffeeContext createContext(
+						ServletRequest request, ServletResponse response, ServletContext servletContext)
+	{
+		HttpServletRequest httpRequest = (HttpServletRequest)request;
+		CoffeeContext context = new CoffeeContext();
+
+		context.setRequest(request);
+		context.setResponse(response);
+		context.setServletContext(servletContext);
+		context.setPath(httpRequest.getRequestURI());
+		context.put("contextPath", httpRequest.getContextPath());
+		context.put("path", httpRequest.getRequestURI());
+
+		return context;
 	}
-	
+
 	public static CoffeeResourceLoader getResourceLoader(CoffeeContext context) throws IOException, ClassNotFoundException {
-		return getResourceLoader(context.getContextPath());
+		CoffeeResourceLoader resourceLoader = getResourceLoader(context.getContextPath());
+		resourceLoader.setCacheEnabled(cacheEnabled);
+		return resourceLoader;
 	}
-	
+
 	public static CoffeeResourceLoader getResourceLoader(String contextPath) throws IOException, ClassNotFoundException {
 		CoffeeResourceLoader loader = resourceLoaders.get(contextPath);
 		if (Util.isNull(loader)) {
@@ -42,6 +62,14 @@ public class Cafeteria {
 			resourceLoaders.put(contextPath, loader);
 		}
 		return loader;
+	}
+	
+	public static void disableCache(){
+		cacheEnabled = false;
+	}
+	
+	public static void enableCache(){
+		cacheEnabled = true;
 	}
 
 }

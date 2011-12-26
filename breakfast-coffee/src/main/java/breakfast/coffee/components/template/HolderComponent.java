@@ -15,24 +15,23 @@
  */
 package breakfast.coffee.components.template;
 
-import breakfast.coffee.components.AbstractComponentFactory;
+import java.io.IOException;
 
-/**
- * Core components' factory.
- * 
- * @since Coffee 1.0
- */
-public class TemplateComponentFactory extends AbstractComponentFactory {
+import breakfast.coffee.components.AbstractComponent;
+import breakfast.coffee.components.IComponent;
+
+
+public class HolderComponent extends AbstractComponent {
 
 	@Override
-	public void configure() {
-		register("define", Define.class);
-		register("foreach", Foreach.class);
-		register("include", Template.class);
-		register("var", Var.class);
-		register("template", Template.class);
-		register("component", HolderComponent.class);
-		register("children", TemplateBasedComponentChildren.class);
+	public void configure() {}
+
+	@Override
+	public void render() throws IOException {
+		for (IComponent child : getChildren()) {
+			child.setCoffeeContext(getCoffeeContext());
+			child.render();
+		}
 	}
 
 }

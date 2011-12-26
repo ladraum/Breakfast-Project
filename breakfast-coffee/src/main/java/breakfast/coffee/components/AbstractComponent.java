@@ -49,7 +49,7 @@ public abstract class AbstractComponent implements IComponent {
 	private static final String[] invalidAttributeNames = new String[]{ "class", "children", "attributes", "parent", "textContent", "coffeeContext" };
 
 	protected List<IComponent> children;
-	protected Map<String, Object> attributes;
+	private Map<String, Object> attributes;
 	private IComponent parent;
 	private String textContent;
 	private String id;
@@ -136,8 +136,12 @@ public abstract class AbstractComponent implements IComponent {
 	public String getTextContent() {
 		if (isNull(textContent))
 			return null;
-		return CoffeeBinder.getValue(
-				textContent, coffeeContext).toString();
+
+		Object content = CoffeeBinder.getValue(textContent, coffeeContext);
+		if (isNull(content))
+			return null;
+
+		return content.toString();
 	}
 
 	@Override
@@ -191,8 +195,9 @@ public abstract class AbstractComponent implements IComponent {
 	public IComponent setAttribute(String attribute, Object value) {
 		this.attributes.put(attribute, value);
 		try {
-			Method setter = Reflection.extractSetterFor(attribute, this, value);
-			setter.invoke(this, value);
+			Object parsedValue = Reflection.parseFieldValue(attribute, this, value);
+			Method setter = Reflection.extractSetterFor(attribute, this, parsedValue);
+			setter.invoke(this, parsedValue);
 			return this;
 		} catch (Exception e) {
 			return this;
@@ -250,6 +255,8 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 	public String getId() {
+		if (!Util.isNull(id))
+			id = CoffeeBinder.getValue(id, getCoffeeContext()).toString();
 		return id;
 	}
 
@@ -273,6 +280,14 @@ public abstract class AbstractComponent implements IComponent {
 	@Override
 	public CoffeeContext getCoffeeContext() {
 		return this.coffeeContext;
+	}
+
+	public void setAttributes(Map<String, Object> attributes) {
+		this.attributes = attributes;
+	}
+
+	public Map<String, Object> getAttributes() {
+		return attributes;
 	}
 
 }
