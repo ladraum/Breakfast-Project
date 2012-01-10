@@ -93,7 +93,7 @@ public class CoffeeContext {
 	}
 
 /** 
- * Set a new URI location relative to the context. The '<i>current URI</i>' defines
+ * Set a new URI location relative to the coffeeContext. The '<i>current URI</i>' defines
  * the actual rendered URI. When you change the current URI the Coffee Engine
  * send's a HTTP 302 status and redirect your pages to the new set URI.
  * 
@@ -107,7 +107,7 @@ public class CoffeeContext {
 	}
 
 /**
- * Get the location URI relative to the context.
+ * Get the location URI relative to the coffeeContext.
  * @return
  */
 	public String getRelativePath() {
@@ -116,7 +116,7 @@ public class CoffeeContext {
 	}
 
 /** 
- * Set a new URI location to the context. The '<i>current URI</i>' defines
+ * Set a new URI location to the coffeeContext. The '<i>current URI</i>' defines
  * the actual rendered URI. When you change the current URI the Coffee Engine
  * send's a HTTP 302 status and redirect your pages to the new set URI.
  * 
@@ -138,7 +138,7 @@ public class CoffeeContext {
 	}
 
 /**
- * Retrieves the current context path. For more info see
+ * Retrieves the current coffeeContext path. For more info see
  * {@link HttpServletRequest#getContextPath()}
  * @return contextPath
  */

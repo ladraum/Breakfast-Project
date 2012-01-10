@@ -52,7 +52,7 @@ public class CoffeeResource {
 	
 /**
  * The resource hook factory. 
- * @param context
+ * @param coffeeContext
  * @return
  * @throws IllegalAccessException 
  * @throws InstantiationException 

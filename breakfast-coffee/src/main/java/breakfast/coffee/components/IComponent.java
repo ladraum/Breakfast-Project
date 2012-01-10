@@ -55,7 +55,7 @@ public interface IComponent extends Cloneable {
  * <br/>
  * Note: this method is handled by the Coffee Life Cycle and should not be called
  * unless you really knows what are you doing.
- * @param context 
+ * @param coffeeContext 
  * 
  * @return
  * @throws CloneNotSupportedException

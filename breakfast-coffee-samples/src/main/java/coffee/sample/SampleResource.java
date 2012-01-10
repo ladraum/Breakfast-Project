@@ -14,7 +14,7 @@ public class SampleResource extends Resource {
 	@Override
 	public void configure() {
 		usuario = new Usuario();
-		context.put("usuario", usuario);
+		coffeeContext.put("usuario", usuario);
 	}
 
 	@Override

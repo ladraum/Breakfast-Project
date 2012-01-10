@@ -26,14 +26,14 @@ public interface IComponentFactory {
  * <br/>
  * The default implementation is defined by {@link AbstractComponentFactory} and it's called
  * by the default component parser {@link CoffeeParser}. The parser expects that new component
- * has the context set and configured.<br/>
+ * has the coffeeContext set and configured.<br/>
  * <br/>
  * Note that you should not implement this interface by yourself unless you really knows what are
  * you doing. Otherwise, choose to extends {@link AbstractComponentFactory} or {@link TemplateComponentFactory}
  * classes.
  * 
  * @param name
- * @param context
+ * @param coffeeContext
  * @return
  * @throws InstantiationException
  * @throws IllegalAccessException

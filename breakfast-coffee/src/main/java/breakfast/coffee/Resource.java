@@ -28,7 +28,7 @@ import breakfast.coffee.binding.EJBManager;
  */
 public abstract class Resource implements IResource {
 
-	protected CoffeeContext context;
+	protected CoffeeContext coffeeContext;
 	
 	public Resource() {
 		EJBManager.manageBean(this);
@@ -36,7 +36,7 @@ public abstract class Resource implements IResource {
 
 	@Override
 	public void configure(CoffeeContext context) throws IOException {
-		setContext(context);
+		setCoffeeContext(context);
 		setCharacterEncoding("UTF-8");
 		setContentType("text/html");
 		configure();
@@ -49,45 +49,50 @@ public abstract class Resource implements IResource {
 	
 	@Override
 	public void process() {
-		doRequest();
-		if (isGet())
-			doGet();
-		else if (isPost())
-			doPost();
+		try {
+			doRequest();
+			if (isGet())
+				doGet();
+			else if (isPost())
+				doPost();
+		} catch (Exception e) {
+			doFail (e);
+		}
 	}
 
-	public void doGet() {}
-	public void doPost() {}
-	public void doRequest() {}
+	public void doGet() throws Exception {}
+	public void doPost() throws Exception {}
+	public void doRequest() throws Exception {}
+	public void doFail (Exception e) {}
 
 /**
- * Changes the context navigation. Whenever you chance the coffee context navigation
+ * Changes the coffeeContext navigation. Whenever you chance the coffee coffeeContext navigation
  * the user will be redirected to the new URI.
  * @param uri
  */
 	public void redirect (String uri) {
-		context.setPath(uri);
+		coffeeContext.setPath(uri);
 	}
 
 	public void redirectToResource(String url) {
-		redirect(context.getContextPath() + url);
+		redirect(coffeeContext.getContextPath() + url);
 	}
 
-	public CoffeeContext getContext() {
-		return context;
+	public CoffeeContext getCoffeeContext() {
+		return coffeeContext;
 	}
 
-	public void setContext(CoffeeContext context) {
-		this.context  = context;
+	public void setCoffeeContext(CoffeeContext context) {
+		this.coffeeContext  = context;
 	}
 
 	public void setCharacterEncoding(String encoding) throws IOException {
-		getContext().getRequest().setCharacterEncoding(encoding);
-		getContext().getResponse().setCharacterEncoding(encoding);
+		getCoffeeContext().getRequest().setCharacterEncoding(encoding);
+		getCoffeeContext().getResponse().setCharacterEncoding(encoding);
 	}
 
 	public void setContentType(String contentType) {
-		getContext().getResponse().setContentType(contentType);
+		getCoffeeContext().getResponse().setContentType(contentType);
 	}
 	
 /**
@@ -96,7 +101,7 @@ public abstract class Resource implements IResource {
  * @return
  */
 	public String getParameter(String param) {
-		return getContext().getRequest().getParameter(param);
+		return getCoffeeContext().getRequest().getParameter(param);
 	}
 
 /**
@@ -117,6 +122,6 @@ public abstract class Resource implements IResource {
  * @return the request HTTP method.
  */
 	public String getHttpMethod() {
-		return getContext().getRequest().getMethod();
+		return getCoffeeContext().getRequest().getMethod();
 	}
 }

@@ -94,25 +94,8 @@ public class XHtmlComponent extends AbstractComponent {
 
 /**
  * Renders the custom child elements. Software developers should
- * use this method to create custom child elements to him components.
+ * use this method to create custom child elements to their components.
  * 
- * The sample wrapper bellow shows how we can wrap some HTML tags into
- * a single custom component.
- * 
- * <code><pre>
- * 
- * class FormItemAndTextInputComponent extends XHtmlComponent {
- * 
- * 		public void configure (){
- * 			setSkipRenderChildComponents(true);
- *  	}
- * 
- * 		public void renderChildren() {
- * 			
- * 		}
- * }
- * 
- * </pre></code>
  * @throws IOException 
  */
 	public void renderChildren() throws IOException {

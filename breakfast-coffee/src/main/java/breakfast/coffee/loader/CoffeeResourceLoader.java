@@ -61,7 +61,7 @@ public class CoffeeResourceLoader {
  * resources in a cached factory of components.
  * 
  * @param teplateName
- * @param context 
+ * @param coffeeContext 
  * @return IComponent implementation of compiled template
  * @throws IOException
  * @throws ParserConfigurationException
@@ -77,16 +77,21 @@ public class CoffeeResourceLoader {
 		if (Util.isNull(template))
 			throw new IOException("Can't find template '" + templateName + "'.");
 
-		CoffeeParser parser = new CoffeeParser();
-		parser.setContext(context);
-		IComponent application = parser.parse(template);
-		resourceCache.put(templateName, application);
-
-		return application;
+		try {
+			CoffeeParser parser = new CoffeeParser();
+			parser.setContext(context);
+			IComponent application = parser.parse(template);
+			resourceCache.put(templateName, application);
+	
+			return application;
+		} catch (NullPointerException e) {
+			System.err.println("ERROR compiling " + templateName);
+			throw e;
+		}
 	}
 
 /**
- * Scans all classes accessible from the context class loader which belong to the given package and sub-packages.
+ * Scans all classes accessible from the coffeeContext class loader which belong to the given package and sub-packages.
  * Based on this Victor's snippet code at http://snippets.dzone.com/posts/show/4831.
  *
  * @param packageName The base package

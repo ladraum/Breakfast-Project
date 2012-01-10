@@ -20,13 +20,45 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import breakfast.coffee.annotation.Parser;
 import breakfast.coffee.binding.DefaultParser;
 import breakfast.coffee.binding.IParser;
 
 public class Reflection {
+	
+	/**
+	 * @param annotation
+	 * @param target
+	 * @return
+	 */
+	public static List<Field>  extractAnnotatedFieldsFor(Class<? extends Annotation> annotation, Object target) {
+		ArrayList<Field> fields = new ArrayList<Field>();
 
+		Class<? extends Object> clazz = target.getClass();
+		while (!clazz.equals(Object.class)) {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (field.isAnnotationPresent(annotation))
+					fields.add(field);
+			}
+			clazz = clazz.getSuperclass();
+		}
+
+		return fields;
+	}
+
+	/**
+	 * @param attribute
+	 * @param target
+	 * @param value
+	 * @param optionalParams
+	 * @return
+	 * @throws NoSuchFieldException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
 	public static Object parseFieldValue(String attribute, Object target, Object value, Object ...optionalParams)
 			throws NoSuchFieldException, InstantiationException,
 			IllegalAccessException {
@@ -45,6 +77,13 @@ public class Reflection {
 		return parser.parseValue(value, type, genericTypes);
 	}
 
+	/**
+	 * @param attribute
+	 * @param target
+	 * @return
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 */
 	public static Annotation[] extractAnnotationsFor(String attribute, Object target)
 			throws SecurityException, NoSuchFieldException {
 		Field field = extractFieldFor(target, attribute);
@@ -55,6 +94,13 @@ public class Reflection {
 		return field.getAnnotations();
 	}
 
+	/**
+	 * @param attribute
+	 * @param target
+	 * @param annotation
+	 * @return
+	 * @throws SecurityException
+	 */
 	public static Annotation extractAnnotationFor(String attribute, Object target, Class<? extends Annotation> annotation)
 			throws SecurityException {
 		Field field = extractFieldFor(target, attribute);
@@ -65,11 +111,21 @@ public class Reflection {
 		return field.getAnnotation(annotation);
 	}
 
+	/**
+	 * @param target
+	 * @param attribute
+	 * @return
+	 */
 	public static Field extractFieldFor (Object target, String attribute) {
 		Class<? extends Object> clazz = target.getClass();
 		return extractFieldFor(attribute, clazz);
 	}
 
+	/**
+	 * @param attribute
+	 * @param clazz
+	 * @return
+	 */
 	public static Field extractFieldFor (String attribute, Class<?> clazz) {
 		try {
 			if (clazz.equals(Object.class))
@@ -80,6 +136,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * @param attribute
+	 * @param target
+	 * @return
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 */
 	public static Class<?> extractReturnTypeFor (String attribute, Object target) 
 			throws SecurityException, NoSuchFieldException {
 		Field field = extractFieldFor(target, attribute);
@@ -88,6 +151,12 @@ public class Reflection {
 		return field.getType();
 	}
 
+	/**
+	 * @param attribute
+	 * @param target
+	 * @return
+	 * @throws SecurityException
+	 */
 	public static Type[] extractGenericReturnTypeFor(String attribute, Object target)
 			throws SecurityException {
 		Field field = extractFieldFor(target, attribute);

@@ -14,7 +14,8 @@ import breakfast.coffee.loader.CoffeeResourceLoader;
 
 public class TemplateBasedComponent extends AbstractComponent {
 
-	private String template;
+	private String rootdir = "";
+	private String extension = "xhtml";
 	private String componentName;
 
 	@Override
@@ -49,16 +50,11 @@ public class TemplateBasedComponent extends AbstractComponent {
 		}
 	}
 
-	public void setTemplate(String template) {
-		this.template = template;
-	}
-
 	public String getTemplate() {
-		return template;
+		return getRootdir() + getComponentName() + "." + getExtension();
 	}
 
 	public void set(String name, Object value) {
-		System.out.println(getComponentName() + ":" + name + "," + value);
 		getCoffeeContext().put(getComponentName() + ":" + name, value);
 	}
 
@@ -68,6 +64,22 @@ public class TemplateBasedComponent extends AbstractComponent {
 
 	public String getComponentName() {
 		return componentName;
+	}
+
+	public void setRootdir(String rootdir) {
+		this.rootdir = rootdir;
+	}
+
+	public String getRootdir() {
+		return rootdir;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+
+	public String getExtension() {
+		return extension;
 	}
 
 }

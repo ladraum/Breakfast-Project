@@ -87,7 +87,7 @@ public class CoffeeParser extends DefaultHandler {
 		IComponentFactory factory = (IComponentFactory)Reflection.instanceForName(className);
 
 		if (Util.isNull(factory))
-			throw new NullPointerException("The 'factory' object is null: Can't find components factory for class " + className);
+			throw new NullPointerException("Error while parsing template. Can't find components factory for class " + className);
 
 		CoffeeContext.registerNamespace(uri, factory);
 	}

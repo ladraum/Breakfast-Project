@@ -30,7 +30,7 @@ public @interface WebResource {
 	 * <b>pattern</b> (required): a regular expression pattern to match against
 	 * 				  request URI. If the requested URI matches with this pattern then
 	 * 				  your web resource will be processed. Remember that the URI patter
-	 * 			  	  informed should be relative to the current context path.
+	 * 			  	  informed should be relative to the current coffeeContext path.
 	 */
 	String pattern();
 	/**

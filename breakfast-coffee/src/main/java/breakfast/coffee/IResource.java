@@ -28,10 +28,10 @@ import java.io.IOException;
 public interface IResource {
 
 /**
- * Configure the web resource. It allows to feed the context with data
+ * Configure the web resource. It allows to feed the coffeeContext with data
  * that will be handle by the coffee parser (like value expressions, for
  * an example).
- * @param context
+ * @param coffeeContext
  * @throws IOException 
  */
 	public abstract void configure(CoffeeContext context) throws IOException;

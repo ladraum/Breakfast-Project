@@ -67,7 +67,7 @@ public class EJBManager {
 	 * <p>Searches for the {@link EJB} annotation in
 	 * the supplied field. If found, try to locate
 	 * the <b>EJB</b> <b>no-interface</b> or 
-	 * <b>local</b> in the JNDI context. After doing so,
+	 * <b>local</b> in the JNDI coffeeContext. After doing so,
 	 * via reflection executes the bean <b>setter</b> and
 	 * <b>getter</b> methods, injecting the <b>EJB</b> in
 	 * the non managed class.</p>

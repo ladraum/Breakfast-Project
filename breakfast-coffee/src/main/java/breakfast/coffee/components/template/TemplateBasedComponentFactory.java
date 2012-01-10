@@ -41,7 +41,6 @@ public abstract class TemplateBasedComponentFactory implements IComponentFactory
 			clazz = defaultComponent;
 
 		component = (TemplateBasedComponent)clazz.newInstance();
-		component.setTemplate(name);
 		component.setComponentName(name);
 		component.setCoffeeContext(context);
 		return component;
