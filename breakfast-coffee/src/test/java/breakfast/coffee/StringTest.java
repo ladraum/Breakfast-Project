@@ -1,13 +1,12 @@
 package breakfast.coffee;
 
-import breakfast.coffee.util.StringUtil;
 
 
 public class StringTest{
 
 
 	public static void main( String[] args ){
-    int i = 0;
+    /*int i = 0;
     long prev_time = System.currentTimeMillis();
     long time;
 
@@ -50,7 +49,7 @@ public class StringTest{
     	new StringUtil().str("Blah ").str(i).str(" Blah");
     }
     time = System.currentTimeMillis() - prev_time;
-    System.out.println("Time sbConcat " + time);
+    System.out.println("Time sbConcat " + time);*/
 
     }
     

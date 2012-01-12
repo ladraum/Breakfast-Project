@@ -43,8 +43,13 @@ public class EJBManager {
 	 */
 	public static void manageBean(Object bean) {
 		try {
-			for (Field field : bean.getClass().getDeclaredFields()) {
-				injectEJB(field, bean);
+			Class<? extends Object> clazz = bean.getClass();
+			while (!clazz.equals(Object.class)) {
+				System.out.println("Analyzing " + clazz.getCanonicalName());
+				for (Field field : clazz.getDeclaredFields()) {
+					injectEJB(field, bean);
+				}
+				clazz = clazz.getSuperclass();
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();

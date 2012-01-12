@@ -17,6 +17,8 @@ package breakfast.coffee;
 
 import java.io.IOException;
 
+import breakfast.coffee.binding.EJBManager;
+
 /**
  * @since Coffee 1.0
  */
@@ -60,6 +62,7 @@ public class CoffeeResource {
  */
 	public IResource instantiateHook(CoffeeContext context) throws InstantiationException, IllegalAccessException, IOException {
 		IResource hook = (IResource)clazz.newInstance();
+		EJBManager.manageBean(hook);
 		hook.configure(context);
 		return hook;
 	}
