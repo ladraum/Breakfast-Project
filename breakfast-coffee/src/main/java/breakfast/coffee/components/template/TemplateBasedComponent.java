@@ -19,10 +19,7 @@ public class TemplateBasedComponent extends AbstractComponent {
 	private String componentName;
 
 	@Override
-	public void configure() {
-		for (String key : getAttributeKeys())
-			set(key, getAttributes().get(key));
-	}
+	public void configure() {}
 
 	@Override
 	public void render() throws IOException {
@@ -80,6 +77,12 @@ public class TemplateBasedComponent extends AbstractComponent {
 
 	public String getExtension() {
 		return extension;
+	}
+	
+	@Override
+    public IComponent setAttribute(String attribute, Object value) {
+        set(attribute, value);
+        return super.setAttribute(attribute, value);
 	}
 
 }

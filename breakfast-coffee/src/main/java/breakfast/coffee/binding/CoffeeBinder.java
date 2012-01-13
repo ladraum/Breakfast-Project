@@ -66,7 +66,8 @@ public class CoffeeBinder {
 
 			Object evaluatedExpression = evaluateExpressionAsObject(context, matcher);
 			if (isNull(evaluatedExpression))
-				continue;
+				evaluatedExpression = "";
+
 			expression =  expression.replace(group, evaluatedExpression.toString());
 			matchedGroups.add(group);
 		}
