@@ -166,14 +166,14 @@ public interface IComponent extends Cloneable {
  * @return
  * @see IComponent#isValueHolder
  */
-	public Object getHeldValue();
+	public Object getHeldExpression();
 
 /**
  * Get's the default value for the component.
  * @param value
  * @see IComponent#getHoldenValue()
  */
-	public IComponent holdValue(String value);
+	public IComponent holdExpression(String value);
 
 /**
  * Sets the current CoffeeContext.

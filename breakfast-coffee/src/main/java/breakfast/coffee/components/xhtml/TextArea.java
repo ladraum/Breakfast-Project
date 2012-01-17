@@ -39,7 +39,7 @@ public class TextArea extends XHtmlComponent {
 	@Override
 	public IComponent setTextContent(String content) {
 		super.setTextContent(content);
-		holdValue(content);
+		holdExpression(content);
 		return this;
 	}
 

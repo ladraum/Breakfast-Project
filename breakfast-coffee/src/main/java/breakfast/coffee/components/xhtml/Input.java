@@ -36,7 +36,7 @@ public class Input extends XHtmlComponent {
 
 	public void setValue(String value) {
 		if (type.equals("text"))
-			holdValue(value);
+			holdExpression(value);
 		this.value = value;
 	}
 
@@ -52,7 +52,7 @@ public class Input extends XHtmlComponent {
 	public void setChecked(String value) {
 		if (type.equals("checkbox")
 		||  type.equals("radio"))
-			holdValue(value);
+			holdExpression(value);
 	}
 
 }

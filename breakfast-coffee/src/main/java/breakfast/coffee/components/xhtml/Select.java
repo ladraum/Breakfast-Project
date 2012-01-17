@@ -51,6 +51,6 @@ public class Select extends XHtmlComponent {
 	}
 
 	public void setSelected(String selected) {
-		holdValue(selected);
+		holdExpression(selected);
 	}
 }

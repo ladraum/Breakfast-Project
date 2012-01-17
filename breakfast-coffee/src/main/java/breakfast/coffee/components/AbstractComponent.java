@@ -53,7 +53,7 @@ public abstract class AbstractComponent implements IComponent {
 	private IComponent parent;
 	private String textContent;
 	private String id;
-	private Object value;
+	private Object heldExpression;
 	protected CoffeeContext coffeeContext;
 
 	public AbstractComponent() {
@@ -78,7 +78,7 @@ public abstract class AbstractComponent implements IComponent {
 		if (!isValueHolder())
 			return;
 
-		String expression = (String)getHeldValue();
+		String expression = (String)getHeldExpression();
 		String value = coffeeContext.getRequest().getParameter(getId());
 		coffeeContext.put(CoffeeContext.COFFEE_CURRENT_PARSED_COMPONENT, this);
 		CoffeeBinder.setValue(expression, coffeeContext, value);
@@ -146,11 +146,11 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 /**
- * Retrieves the attribute value from component as Object.<br/>
+ * Retrieves the attribute heldExpression from component as Object.<br/>
  * <br/>
  * If the component implementation has a setter method with same name of the attribute
- * it will be dispatched and ignoring the value binding. Otherwise, it will try to
- * retrieve the value from a possible defined binding expression.
+ * it will be dispatched and ignoring the heldExpression binding. Otherwise, it will try to
+ * retrieve the heldExpression from a possible defined binding expression.
  * 
  * @param attribute
  */
@@ -187,9 +187,9 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 /**
- * Sets an attribute value.<br/>
+ * Sets an attribute heldExpression.<br/>
  * <br/>
- * After stores the value, if the component implementation has a setter method with same name of the attribute
+ * After stores the heldExpression, if the component implementation has a setter method with same name of the attribute
  * it will be dispatched too.
  */
 	public IComponent setAttribute(String attribute, Object value) {
@@ -244,7 +244,7 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 	public boolean isValueHolder() {
-		return !Util.isNull(getHeldValue()) && !Util.isNull(getId());
+		return !Util.isNull(getHeldExpression()) && !Util.isNull(getId());
 	}
 
 	@Override
@@ -261,13 +261,13 @@ public abstract class AbstractComponent implements IComponent {
 	}
 
 	@Override
-	public Object getHeldValue() {
-		return value;
+	public Object getHeldExpression() {
+		return heldExpression;
 	}
 
 	@Override
-	public IComponent holdValue(String value) {
-		this.value = value;
+	public IComponent holdExpression(String value) {
+		this.heldExpression = value;
 		return this;
 	};
 
