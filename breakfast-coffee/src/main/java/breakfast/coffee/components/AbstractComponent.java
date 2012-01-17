@@ -46,7 +46,7 @@ import breakfast.coffee.util.Util;
  */
 public abstract class AbstractComponent implements IComponent {
 	
-	private static final String[] invalidAttributeNames = new String[]{ "class", "children", "attributes", "parent", "textContent", "coffeeContext" };
+	private static final String[] invalidAttributeNames = new String[]{ "class", "children", "attributes", "parent", "textContent", "coffeeContext", "heldExpression" };
 
 	protected List<IComponent> children;
 	private Map<String, Object> attributes;
@@ -146,11 +146,11 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 /**
- * Retrieves the attribute heldExpression from component as Object.<br/>
+ * Retrieves the attribute value from component as Object.<br/>
  * <br/>
  * If the component implementation has a setter method with same name of the attribute
- * it will be dispatched and ignoring the heldExpression binding. Otherwise, it will try to
- * retrieve the heldExpression from a possible defined binding expression.
+ * it will be dispatched and ignoring the value binding. Otherwise, it will try to
+ * retrieve the value from a possible defined binding expression.
  * 
  * @param attribute
  */
@@ -180,20 +180,21 @@ public abstract class AbstractComponent implements IComponent {
 
 		Object value = CoffeeBinder.getValue(object.toString(), getCoffeeContext());
 		if (isNull(value))
-			return "";
+			return object.toString();
 
 		return value.toString();
 	}
 
 	@Override
 /**
- * Sets an attribute heldExpression.<br/>
+ * Sets an attribute value.<br/>
  * <br/>
- * After stores the heldExpression, if the component implementation has a setter method with same name of the attribute
+ * After stores the value, if the component implementation has a setter method with same name of the attribute
  * it will be dispatched too.
  */
 	public IComponent setAttribute(String attribute, Object value) {
 		this.attributes.put(attribute, value);
+
 		try {
 			Object parsedValue = Reflection.parseFieldValue(attribute, this, value);
 			Method setter = Reflection.extractSetterFor(attribute, this, parsedValue);
