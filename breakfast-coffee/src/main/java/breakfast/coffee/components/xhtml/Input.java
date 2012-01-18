@@ -17,7 +17,7 @@ package breakfast.coffee.components.xhtml;
 
 import java.io.IOException;
 
-import breakfast.coffee.util.Util;
+import breakfast.coffee.util.StringUtil;
 
 public class Input extends XHtmlComponent {
 
@@ -27,12 +27,8 @@ public class Input extends XHtmlComponent {
 		setSelfCloseable(true);
 
 		String name = getAttributeAsString("name");
-		if (Util.isNull(name))
+		if (StringUtil.isEmpty(name))
 			setAttribute("name", getId());
-		else {
-			//setAttribute("id", name);
-			setId(name);
-		}
 
 		String type = getAttributeAsString("type");
 		if (type.equals("checkbox"))

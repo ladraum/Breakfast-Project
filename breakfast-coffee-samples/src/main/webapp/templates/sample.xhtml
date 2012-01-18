@@ -4,26 +4,26 @@
 		xmlns:tpl="urn:coffee:template"
 		src="templates/template.xhtml" >
 
-	<tpl:define name="title" value="Yeah! It really fucking works!" />
+	<tpl:define name="title" id="title" value="Yeah! It really fucking works!" />
 
-	<tpl:define name="body">
+	<tpl:define name="body" id="body">
 	
 		<form>
 			<div class="FormItem">
 				<label>Nome:</label>
-				<input type="text" name="nome" value="#{user.nome}" />
+				<input type="text" id="nome" value="#{user.nome}" />
 			</div>
 			<div class="FormItem">
 				<label>Sobrenome:</label>
-				<input type="text" name="sobrenome" value="#{user.sobrenome}" />
+				<input type="text" name="sobrenome" id="sobrenome" value="#{user.sobrenome}" />
 			</div>
 			<div class="FormItem">
 				<label>Idade:</label>
-				<input type="text" name="idade" value="#{user.idade}" />
+				<input type="text" name="idade" id="idade" value="#{user.idade}" />
 			</div>
 			<div class="FormItem">
 				<label>Sexo:</label>
-				<select name="sexo">
+				<select name="sexo" id="sexo">
 					<option value="0" selected="#{user.sexo}"> -- Selecione -- </option>
 					<option value="1" selected="#{user.sexo}">Masculino</option>
 					<option value="2" selected="#{user.sexo}">Feminino</option>
@@ -31,16 +31,16 @@
 			</div>
 			<div class="FormItem">
 				<label>Observações:</label>
-				<textarea name="obs" rows="5" cols="60">#{user.observacoes}</textarea>
+				<textarea name="obs" id="obs" rows="5" cols="60">#{user.observacoes}</textarea>
 			</div>
 			<div class="FormItem">
 				<label>Doador de sangue?</label>
-				<label><input type="radio" name="doador" value="true" checked="#{user.doador}" /> Sim</label>
-				<label><input type="radio" name="doador" value="false" checked="#{user.doador}" /> Não</label>
+				<label><input type="radio" name="doador" id="doador" value="true" checked="#{user.doador}" /> Sim</label>
+				<label><input type="radio" name="doador" id="doador" value="false" checked="#{user.doador}" /> Não</label>
 			</div>
 			<div class="FormItem">
 				<label>Usuário Ativo?</label>
-				<input type="checkbox" name="active" checked="#{user.active}" />
+				<input type="checkbox" name="active" id="active" checked="#{user.active}" />
 			</div>
 		</form>
 		
