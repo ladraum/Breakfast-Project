@@ -60,7 +60,7 @@ public class CoffeeResource {
  * @throws InstantiationException 
  * @throws IOException 
  */
-	public IResource instantiateHook(CoffeeContext context) throws InstantiationException, IllegalAccessException, IOException {
+	public IResource instantiateResource(CoffeeContext context) throws InstantiationException, IllegalAccessException, IOException {
 		IResource hook = (IResource)clazz.newInstance();
 		EJBManager.manageBean(hook);
 		hook.configure(context);

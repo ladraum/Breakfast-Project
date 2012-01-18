@@ -17,21 +17,15 @@ package breakfast.coffee.components.xhtml;
 
 public class Link extends XHtmlComponent {
 	
-	private String href;
-	
 	@Override
 	public void configure() {
 		setComponentName("link");
-	}
 
-	public String getHref() {
-		return href;
-	}
+		String href = getAttributeAsString("href");
+		if (href.matches("^[a-z0-9].*") && !href.contains(":"))
+			href = getCoffeeContext().getContextPath() + "/" + href;
+		setAttribute("href", href);
 
-	public void setHref(String value) {
-		if (value.matches("^[a-z0-9].*") && !value.contains(":"))
-			value = getCoffeeContext().getContextPath() + "/" + value;
-		this.href = value;
 	}
 
 }

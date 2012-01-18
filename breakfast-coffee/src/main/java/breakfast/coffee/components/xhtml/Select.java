@@ -15,42 +15,22 @@
  */
 package breakfast.coffee.components.xhtml;
 
-import java.io.IOException;
-
-import breakfast.coffee.components.IComponent;
+import breakfast.coffee.util.Util;
 
 
 public class Select extends XHtmlComponent {
 	
-	private String name;
-
 	@Override
 	public void configure() {
 		super.configure();
 		setComponentName("select");
-		ignoreAttribute("selected");
-	}
-	
-	@Override
-	public void renderChildren() throws IOException {
-		for (IComponent child : getChildren()) {
-			String selected = getAttributeValue("selected");
-			if (child.getAttribute("value").equals(selected))
-				child.setAttribute("selected", "selected");
-			child.render();
+
+		String name = getAttributeAsString("name");
+		if (Util.isNull(name))
+			setAttribute("name", getId());
+		else {
+			setAttribute("id", name);
+			setId(name);
 		}
-	}
-
-	public void setName(String name) {
-		this.name = name;
-		setId(name);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setSelected(String selected) {
-		holdExpression(selected);
 	}
 }

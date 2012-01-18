@@ -29,13 +29,12 @@ import breakfast.coffee.loader.CoffeeResourceLoader;
 
 public class Template extends AbstractComponent {
 	
-	private String src;
-
 	@Override
 	public void configure() {}
 
 	@Override
 	public void render() throws IOException {
+		String src = getAttributeAsString("src");
 		try {
 			CoffeeResourceLoader resourceLoader = Cafeteria.getResourceLoader(getCoffeeContext());
 			IComponent template = resourceLoader.compile(src, getCoffeeContext());
@@ -49,13 +48,5 @@ public class Template extends AbstractComponent {
 		} catch (ClassNotFoundException e) {
 			throw new IOException(e);
 		}
-	}
-
-	public void setSrc(String src) {
-		this.src = src;
-	}
-
-	public String getSrc() {
-		return src;
 	}
 }

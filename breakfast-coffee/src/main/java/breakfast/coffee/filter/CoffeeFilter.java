@@ -90,17 +90,17 @@ public class CoffeeFilter implements Filter {
 
 		try {
 			CoffeeContext coffeeContext = Cafeteria.createContext(request, response, getServletContext());
-			CoffeeResource resource = resourceLoader.getResource(coffeeContext.getRelativePath());
+			CoffeeResource coffeeResource = resourceLoader.getResource(coffeeContext.getRelativePath());
 
-			if (isNull(resource)) {
+			if (isNull(coffeeResource)) {
 				chain.doFilter(request, response);
 				return;
 			}
 
-			IResource hook = resource.instantiateHook(coffeeContext);
-			IComponent webpage = resourceLoader.compile(resource.getTemplate(), coffeeContext);
+			IResource resource = coffeeResource.instantiateResource(coffeeContext);
+			IComponent webpage = resourceLoader.compile(coffeeResource.getTemplate(), coffeeContext);
 			webpage.setCoffeeContext(coffeeContext);
-			hook.process();
+			resource.process();
 
 			String uri = ((HttpServletRequest)request).getRequestURI();
 			if (!coffeeContext.getPath().equals(uri)){

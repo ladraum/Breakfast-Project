@@ -17,21 +17,14 @@ package breakfast.coffee.components.xhtml;
 
 public class Script extends XHtmlComponent {
 
-	private String src;
-
 	@Override
 	public void configure() {
 		setComponentName("script");
-	}
-
-	public String getSrc() {
-		return src;
-	}
-
-	public void setSrc(String value) {
-		if (value.matches("^[a-z0-9].*") && !value.contains(":"))
-			value = getCoffeeContext().getContextPath() + "/" + value;
-		this.src = value;
+		
+		String src = getAttributeAsString("src");
+		if (src.matches("^[a-z0-9].*") && !src.contains(":"))
+			src = getCoffeeContext().getContextPath() + "/" + src;
+		setAttribute("src", src);
 	}
 
 }

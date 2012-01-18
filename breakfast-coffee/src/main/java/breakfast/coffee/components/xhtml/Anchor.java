@@ -16,22 +16,16 @@
 package breakfast.coffee.components.xhtml;
 
 public class Anchor extends XHtmlComponent {
-	
-	private String href;
-	
+
 	@Override
 	public void configure() {
 		setComponentName("a");
-	}
-	
-	public String getHref() {
-		return href;
-	}
 
-	public void setHref(String value) {
-		if (value.matches("^[a-z0-9].*") && !value.contains(":"))
-			value = getCoffeeContext().getContextPath() + "/" + value;
-		this.href = value;
+		String href = getAttributeAsString("href");
+		if (href.matches("^[a-z0-9].*") && !href.contains(":"))
+			href = getCoffeeContext().getContextPath() + "/" + href;
+		setAttribute("href", href);
+
 	}
 
 }

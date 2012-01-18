@@ -33,14 +33,6 @@ import breakfast.coffee.binding.Evaluator;
 public interface IComponent extends Cloneable {
 
 /**
- * Configures the component.
- * 
- * This is a useful method to be override, configure attributes, add custom
- * child elements and change the default component behavior.
- */
-	public void configure();
-
-/**
  * Renders the component into a HTML document.
  * @throws IOException 
  */
@@ -166,7 +158,7 @@ public interface IComponent extends Cloneable {
  * @return
  * @see IComponent#isValueHolder
  */
-	public Object getHeldExpression();
+	public String getHeldExpression();
 
 /**
  * Get's the default value for the component.

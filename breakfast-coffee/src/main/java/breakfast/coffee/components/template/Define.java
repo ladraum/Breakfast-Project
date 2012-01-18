@@ -24,11 +24,9 @@ import breakfast.coffee.components.AbstractComponent;
 
 public class Define extends AbstractComponent {
 
-	private String name;
-	private String value;
-
 	@Override
 	public void configure() {
+		String name = getAttributeAsString("name");
 		coffeeContext.put(CoffeeContext.COFFEE_COMPONENTS_TEMPLATE_VALUE + name, getDefinedValue());
 	}
 
@@ -37,28 +35,12 @@ public class Define extends AbstractComponent {
 	
 	public Object getDefinedValue() {
 		if (getNumChildren() == 0)
-			return CoffeeBinder.getValue(getValue(), coffeeContext);
+			return CoffeeBinder.getValue(getAttributeAsString("value"), coffeeContext);
 
 		HolderComponent component = new HolderComponent();
 		component.setCoffeeContext(getCoffeeContext());
 		component.setChildren(getChildren());
 		return component;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public String getValue() {
-		return value;
 	}
 
 }

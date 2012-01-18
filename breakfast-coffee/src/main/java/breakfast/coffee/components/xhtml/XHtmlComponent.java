@@ -15,7 +15,6 @@
  */
 package breakfast.coffee.components.xhtml;
 
-import static breakfast.coffee.util.StringUtil.isEmpty;
 import static breakfast.coffee.util.Util.isNull;
 
 import java.io.IOException;
@@ -25,6 +24,7 @@ import java.util.List;
 
 import breakfast.coffee.components.AbstractComponent;
 import breakfast.coffee.components.IComponent;
+import breakfast.coffee.util.StringUtil;
 
 
 /**
@@ -36,7 +36,9 @@ public class XHtmlComponent extends AbstractComponent {
 	private List<String> ignoredAttributes;
 	private String componentName;
 	
-	public XHtmlComponent() {}
+	public XHtmlComponent() {
+		ignoredAttributes = new ArrayList<String>();
+	}
 
 	public XHtmlComponent(String name) {
 		super();
@@ -44,14 +46,14 @@ public class XHtmlComponent extends AbstractComponent {
 	}
 
 	@Override
-	protected void initialize() {
-		super.initialize();
-		ignoredAttributes = new ArrayList<String>();
-	}
-
-	@Override
 	public void configure()  {
 		setAttribute("id", getId());
+	}
+	
+	@Override
+	protected void flush() {
+		ignoredAttributes = new ArrayList<String>();
+		super.flush();
 	}
 
 	@Override
@@ -67,13 +69,12 @@ public class XHtmlComponent extends AbstractComponent {
 		for (String attr : getAttributes().keySet()) {
 			if (ignoredAttributes.contains(attr))
 				continue;
-			Object attributeValue = getAttribute(attr);
-			if (!isNull(attributeValue)
-			&&  !isEmpty(attributeValue.toString()))
+			String attributeValue = getAttributeAsString(attr);
+			if (!StringUtil.isEmpty(attributeValue))
 				writer.append(' ')
 					  .append(attr)
 					  .append("=\"")
-					  .append(attributeValue.toString())
+					  .append(attributeValue)
 					  .append("\"");
 		}
 

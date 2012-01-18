@@ -32,7 +32,7 @@ public class PooledExpressionTest {
 			total_time+= time;
 		}
 		System.out.println("Total Time:" + total_time);
-		System.out.println("Avarage Time:" + (total_time/loop_times));
+		System.out.println("Avarage Time:" + (total_time/(loop_times*10000)));
 	}
 
 	@Test

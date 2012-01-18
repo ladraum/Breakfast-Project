@@ -11,6 +11,7 @@ import breakfast.coffee.CoffeeContext;
 import breakfast.coffee.components.AbstractComponent;
 import breakfast.coffee.components.IComponent;
 import breakfast.coffee.loader.CoffeeResourceLoader;
+import breakfast.coffee.util.StringUtil;
 
 public class TemplateBasedComponent extends AbstractComponent {
 
@@ -19,14 +20,14 @@ public class TemplateBasedComponent extends AbstractComponent {
 	private String componentName;
 
 	@Override
-	public void configure() {
-		for (String attribute : getAttributeKeys())
-	        set(attribute, getAttributeValue(attribute));
-	}
-
+	public void configure() {  }
+ 
 	@Override
 	public void render() throws IOException {
 		try {
+			for (String attribute : getAttributeKeys())
+				getCoffeeContext().put(getComponentName() + ":" + attribute, getAttributeAsString(attribute));
+
 			HolderComponent holder = new HolderComponent();
 			holder.setChildren(getChildren());
 			CoffeeContext coffeeContext = getCoffeeContext();
@@ -54,8 +55,11 @@ public class TemplateBasedComponent extends AbstractComponent {
 		return getRootdir() + getComponentName() + "." + getExtension();
 	}
 
-	public void set(String name, Object value) {
-		getCoffeeContext().put(getComponentName() + ":" + name, value);
+	public String getId() {
+        String id = super.getId();
+        if (StringUtil.isEmpty(id))
+            id = getCoffeeContext().getNextId();
+        return id;
 	}
 
 	public void setComponentName(String componentName) {

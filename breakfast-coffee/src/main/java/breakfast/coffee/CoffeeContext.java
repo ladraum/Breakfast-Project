@@ -30,7 +30,7 @@ import breakfast.coffee.components.IComponentFactory;
 public class CoffeeContext {
 
 	public static final String COFFEE_COMPONENTS_TEMPLATE_VALUE = "COFFEE_COMPONENTS_TEMPLATE_VALUE.";
-	public static final String COFFEE_CURRENT_PARSED_COMPONENT = "COFFEE_CURRENT_PARSED_COMPONENT";
+//	public static final String COFFEE_CURRENT_PARSED_COMPONENT = "COFFEE_CURRENT_PARSED_COMPONENT";
 	private static Map<String, IComponentFactory> registeredNamespaces = new HashMap<String, IComponentFactory>();
 	
 	private Map<String, Object> properties;

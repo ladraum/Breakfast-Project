@@ -17,22 +17,15 @@ package breakfast.coffee.components.xhtml;
 
 public class Image extends XHtmlComponent {
 	
-	private String href;
-	
 	@Override
 	public void configure() {
 		setComponentName("img");
 		setSelfCloseable(true);
+		
+		String src = getAttributeAsString("src");
+		if (src.matches("^[a-z0-9].*") && !src.contains(":"))
+			src = getCoffeeContext().getContextPath() + "/" + src;
+		setAttribute("src", src);
 	}
 	
-	public String getHref() {
-		return href;
-	}
-
-	public void setHref(String value) {
-		if (value.matches("^[a-z0-9].*") && !value.contains(":"))
-			value = getCoffeeContext().getContextPath() + "/" + value;
-		this.href = value;
-	}
-
 }

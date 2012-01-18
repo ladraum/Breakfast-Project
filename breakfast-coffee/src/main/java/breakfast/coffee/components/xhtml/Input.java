@@ -15,44 +15,46 @@
  */
 package breakfast.coffee.components.xhtml;
 
+import java.io.IOException;
+
+import breakfast.coffee.util.Util;
+
 public class Input extends XHtmlComponent {
-	
-	private String type;
-	private String value;
 
 	@Override
 	public void configure() {
 		setComponentName("input");
 		setSelfCloseable(true);
-	}
 
-	public void setName(String name) {
-		setId(name);
+		String name = getAttributeAsString("name");
+		if (Util.isNull(name))
+			setAttribute("name", getId());
+		else {
+			//setAttribute("id", name);
+			setId(name);
+		}
+
+		String type = getAttributeAsString("type");
+		if (type.equals("checkbox"))
+			setAttribute("value","true");
+		if (type.equals("radio") || type.equals("checkbox"))
+			holdExpression(getAttribute("checked").toString());
+		else
+			holdExpression(getAttribute("value").toString());
+
 	}
 	
-	public void setType(String value) {
-		this.type = value;
-	}
+	@Override
+	public void render() throws IOException {
+		if (getAttributeAsString("type").equals("checkbox")
+		&& !getAttributeAsString("checked").equals("true"))
+			ignoreAttribute("checked");
 
-	public void setValue(String value) {
-		if (type.equals("text"))
-			holdExpression(value);
-		this.value = value;
-	}
+		if (getAttributeAsString("type").equals("radio")
+		&& !getAttributeAsString("checked").equals(getAttributeAsString("value")))
+			ignoreAttribute("checked");
 
-	public String getChecked() {
-		String newValue = getAttributeValue("checked");
-		if (type.equals("radio") && newValue.equals(value))
-			return "checked";
-		if (type.equals("checkbox") && newValue.equals("on"))
-			return "checked";
-		return "";
-	}
-
-	public void setChecked(String value) {
-		if (type.equals("checkbox")
-		||  type.equals("radio"))
-			holdExpression(value);
+		super.render();
 	}
 
 }

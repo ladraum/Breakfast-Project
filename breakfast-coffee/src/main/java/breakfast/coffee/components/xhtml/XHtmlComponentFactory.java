@@ -34,13 +34,14 @@ public class XHtmlComponentFactory implements IComponentFactory {
 		components = new HashMap<String, Class<? extends IComponent>>();
 		components.put("input", Input.class);
 		components.put("select", Select.class);
+		components.put("option", Option.class);
 		components.put("textarea", TextArea.class);
 		components.put("html", Html.class);
 		components.put("link", Link.class);
 		components.put("img", Image.class);
 		components.put("a", Anchor.class);
 		components.put("script", Script.class);
-		
+
 		selfCloseableComponents = new ArrayList<String>();
 		selfCloseableComponents.add("br");
 		selfCloseableComponents.add("meta");

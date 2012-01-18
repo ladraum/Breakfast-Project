@@ -7,7 +7,8 @@
 
 	<filter>
 		<filter-name>Coffee</filter-name>
-		<filter-class>coffee.core.filter.CoffeeFilter</filter-class>
+		<filter-class>breakfast.coffee.filter.CoffeeFilter</filter-class>
+		<async-supported>true</async-supported>
 	</filter>
 
 	<filter-mapping>

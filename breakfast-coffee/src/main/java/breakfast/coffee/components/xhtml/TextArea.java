@@ -16,24 +16,22 @@
 package breakfast.coffee.components.xhtml;
 
 import breakfast.coffee.components.IComponent;
+import breakfast.coffee.util.Util;
 
 public class TextArea extends XHtmlComponent {
-
-	private String name;
 
 	@Override
 	public void configure() {
 		super.configure();
 		setComponentName("textarea");
-	}
 
-	public void setName(String name) {
-		this.name = name;
-		setId(name);
-	}
-
-	public String getName() {
-		return name;
+		String name = getAttributeAsString("name");
+		if (Util.isNull(name))
+			setAttribute("name", getId());
+		else {
+			setAttribute("id", name);
+			setId(name);
+		}
 	}
 
 	@Override

@@ -27,14 +27,13 @@ import breakfast.coffee.util.Util;
 
 public class Var extends AbstractComponent {
 
-	private String name;
-
 	@Override
 	public void configure() {}
 
 	@Override
 	public void render() throws IOException {
-		Object definedValue = getValue();
+		String name = getAttributeAsString("name");
+		Object definedValue = getCoffeeContext().get(CoffeeContext.COFFEE_COMPONENTS_TEMPLATE_VALUE + name);
 		
 		if (Util.isNull(definedValue))
 			return;
@@ -49,18 +48,6 @@ public class Var extends AbstractComponent {
 
 		if (!Util.isNull(value))
 			writer.append(value.toString());
-	}
-
-	public Object getValue() {
-		return getCoffeeContext().get(CoffeeContext.COFFEE_COMPONENTS_TEMPLATE_VALUE + name);
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 }

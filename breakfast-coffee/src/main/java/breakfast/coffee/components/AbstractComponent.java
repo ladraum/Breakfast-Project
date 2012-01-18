@@ -18,7 +18,6 @@ package breakfast.coffee.components;
 import static breakfast.coffee.util.Util.isNull;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ import java.util.Map;
 
 import breakfast.coffee.CoffeeContext;
 import breakfast.coffee.binding.CoffeeBinder;
-import breakfast.coffee.util.Reflection;
+import breakfast.coffee.util.StringUtil;
 import breakfast.coffee.util.Util;
 
 
@@ -53,20 +52,15 @@ public abstract class AbstractComponent implements IComponent {
 	private IComponent parent;
 	private String textContent;
 	private String id;
-	private Object heldExpression;
+	private String heldExpression;
 	protected CoffeeContext coffeeContext;
 
 	public AbstractComponent() {
 		super();
-		initialize();
-	}
-
-	protected void initialize() {
 		children = new ArrayList<IComponent>();
 		attributes = new HashMap<String, Object>();
 	}
 
-	@Override
 	public abstract void configure();
 
 	public abstract void render() throws IOException;
@@ -80,7 +74,6 @@ public abstract class AbstractComponent implements IComponent {
 
 		String expression = (String)getHeldExpression();
 		String value = coffeeContext.getRequest().getParameter(getId());
-		coffeeContext.put(CoffeeContext.COFFEE_CURRENT_PARSED_COMPONENT, this);
 		CoffeeBinder.setValue(expression, coffeeContext, value);
 	}
 
@@ -146,7 +139,7 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 /**
- * Retrieves the attribute value from component as Object.<br/>
+ * Retrieves the component's attribute value as an Object.<br/>
  * <br/>
  * If the component implementation has a setter method with same name of the attribute
  * it will be dispatched and ignoring the value binding. Otherwise, it will try to
@@ -155,33 +148,32 @@ public abstract class AbstractComponent implements IComponent {
  * @param attribute
  */
 	public Object getAttribute(String attribute) {
-		try{
-			if (isInvalidAttribute(attribute))
-				return getAttributeValue(attribute);
-			Method getter = Reflection.extractGetterFor(attribute, this);
-			return getter.invoke(this);
-		} catch (Exception e) {
-			Object object = attributes.get(attribute);
-			if (isNull(object))
-				return null;
-			return CoffeeBinder.getValue(object.toString(), getCoffeeContext());
-		}
+		return attributes.get(attribute);
 	}
 
 /**
- * 
+ * Retrieves the attribute value and, if it is an valid expression, returns
+ * the value of the parsed expression
+ *  
+ * @param attribute
+ * @return
+ */
+	public Object getParsedAttribute(String attribute) {
+		Object object = attributes.get(attribute);
+		if (isNull(object))
+			return null;
+		return CoffeeBinder.getValue(object.toString(), getCoffeeContext());
+	}
+
+/**
+ * Retrieves the component's attribute value as an String.
  * @param attr
  * @return
  */
-	public String getAttributeValue(String attr) {
-		Object object = attributes.get(attr);
-		if (isNull(object))
-			return null;
-
-		Object value = CoffeeBinder.getValue(object.toString(), getCoffeeContext());
+	public String getAttributeAsString(String attr) {
+		Object value = getParsedAttribute(attr);
 		if (isNull(value))
-			return object.toString();
-
+			return "";
 		return value.toString();
 	}
 
@@ -194,15 +186,7 @@ public abstract class AbstractComponent implements IComponent {
  */
 	public IComponent setAttribute(String attribute, Object value) {
 		this.attributes.put(attribute, value);
-
-		try {
-			Object parsedValue = Reflection.parseFieldValue(attribute, this, value);
-			Method setter = Reflection.extractSetterFor(attribute, this, parsedValue);
-			setter.invoke(this, parsedValue);
-			return this;
-		} catch (Exception e) {
-			return this;
-		}
+		return this;
 	}
 
 	public boolean isInvalidAttribute(String attribute) {
@@ -245,7 +229,7 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 	public boolean isValueHolder() {
-		return !Util.isNull(getHeldExpression()) && !Util.isNull(getId());
+		return !StringUtil.isEmpty(getHeldExpression()) && !Util.isNull(getId());
 	}
 
 	@Override
@@ -256,13 +240,17 @@ public abstract class AbstractComponent implements IComponent {
 
 	@Override
 	public String getId() {
-		if (!Util.isNull(id))
-			id = CoffeeBinder.getValue(id, getCoffeeContext()).toString();
-		return id;
+		if (Util.isNull(this.id)) {
+			String id = getAttributeAsString("id");
+			if (Util.isNull(id))
+				id = getCoffeeContext().getNextId();
+			this.id = id;
+		}
+		return this.id;
 	}
 
 	@Override
-	public Object getHeldExpression() {
+	public String getHeldExpression() {
 		return heldExpression;
 	}
 
@@ -270,7 +258,12 @@ public abstract class AbstractComponent implements IComponent {
 	public IComponent holdExpression(String value) {
 		this.heldExpression = value;
 		return this;
-	};
+	}
+	
+	public void setBindableAttribute(String attribute) {
+        String value = getAttributeAsString(attribute);
+        holdExpression(value);
+	}
 
 	@Override
 	public IComponent setCoffeeContext(CoffeeContext context) {

@@ -9,41 +9,40 @@ import breakfast.coffee.util.Util;
 
 public class SampleResource extends Resource {
 
-	private Usuario usuario;
+	private Usuario user;
 
 	@Override
 	public void configure() {
-		usuario = new Usuario();
-		coffeeContext.put("usuario", usuario);
+		user = new Usuario();
+		coffeeContext.put("user", user);
 	}
 
 	@Override
 	public void process() {
-		
-		// TODO: incluir a servlet-api:2.5 no pom.xml
-		
-		if (Util.isNull(usuario.getNome()))
-			usuario.setNome("Miere");
-		if (Util.isNull(usuario.getSobrenome()))
-			usuario.setSobrenome("Liniel Teixeira");
-		if (Util.isNull(usuario.getIdade()))
-			usuario.setIdade("26");
-		if (Util.isNull(usuario.getSexo()))
-			usuario.setSexo((short) 0);
-		if (Util.isNull(usuario.getObservacoes()))
-			usuario.setObservacoes("");
-		if (Util.isNull(usuario.getDoador()))
-			usuario.setDoador("false");
+
+		if (Util.isNull(user.getNome()))
+			user.setNome("Miere");
+		if (Util.isNull(user.getSobrenome()))
+			user.setSobrenome("Liniel Teixeira");
+		if (Util.isNull(user.getIdade()))
+			user.setIdade("27");
+		if (Util.isNull(user.getSexo()))
+			user.setSexo((short) 0);
+		if (Util.isNull(user.getObservacoes()))
+			user.setObservacoes("");
+		if (Util.isNull(user.getDoador()))
+			user.setDoador("false");
 	}
-	
+
 	public class Usuario {
 		
 		private String nome;
 		private String sobrenome;
 		private String idade;
-		private short sexo;
+		private Short sexo;
 		private String observacoes;
 		private String doador;
+		private Boolean active;
 
 		public void setNome(String nome) {
 			this.nome = nome;
@@ -68,16 +67,12 @@ public class SampleResource extends Resource {
 		public String getIdade() {
 			return idade;
 		}
-		
-		public void setSexo(String sexo) {
-			setSexo(Short.parseShort(sexo));
-		}
 
-		public void setSexo(short sexo) {
+		public void setSexo(Short sexo) {
 			this.sexo = sexo;
 		}
 
-		public short getSexo() {
+		public Short getSexo() {
 			return sexo;
 		}
 
@@ -95,6 +90,14 @@ public class SampleResource extends Resource {
 
 		public String getDoador() {
 			return doador;
+		}
+
+		public void setActive(Boolean active) {
+			this.active = active;
+		}
+
+		public Boolean getActive() {
+			return active;
 		}
 		
 	}
