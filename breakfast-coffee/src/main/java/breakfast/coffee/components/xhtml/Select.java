@@ -28,9 +28,5 @@ public class Select extends XHtmlComponent {
 		String name = getAttributeAsString("name");
 		if (Util.isNull(name))
 			setAttribute("name", getId());
-		else {
-			setAttribute("id", name);
-			setId(name);
-		}
 	}
 }
