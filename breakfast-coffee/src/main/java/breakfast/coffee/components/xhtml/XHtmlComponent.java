@@ -47,7 +47,7 @@ public class XHtmlComponent extends AbstractComponent {
 
 	@Override
 	public void configure()  {
-		setAttribute("id", getId());
+		//setAttribute("id", getId());
 	}
 	
 	@Override
