@@ -261,8 +261,9 @@ public abstract class AbstractComponent implements IComponent {
 	}
 	
 	public void setBindableAttribute(String attribute) {
-        String value = getAttribute(attribute).toString();
-        holdExpression(value);
+        Object value = getAttribute(attribute);
+        if (!Util.isNull(value))
+        	holdExpression(value.toString());
 	}
 
 	@Override

@@ -11,32 +11,32 @@
 		<form>
 			<div class="FormItem">
 				<label>Nome:</label>
-				<input type="text" id="nome" value="#{user.nome}" />
+				<input type="text" id="firstName" value="#{user.firstName}" />
 			</div>
 			<div class="FormItem">
 				<label>Sobrenome:</label>
-				<input type="text" name="sobrenome" id="sobrenome" value="#{user.sobrenome}" />
+				<input type="text" name="lastName" id="sobrenome" value="#{user.lastName}" />
 			</div>
 			<div class="FormItem">
 				<label>Idade:</label>
-				<input type="text" name="idade" id="idade" value="#{user.idade}" />
+				<input type="text" name="age" id="idade" value="#{user.age}" />
 			</div>
 			<div class="FormItem">
 				<label>Sexo:</label>
-				<select name="sexo" id="sexo">
-					<option value="0" selected="#{user.sexo}"> -- Selecione -- </option>
-					<option value="1" selected="#{user.sexo}">Masculino</option>
-					<option value="2" selected="#{user.sexo}">Feminino</option>
+				<select name="gender" id="gender">
+					<option value="0" selected="#{user.gender}"> -- Selecione -- </option>
+					<option value="1" selected="#{user.gender}">Masculino</option>
+					<option value="2" selected="#{user.gender}">Feminino</option>
 				</select>
 			</div>
 			<div class="FormItem">
 				<label>Observações:</label>
-				<textarea name="obs" id="obs" rows="5" cols="60">#{user.observacoes}</textarea>
+				<textarea name="obs" id="obs" rows="5" cols="60">#{user.obs}</textarea>
 			</div>
 			<div class="FormItem">
 				<label>Doador de sangue?</label>
-				<label><input type="radio" name="doador" id="doador" value="true" checked="#{user.doador}" /> Sim</label>
-				<label><input type="radio" name="doador" id="doador" value="false" checked="#{user.doador}" /> Não</label>
+				<label><input type="radio" name="profileName" id="profileName" value="true" checked="#{user.profileName}" /> Sim</label>
+				<label><input type="radio" name="profileName" id="profileName" value="false" checked="#{user.profileName}" /> Não</label>
 			</div>
 			<div class="FormItem">
 				<label>Usuário Ativo?</label>

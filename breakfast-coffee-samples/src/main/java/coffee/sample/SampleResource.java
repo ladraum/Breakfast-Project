@@ -2,104 +2,89 @@ package coffee.sample;
 
 import breakfast.coffee.Resource;
 import breakfast.coffee.annotation.WebResource;
-import breakfast.coffee.util.Util;
 
-@WebResource( pattern="/sample/*",
-			  template="templates/sample.xhtml")
-
+@WebResource(pattern = "/user/*",
+			 template = "templates/user.xhtml")
 public class SampleResource extends Resource {
 
-	private Usuario user;
+	private User user;
 
 	@Override
 	public void configure() {
-		user = new Usuario();
+		user = new User();
 		coffeeContext.put("user", user);
 	}
 
 	@Override
-	public void process() {
-
-		if (Util.isNull(user.getNome()))
-			user.setNome("Miere");
-		if (Util.isNull(user.getSobrenome()))
-			user.setSobrenome("Liniel Teixeira");
-		if (Util.isNull(user.getIdade()))
-			user.setIdade("27");
-		if (Util.isNull(user.getSexo()))
-			user.setSexo((short) 0);
-		if (Util.isNull(user.getObservacoes()))
-			user.setObservacoes("");
-		if (Util.isNull(user.getDoador()))
-			user.setDoador("false");
+	public void doGet() throws Exception {
 	}
 
-	public class Usuario {
-		
-		private String nome;
-		private String sobrenome;
-		private String idade;
-		private Short sexo;
-		private String observacoes;
-		private String doador;
+	public class User {
+
+		private String firstName;
+		private String lastName;
+		private String age;
+		private Short gender;
+		private String obs;
+		private String profileName;
 		private Boolean active;
 
-		public void setNome(String nome) {
-			this.nome = nome;
+		public String getFirstName() {
+			return firstName;
 		}
 
-		public String getNome() {
-			return nome;
+		public void setFirstName(String firstName) {
+			this.firstName = firstName;
 		}
 
-		public void setSobrenome(String sobrenome) {
-			this.sobrenome = sobrenome;
+		public String getLastName() {
+			return lastName;
 		}
 
-		public String getSobrenome() {
-			return sobrenome;
+		public void setLastName(String lastName) {
+			this.lastName = lastName;
 		}
 
-		public void setIdade(String idade) {
-			this.idade = idade;
+		public String getAge() {
+			return age;
 		}
 
-		public String getIdade() {
-			return idade;
+		public void setAge(String age) {
+			this.age = age;
 		}
 
-		public void setSexo(Short sexo) {
-			this.sexo = sexo;
+		public Short getGender() {
+			return gender;
 		}
 
-		public Short getSexo() {
-			return sexo;
+		public void setGender(Short gender) {
+			this.gender = gender;
 		}
 
-		public void setObservacoes(String observacoes) {
-			this.observacoes = observacoes;
+		public String getObs() {
+			return obs;
 		}
 
-		public String getObservacoes() {
-			return observacoes;
+		public void setObs(String obs) {
+			this.obs = obs;
 		}
 
-		public void setDoador(String doador) {
-			this.doador = doador;
+		public String getProfileName() {
+			return profileName;
 		}
 
-		public String getDoador() {
-			return doador;
+		public void setProfileName(String profileName) {
+			this.profileName = profileName;
+		}
+
+		public Boolean getActive() {
+			return active;
 		}
 
 		public void setActive(Boolean active) {
 			this.active = active;
 		}
 
-		public Boolean getActive() {
-			return active;
-		}
-		
 	}
 
 }

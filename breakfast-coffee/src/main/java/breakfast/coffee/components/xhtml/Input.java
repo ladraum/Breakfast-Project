@@ -18,6 +18,7 @@ package breakfast.coffee.components.xhtml;
 import java.io.IOException;
 
 import breakfast.coffee.util.StringUtil;
+import breakfast.coffee.util.Util;
 
 public class Input extends XHtmlComponent {
 
@@ -31,15 +32,20 @@ public class Input extends XHtmlComponent {
 			setAttribute("name", getId());
 
 		String type = getAttributeAsString("type");
+
 		if (type.equals("checkbox"))
 			setAttribute("value","true");
-		if (type.equals("radio") || type.equals("checkbox"))
+
+		if (type.equals("radio") || type.equals("checkbox")
+		&&  !Util.isNull(getAttribute("checked")))
 			holdExpression(getAttribute("checked").toString());
-		else
+
+		else if (!type.equals("radio") && !type.equals("checkbox")
+		&&  !Util.isNull(getAttribute("value")))
 			holdExpression(getAttribute("value").toString());
 
 	}
-	
+
 	@Override
 	public void render() throws IOException {
 		if (getAttributeAsString("type").equals("checkbox")
